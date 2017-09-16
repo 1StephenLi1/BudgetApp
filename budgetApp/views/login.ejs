@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include includes/head.ejs %>
+</head>
+
+<body class="hold-transition skin-black fixed sidebar-mini">
+    <div class="wrapper container-fluid">
+
+        <% include includes/top-nav.ejs %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    <%= title %>
+                </h1>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Login</h2>
+                        <form id="login">
+                            <input type="text" placeholder="Email" name="email" required autofocus>
+                            <input type="password" placeholder="Password" name="password" required>
+                        </form>
+                        <button type="submit" form="login">Login</button>
+                    </div>
+                    <div class="col-md-6">
+                        <form>
+                        <h2>Sign Up</h2>
+                            <input type="text" placeholder="Email" name="email" required>
+                            <input type="password" placeholder="Password" name="password" required>
+                            <input type="text" placeholder="First Name" name="name" required>
+                            <input type="text" placeholder="Surname" name="surname" required>
+                        </form>
+                        <button type="submit" form="signup">Sign Up</button>
+                    </div>
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <% include includes/footer.ejs %>
+
+    </div>
+    <!-- ./wrapper -->
+
+    <% include includes/jsDefaults.ejs %>
+
+
+</body>
+</html>

@@ -8,4 +8,4 @@
 4. Change MySQL port to match config/config.json
 5. Create user 'budgetApp'@'localhost' password 'budget123./' in MySQL
 6. Create database 'budgetapp' and grant privileges to user
-7. `node bin/www` to start
+7. `npm start`
