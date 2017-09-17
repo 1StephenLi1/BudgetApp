@@ -26,12 +26,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-app.use(session({ cookie: { maxAge: 60000 }, secret: 'secret' }));
+app.use(session({ authenticated: false, cookie: { maxAge: 60000 }, secret: 'secret' }));
 
 // authentication
 app.use(function(req, res, next) {
 	console.log("Authentication " + req.url);
-	if ((req.url != '/login' && req.url != '/signup') && !req.session) {
+	if ((req.url != '/login' && req.url != '/signup') && !req.session.authenticated) {
 		console.log("Redirecting to login page");
 		res.redirect('login');
 		return;

@@ -23,6 +23,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h2>Login</h2>
+                        <% if (login != null && login.length > 0) { %>
+                            <div class="alert alert-danger"><%= login %></div>
+                        <% } %>
                         <form id="login" action="/login", method="post">
                             <input type="text" placeholder="Email" name="email" required autofocus>
                             <input type="password" placeholder="Password" name="password" required>
@@ -32,8 +35,8 @@
                     <div class="col-md-6">
                         <form id="signup" action="/signup", method="post">
                         <h2>Sign Up</h2>
-                        <% if (message != null && message.length > 0) { %>
-                            <div class="alert alert-danger"><%= message %></div>
+                        <% if (signup != null && signup.length > 0) { %>
+                            <div class="alert alert-danger"><%= signup %></div>
                         <% } %>
                             <input type="text" placeholder="Email" name="email" required>
                             <input type="password" placeholder="Password" name="password" required>
