@@ -34,6 +34,7 @@ router.post('/', function(req, res, next) {
 				req.session.email = user.dataValues.email;
 				req.session.firstName = user.dataValues.firstName;
 				req.session.lastName = user.dataValues.lastName;
+				req.session.id = user.dataValues.id;
 				res.redirect('/');
 			} else {
 				req.flash('login', 'Incorrect password for ' + user.email);
