@@ -14,7 +14,6 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
 var expenses = require('./routes/expenses');
-var uploadCsv = require('./routes/uploadCsv');
 
 var app = express();
 
@@ -51,7 +50,6 @@ app.use('/users', users);
 app.use('/login', login);
 app.use('/signup', signup);
 app.use('/expenses', expenses);
-app.use('/uploadCsv', uploadCsv);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
