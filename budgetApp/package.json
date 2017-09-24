@@ -13,10 +13,13 @@
     "ejs": "^2.5.7",
     "express": "~4.15.2",
     "express-ejs-layouts": "^2.3.1",
+    "express-fileupload": "^0.2.0",
     "express-session": "^1.15.5",
+    "fast-csv": "^2.4.0",
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
     "mysql2": "^1.4.2",
+    "node-array": "0.0.7",
     "sequelize": "^4.8.3",
     "sequelize-cli": "^3.0.0-2",
     "serve-favicon": "~2.4.2"
