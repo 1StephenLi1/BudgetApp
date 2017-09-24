@@ -122,7 +122,7 @@
             <!-- The user image in the navbar-->
             <img src="images/user-icon-placeholder.png" class="user-image" alt="User Image">
             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-            <span class="hidden-xs">User Full Name</span>
+            <span class="hidden-xs"><%= user.firstName %> <%= user.lastName %></span>
           </a>
           <ul class="dropdown-menu">
             <!-- The user image in the menu -->
@@ -130,7 +130,7 @@
               <img src="images/user-icon-placeholder.png" class="img-circle" alt="User Image">
 
               <p>
-                User Full Name
+                <%= user.firstName %> <%= user.lastName %>
                 <small>What to put here</small>
               </p>
             </li>

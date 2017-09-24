@@ -8,7 +8,9 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: 0,
             allowNull: false
         },
-        inflow: DataTypes.BOOLEAN,
+        shortDescription: DataTypes.STRING,
+        longDescription: DataTypes.STRING,
+        isExpense: DataTypes.BOOLEAN,
     });
 
     Cashflow.associate = function(models) {

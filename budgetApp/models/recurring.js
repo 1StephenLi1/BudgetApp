@@ -10,6 +10,11 @@ module.exports = function(sequelize, DataTypes) {
         startDate: DataTypes.DATE,
         endDate: DataTypes.DATE,
         frequency: DataTypes.INTEGER,
+        isArchived:  {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+          allowNull: false
+        }
     });
 
     return Recurring;

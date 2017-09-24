@@ -27,14 +27,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-app.use(session({ authenticated: false, cookie: { maxAge: 60000 }, secret: 'secret' }));
+app.use(session({ authenticated: false, cookie: { maxAge: 600000 }, secret: 'secret' }));
 
 // authentication
 app.use(function(req, res, next) {
 	console.log("Authentication " + req.url);
 	if ((req.url != '/login' && req.url != '/signup') && !req.session.authenticated) {
 		console.log("Redirecting to login page");
-		res.redirect('login');
+		res.redirect('/login');
 		return;
 	}
 	console.log("Authenticated");
@@ -63,7 +63,9 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', {
+	  user: req.session.user
+  });
 });
 
 module.exports = app;

@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 	if (req.session.authenticated) {
 		res.redirect('/');
 	} else {
-		res.render('login', { title: 'Login', login: req.flash('login'), signup: req.flash('signup') });
+		res.render('login', { title: 'Login', login: req.flash('login')});
 	}
 });
 
@@ -31,10 +31,13 @@ router.post('/', function(req, res, next) {
 			var salt = user.dataValues.salt;
 			if (auth.sha512(creds.password, salt) == user.dataValues.password) {
 				req.session.authenticated = true;
-				req.session.email = user.dataValues.email;
-				req.session.firstName = user.dataValues.firstName;
-				req.session.lastName = user.dataValues.lastName;
-				req.session.id = user.dataValues.id;
+				req.session.user = {
+					id: user.dataValues.id,
+					email: user.dataValues.email,
+					firstName: user.dataValues.firstName,
+					lastName: user.dataValues.lastName
+				}
+
 				res.redirect('/');
 			} else {
 				req.flash('login', 'Incorrect password for ' + user.email);
@@ -44,5 +47,5 @@ router.post('/', function(req, res, next) {
 	})
 	// res.render('login', { title: 'Login', message: req.flash('message') });
 });
-   
+
 module.exports = router;
