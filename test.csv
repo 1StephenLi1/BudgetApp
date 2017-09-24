@@ -1,2 +1,2 @@
-First Name,Last Name,Category,Amount,Email
-Stephen,Li,expense,100,fanmo97@gmail.com
+First Name,Last Name,Short Description,Amount,Long Description,DateTime,
+Stephen,Li,expense,100,this is an exppense record,24/09/2017 15:15,
