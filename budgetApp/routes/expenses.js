@@ -59,7 +59,8 @@ router.post('/addExpense', function(req, res) {
             longDescription: req.body.longDescription,
             amount: req.body.amount,
             dateTime: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
-            UserId: req.session.user.id
+            UserId: req.session.user.id,
+            isExpense: true
         }).then(function(expense) {
             if (expense == null) {
                 res.status(400).json({
@@ -85,13 +86,13 @@ router.get('/uploadCsv', function(req, res) {
 router.post('/uploadCsv', function(req, res) {
    if (!req.files)
     return res.status(400).send('No files were uploaded.');
- 
+
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
   let csvFile = req.files.mycsv;
   let fliePath = __dirname+'';
   let newFilePath = '';
   let arr = fliePath.split('\\');
-  
+
   for (let i = 0; i < arr.length -1; i++) {
     newFilePath += arr[i]+'/';
   }
@@ -131,10 +132,10 @@ router.post('/uploadCsv', function(req, res) {
         console.log("done");
     });
     }
-              
+
   });
 
-}); 
+});
 
 
 
