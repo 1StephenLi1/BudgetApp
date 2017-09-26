@@ -6,8 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var flash = require('connect-flash');
-var exphbs  = require('express-handlebars');
-
 
 const fileUpload = require('express-fileupload');
 
@@ -16,8 +14,10 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
 var expenses = require('./routes/expenses');
+var settings = require('./routes/settings');
+var forgotPassword = require('./routes/forgotPassword');
+var resetPassword = require('./routes/resetPassword');
 var incomes = require('./routes/incomes');
-var autocomplete = require('./routes/autocomplete');
 
 var app = express();
 
@@ -26,8 +26,6 @@ app.use(fileUpload());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
-
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -37,21 +35,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-app.use(session({ authenticated: false, cookie: { maxAge: 60 * 60 * 1000 }, secret: 'secret' }));
+app.use(session({ authenticated: false, cookie: { maxAge: 600000 }, secret: 'secret' }));
 
 // authentication
 app.use(function(req, res, next) {
 	console.log("Authentication " + req.url);
-	if ((req.url != '/login' && req.url != '/signup') && !req.session.authenticated) {
-		if (!req.session.authenticated) {
-      console.log("Cookie expired");
-    }
+	if ((req.url != '/login' && req.url != '/signup' && req.url !='/forgotPassword' && req.url !='/resetPassword') && !req.session.authenticated) {
+		console.log("Redirecting to login page");
 		res.redirect('/login');
 		return;
 	}
 	console.log("Authenticated");
-  req.session.maxAge = 60 * 60 * 1000;
-  req.session.save();
 	next();
 });
 
@@ -60,8 +54,10 @@ app.use('/users', users);
 app.use('/login', login);
 app.use('/signup', signup);
 app.use('/expenses', expenses);
+app.use('/settings', settings);
+app.use('/forgotPassword', forgotPassword);
+app.use('/resetPassword', resetPassword);
 app.use('/incomes', incomes);
-app.use('/autocomplete', autocomplete);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -77,7 +73,6 @@ app.use(function(err, req, res, next) {
   res.locals.title = "Error - " + err.status
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  console.error(err);
   // render the error page
   res.status(err.status || 500);
   res.render('error', {
