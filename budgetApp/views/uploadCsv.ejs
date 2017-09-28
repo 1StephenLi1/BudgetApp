@@ -10,19 +10,12 @@
         <% include includes/top-nav.ejs %>
         <% include includes/side-nav.ejs %>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    <%= title %>
-                </h1>
-            </section>
-
+        <div class="content-wrapper container-fluid">
             <!-- Main content -->
+            <h1><%= title %></h1>
             <form method="post" action="/expenses/uploadCsv" enctype="multipart/form-data">
                 <input type="file" name="mycsv">
-                <input type="submit" name="submit" value="submit"> 
+                <input class="btn btn-success" type="submit" name="submit" value="submit"> 
             </form>  
             </section>
           

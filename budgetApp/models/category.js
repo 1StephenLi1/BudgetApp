@@ -9,7 +9,8 @@ module.exports = function(sequelize, DataTypes) {
         type: {
             type: DataTypes.ENUM,
             values: ['income', 'expense', 'goal', 'budget'],
-            allowNull: false
+            allowNull: false,
+            default: 'expense'
         },
         isArchived:  {
           type: DataTypes.BOOLEAN,

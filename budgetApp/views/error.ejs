@@ -10,11 +10,9 @@
         <% include includes/top-nav.ejs %>
         <% include includes/side-nav.ejs %>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
+        <div class="content-wrapper container-fluid">
             <!-- Main content -->
-            <section class="content text-center">
-                <h1 class="text-red">404</h1>
+            <h1>404</h1>
     		    <div class="pad-btm text-red">
                     <% if(locals.message != undefined){ %>
                     <h3 class="text-uppercase text-red"><%- message %></h3>
