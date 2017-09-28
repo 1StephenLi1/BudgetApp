@@ -11,6 +11,43 @@ $('#expenseDate').daterangepicker({
     "opens": "left"
 });
 
+// Snippet adapted from https://codeforgeek.com/2014/09/ajax-search-box-using-node-mysql/
+$(document).ready(function() {
+    var categories = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        identify: function(obj) { return obj; },
+        prefetch: '/autocomplete/categories?key=',
+        remote: {
+            wildcard: '%QUERY',
+            url: '/autocomplete/categories?key=%QUERY'
+        }
+    });
+
+    $('#category').typeahead(null, {
+        name: 'category',
+        limit: 10,
+        source: categories
+    });
+
+    var shortDescs = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        identify: function(obj) { return obj; },
+        prefetch: '/autocomplete/shortDescs?key=',
+        remote: {
+            wildcard: '%QUERY',
+            url: '/autocomplete/shortDescs?key=%QUERY'
+        }
+    });
+
+    $('#shortDescription').typeahead(null, {
+        name: 'shortDescription',
+        limit: 10,
+        source: shortDescs
+    });
+});
+
 function addExpense() {
     /// BUild this function and test
     $.ajax({

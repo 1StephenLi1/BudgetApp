@@ -16,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     Cashflow.associate = function(models) {
         Cashflow.belongsTo(models.Category)
         Cashflow.belongsTo(models.Recurring)
+        Cashflow.belongsTo(models.User)
     }
 
     return Cashflow;

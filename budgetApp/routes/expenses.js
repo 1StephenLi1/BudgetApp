@@ -34,12 +34,8 @@ router.get('/addExpense', function(req, res) {
 
 
 router.post('/addExpense', function(req, res) {
-    if (req.session.user == null || req.session.user.id == null) {
-        req.flash('login', 'You must be logged in to create an expense');
-        res.status(403).json({
-            errorMsg: "You must be logged in to create an expense"
-        })
-    } else if (req.body.shortDescription == null || !req.body.shortDescription.trim().length) {
+    console.log("Made it");
+    if (req.body.shortDescription == null || !req.body.shortDescription.trim().length) {
         // error must have short Desc
         res.status(400).json({
             errorMsg: "Short Description can not be empty"
