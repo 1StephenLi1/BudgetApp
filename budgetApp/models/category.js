@@ -8,7 +8,8 @@ module.exports = function(sequelize, DataTypes) {
         },
         type: {
             type: DataTypes.ENUM,
-            values: ['income', 'expense', 'goal', 'budget']
+            values: ['income', 'expense', 'goal', 'budget'],
+            allowNull: false
         },
         isArchived:  {
           type: DataTypes.BOOLEAN,

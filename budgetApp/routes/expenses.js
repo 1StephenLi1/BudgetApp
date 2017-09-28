@@ -34,29 +34,24 @@ router.get('/addExpense', function(req, res) {
 
 
 router.post('/addExpense', function(req, res) {
-    console.log("Made it");
-    if (req.body.shortDescription == null || !req.body.shortDescription.trim().length) {
-        // error must have short Desc
-        res.status(400).json({
-            errorMsg: "Short Description can not be empty"
-        })
-    } else if (req.body.shortDescription.length > 100) {
-        res.status(400).json({
-            errorMsg: "Short Description can not be greater than 100 characters"
-        })
-    } else if (req.body.amount == null || req.body.amount <= 0) {
-        // error must have amount > 0
-        res.status(400).json({
-            errorMsg: "Expense amount must be greater than $0"
-        })
-    } else {
+    models.Category.findOrCreate({
+        where: {
+            "UserId": req.session.user.id,
+            "type": "expense",
+            "name": req.body.category
+        },
+        default: {
+            "isArchived": 0
+        }
+    }).then(function([category, isNewlyCreated]) {
         models.Cashflow.create({
+            dateTime: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
+            amount: req.body.amount,
             shortDescription: req.body.shortDescription,
             longDescription: req.body.longDescription,
-            amount: req.body.amount,
-            dateTime: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
-            UserId: req.session.user.id,
-            isExpense: true
+            isExpense: true,
+            CategoryId: category.dataValues.id,
+            UserId: req.session.user.id
         }).then(function(expense) {
             if (expense == null) {
                 res.status(400).json({
@@ -64,11 +59,17 @@ router.post('/addExpense', function(req, res) {
                 })
             } else {
                 res.status(200).json({
-                    msg: "Expense was created"
+                    msg: "Expense added successfully"
                 })
             }
         })
-    }
+    }).catch(function (err) {
+        console.error(err);
+        res.status(err.status || 500);
+        res.render('error', {
+            user: req.session.user
+        });
+    });
 })
 
 

@@ -20,6 +20,8 @@
             </section>
             <!-- Main content -->
             <section class="content">
+                <div id="messageBox" class="alert alert-danger"></div>
+
                 <div class="row">
                     <div id="expenseMsg"></div>
                     <div class="box box-primary">
@@ -34,7 +36,7 @@
                                     <label for="amount">Amount</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
-                                        <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.05" value="0.00" autocomplete="off"/>
+                                        <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.50" value="0.00" autocomplete="off"/>
                                     </div>
                                 </div>
                                 <div class="col-md-4 form-group">
@@ -48,11 +50,11 @@
                             <div class="row">
                                 <div class="col-md-4 form-group">
                                     <label for="shortDescription">Short Description</label>
-                                    <input type="text" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="shortDescription" name="shortDescription" maxLength=30 placeholder="e.g. McDonalds">
+                                    <input type="text" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="shortDescription" name="shortDescription" maxLength=30 placeholder="e.g. McDonalds (optional)">
                                 </div>
                                 <div class="col-md-8 form-group">
                                     <label>Long Description</label>
-                                    <textarea class="form-control" name="longDescription" rows="3" placeholder="e.g. Big Mac meal"></textarea>
+                                    <textarea class="form-control" id="longDescription" name="longDescription" rows="3" placeholder="e.g. Big Mac (optional)"></textarea>
                                 </div>
                             </div>
                             <!-- /.box-body -->

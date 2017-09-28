@@ -1,3 +1,5 @@
+$("#messageBox").hide();
+
 $("#amount").on('change', function (event) {
     this.value = parseFloat(this.value).toFixed(2);
 })
@@ -49,24 +51,48 @@ $(document).ready(function() {
 });
 
 function addExpense() {
-    /// BUild this function and test
-    $.ajax({
-        type: "POST",
-        url: "/expenses/addExpense",
-        data: $("#addExpenseForm").serialize(),
-        success: function(result) {
-            console.log(result)
-            var html = "<div class='alert alert-success alert-dismissable'>";
-            html += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-            html += result.msg + '</div>'
-            $('#expenseMsg').html(html);
-            window.location.replace("/expenses");
-        },
-        error: function (result) {
-            var errHtml = "<div class='alert alert-danger alert-dismissable'>";
-            errHtml += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-            errHtml += result.responseJSON.errorMsg + '</div>'
-            $('#expenseMsg').html(errHtml);
-        }
-    });
+    $("#messageBox").hide();
+    var category = $("#category").val().trim();
+    var amount = $("#amount").val().trim();
+    var expenseDate = $("#expenseDate").val().trim();
+    var shortDesc = $("#shortDescription").val().trim();
+    var longDesc = $("#longDescription").val().trim();
+    var validated = true;
+    if (category.length == null || category.length == 0) {
+        $("#messageBox").html("Category is a required field");
+        validated = false;
+    } else if (amount == null || amount <= 0) {
+        $("#messageBox").html("Amount must cost more than free");
+        validated = false;
+    } else if (expenseDate == null) {
+        $("#messageBox").html("Please enter a valid date");
+        validated = false;
+    } else if (shortDesc.length > 255) {
+        $("#messageBox").html("Your short description is not short enough");
+        validated = false;
+    } else if (longDesc.length > 255) {
+        $("#messageBox").html("Your long description is too long");
+        validated = false;
+    }
+    if (!validated) {
+        $("#messageBox").show();
+    } else {
+        $.ajax({
+            type: "POST",
+            url: "/expenses/addExpense",
+            data: $("#addExpenseForm").serialize(),
+            success: function(result) {
+                /*
+                $("#messageBox").html(result.msg);
+                $("#messageBox").show();
+                */
+                console.log("Success");
+                window.location.href = "/";
+            },
+            error: function (result) {
+               $("#messageBox").html(result.responseJSON.errorMsg);
+               $("#messageBox").show();
+            }
+        });
+    }
 }
