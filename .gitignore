@@ -1,2 +1,5 @@
 budgetApp/node_modules
 npm-debug.log
+budgetApp/package-lock.json
+package-lock.json
+budgetApp/config/config.json
