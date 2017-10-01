@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 	if (req.session.authenticated) {
 		res.redirect('/');
 	} else {
-		res.render('passwordReset', { title: 'password reset', signup: req.flash('passwordReset') });
+		res.render('forgotPassword', { title: 'forgot password', signup: req.flash('forgotPassword') });
 	}
 });
 
