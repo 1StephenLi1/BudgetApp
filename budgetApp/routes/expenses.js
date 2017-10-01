@@ -4,11 +4,13 @@ var models = require('../models');
 var moment = require('moment-timezone');
 var csv = require('fast-csv');
 var fs = require('fs');
+var mv = require('mv');
 
 var shortDescription;
 var longDescription;
-var amount;
-var dateTime;
+//var amount;
+var category;
+var date;
 /* GET home page. */
 router.get('/', function(req, res, next) {
   //res.render('index', { title: 'Show sonthing here...' });
@@ -94,26 +96,43 @@ router.post('/uploadCsv', function(req, res) {
     newFilePath += arr[i]+'/';
   }
   // Use the mv() method to place the file somewhere on your server
-  csvFile.mv(newFilePath + '/csv/' + csvFile.name, function(err) {
+  csvFile.mv(newFilePath + '/bin/' + csvFile.name, function(err) {
     if (err) {
-        return res.status(500).render('uploadCsv', { title: err });
+        return res.status(500).render('uploadCsv', { title: err, user: req.session.user.id});
     } else {
-        res.send('File uploaded!');
-        var stream = fs.createReadStream(newFilePath + '/csv/' + csvFile.name);
-
+        var stream = fs.createReadStream(newFilePath + '/bin/' + csvFile.name);
+        res.render('addExpense', {
+        title: 'Add Expense',
+        user: req.session.user
+    })
         csv
         .fromStream(stream, {headers : true})
         .on("data", function(data){
+            console.log('whole data: ' + data);
             amount = data['Amount'],
             shortDescription = data['Short Description'],
             longDescription = data['Long Description'],
-            dateTime = data['DateTime'],
-            models.Cashflow.create({
+            date = data['Expense Date'],
+            category = data['Category'],
+            console.log('Amount: ' + amount);
+            models.Category.findOrCreate({
+                where: {
+                    "UserId": req.session.user.id,
+                    "type": "expense",
+                    "name": category
+                },
+                default: {
+                    "isArchived": 0
+                }
+            }).then(function([category, isNewlyCreated]) {
+                models.Cashflow.create({
+                dateTime: moment(date,'DD/MM/YYYY').tz("Australia/Sydney"),
+                amount: amount,
                 shortDescription: shortDescription,
                 longDescription: longDescription,
-                amount: amount,
-                //dateTime: dateTime,
-                //UserId: req.session.user.id
+                isExpense: true,
+                CategoryId: category.dataValues.id,
+                UserId: req.session.user.id
             }).then(function(expense) {
                 if (expense == null) {
                     res.status(400).json({
@@ -121,18 +140,26 @@ router.post('/uploadCsv', function(req, res) {
                     })
                 } else {
                     res.status(200).json({
-                        msg: "Expense was created"
+                        msg: "Expense added successfully"
                     })
                 }
             })
-        }).on("end", function(){
-        console.log("done");
-    });
+        }).catch(function (err) {
+            console.error(err);
+            res.status(err.status || 500);
+            res.render('error', {
+                user: req.session.user
+            });
+        });
+
+        })//for on
+        .on("end", function(){
+            console.log("done");
+        });
     }
-
-  });
-
 });
+})
+
 
 
 
