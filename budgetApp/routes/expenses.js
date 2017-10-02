@@ -5,6 +5,9 @@ var moment = require('moment-timezone');
 var csv = require('fast-csv');
 var fs = require('fs');
 var mv = require('mv');
+var http = require('http');
+var json2csv = require('json2csv');
+
 
 var shortDescription;
 var longDescription;
@@ -159,6 +162,45 @@ router.post('/uploadCsv', function(req, res) {
     }
 });
 })
+
+router.get('/export', function(req, res) {
+        models.Cashflow.findAll({
+        where: {
+            "isExpense": true
+        }
+    }).then(function(cashflow) {
+            if (cashflow == null) {
+                res.status(400).json({
+                    errorMsg: "An error occured, try again later"
+                })
+            } else {
+                var fields = ['Category', 'Amount', 'Short Description', 'Long Description', 'Expense Date'];
+                // var arrayList;
+                // for (var i in cashflow) {
+                    var myCsv = [
+                      {
+                        "Category": "Expense",
+                        "Amount": cashflow[0].dataValues.amount,
+                        "Short Description": cashflow[0].dataValues.shortDescription,
+                        "Long Description": cashflow[0].dataValues.longDescription,
+                        "Expense Date": cashflow[0].dataValues.dateTime
+                      }
+                    ];
+                    // var obj = JSON.parse(myCsv);
+                    // arrayList.push(obj);
+                // }
+                // var finalCsv = JSON.stringify(arrayList);
+                var csv = json2csv({ data: myCsv, fields: fields });
+                 
+                fs.writeFile('expense.csv', csv, function(err) {
+                  if (err) throw err;
+                  res.download('file.csv');
+                });
+                }
+        })
+})
+
+
 
 
 
