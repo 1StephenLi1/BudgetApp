@@ -13,8 +13,33 @@ $('#expenseDate').daterangepicker({
     "opens": "left"
 });
 
+$('#startsOn').daterangepicker({
+    "singleDatePicker": true,
+    "locale": {
+        "format": "DD/MM/YYYY",
+    },
+    "linkedCalendars": false,
+    "opens": "left"
+});
+
+$('#endsOn').daterangepicker({
+    "singleDatePicker": true,
+    "locale": {
+        "format": "DD/MM/YYYY",
+    },
+    "linkedCalendars": false,
+    "opens": "left"
+});
+
 // Snippet adapted from https://codeforgeek.com/2014/09/ajax-search-box-using-node-mysql/
 $(document).ready(function() {
+    $('#recurringDiv').hide();
+
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue',
+    });
+
     var categories = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -48,6 +73,8 @@ $(document).ready(function() {
         limit: 10,
         source: shortDescs
     });
+
+
 });
 
 function addExpense() {
@@ -96,3 +123,42 @@ function addExpense() {
         });
     }
 }
+
+
+$('#isRecurring').on('ifChecked', function(event){
+    $('#recurringDiv').show(300);
+});
+
+$('#isRecurring').on('ifUnchecked', function(event){
+    $('#recurringDiv').hide(300);
+});
+
+$('#frequency').on('change', function() {
+    if ($('#frequency').val() == "daily") {
+        $('#interval').css('width','80%');
+        $('#intervalType').html('<strong>&nbsp;Days</strong>')
+        $('#repeatsOnDiv').html('')
+    } else if ($('#frequency').val() == "weekly") {
+        $('#interval').css('width','75%');
+        $('#intervalType').html('<strong>&nbsp;Weeks</strong>')
+        var repeatsOnHtml = '<label for="repeatsOn">Repeats On:</label>';
+        repeatsOnHtml += '<select id="repeatsOn" class="form-control" name="repeatsOn">'
+        repeatsOnHtml += '<option value="sunday">Sunday</option>'
+        repeatsOnHtml += '<option value="monday">Monday</option>'
+        repeatsOnHtml += '<option value="tuesday">Tuesday</option>'
+        repeatsOnHtml += '<option value="wednesday">Wednesday</option>'
+        repeatsOnHtml += '<option value="thursday">Thursday</option>'
+        repeatsOnHtml += '<option value="friday">Friday</option>'
+        repeatsOnHtml += '<option value="saturday">Saturday</option>'
+        repeatsOnHtml += '</select>'
+        $('#repeatsOnDiv').html(repeatsOnHtml)
+    } else if ($('#frequency').val() == "monthly") {
+        $('#interval').css('width','75%');
+        $('#intervalType').html('<strong>&nbsp;Months</strong>')
+        $('#repeatsOnDiv').html('')
+    } else if ($('#frequency').val() == "annually") {
+        $('#interval').css('width','80%');
+        $('#intervalType').html('<strong>&nbsp;Years</strong>')
+        $('#repeatsOnDiv').html('')
+    }
+})

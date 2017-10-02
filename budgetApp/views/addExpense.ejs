@@ -50,6 +50,65 @@
                             <textarea class="form-control" id="longDescription" name="longDescription" rows="3" placeholder="e.g. Big Mac (optional)"></textarea>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>
+                                Is this a recurring expense?
+                                &nbsp;&nbsp;<input type="checkbox" id="isRecurring" name="isRecurring">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row" id="recurringDiv">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="frequency">Repeats:</label>
+                                    <select id="frequency" class="form-control" name="frequency">
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                        <option value="annually">Annually</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="interval">Repeats Every:</label>
+                                    <div class="form-inline">
+                                        <select id="interval" class="form-control" style="width:80%" name="interval">
+                                            <%
+                                                for (var i = 1; i <= 30; i++) {
+                                            %>
+                                            <option value="<%=i%>"><%=i%></<option>
+                                            <%
+                                                }
+                                            %>
+                                        </select>
+                                        <div class="form-control" style="border:0px" id="intervalType">
+                                            <strong>&nbsp;Days</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group" id="repeatsOnDiv">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label for="startsOn">Starts On:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                        <input type="text" name="startsOn" id="startsOn" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="startsOn">Ends On:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                        <input type="text" name="endsOn" id="endsOn" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- /.box-body -->
                 </div>
                 <div class="box-footer">
