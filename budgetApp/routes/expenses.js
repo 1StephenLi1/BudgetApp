@@ -8,12 +8,13 @@ var mv = require('mv');
 var http = require('http');
 var json2csv = require('json2csv');
 
-
 var shortDescription;
 var longDescription;
-//var amount;
 var category;
 var date;
+var amount;
+var dateTime;
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   //res.render('index', { title: 'Show sonthing here...' });
@@ -202,6 +203,31 @@ router.get('/export', function(req, res) {
 
 
 
+
+
+router.get('/view-history', function(req, res) {
+    models.Cashflow.findAll().then(function(cashflows){
+        
+        res.render('view-history', {
+        title: 'view-history',
+        user: req.session.user,
+        cashflows:cashflows,
+        page:1,
+        total_page:cashflows.length
+
+        }),
+        console.log(cashflows)
+       }
+        )
+
+})
+router.post('/view-history', function(req, res) {
+
+    models.Cashflow.findAll().then(function(cashflows){console.log(cashflows)})
+    res.status(200).json({
+                    msg: " view history"
+    })
+})
 
 
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include includes/head.ejs %>
+</head>
+
+<body class="hold-transition skin-black fixed sidebar-mini">
+	<div class="wrapper">
+
+		<% include includes/top-nav.ejs %>
+        <% include includes/side-nav.ejs %>
+        <div class="content-wrapper">
+        	<section class="content-header">
+                <h1>
+                    <%= title %>
+                </h1>
+        	</section>
+
+        	<%=total_page%>
+        	<table style="width:100%">
+        		<tr>
+			    	<th>DateTime </th>
+			    	<th>Amount </th> 
+			    	<th>ShortDescription </th>
+			    	<th>LongDescription </th>
+			  	</tr>
+    			<% for(var i=0; i<cashflows.length; i++) {%>
+    			<tr>
+			    	<th><%= cashflows[i].dateTime %></th>
+			    	<th><%= cashflows[i].amount %></th> 
+			    	<th><%= cashflows[i].shortDescription %></th>
+			    	<th><%= cashflows[i].longDescription %></th>
+			  	</tr>
+      			
+      			
+   				<% } %>
+   				<int a  = >
+
+			  	
+			</table>
+          	
+
+       		
+       	</div>
+		<% include includes/footer.ejs %>
+
+    </div>
+
+	<% include includes/jsDefaults.ejs %>
+</body>
+</html>
