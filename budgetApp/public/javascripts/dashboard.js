@@ -1,22 +1,22 @@
 $(document).ready(function() {
-    var data = [{
-        values: [19, 26, 55],
-        labels: ['Residential', 'Non-Residential', 'Utility'],
-        type: 'pie'
-}];
+    data = {
+        datasets: [{
+            data: [10, 20, 30]
+        }],
+    }
 
-var layout = {
-    margin: {
-        l: 20,
-        r: 20,
-        b: 20,
-        t: 20,
-        pad: 10
-    },
-    paper_bgcolor: 'rgba(0,0,0,0)',
-    plot_bgcolor: 'rgba(0,0,0,0)',
-    height: 300
-};
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: [
+        'Red',
+        'Yellow',
+        'Blue'
+    ]
 
-Plotly.newPlot('categories-pie', data, layout);
+    var categoriesPieContext = document.getElementById('categories-pie').getContext('2d');
+
+    var categoriesPie = new Chart(categoriesPieContext,{
+        type: 'pie',
+        data: data,
+        options: {}
+    });
 });

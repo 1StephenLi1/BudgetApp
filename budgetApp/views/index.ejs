@@ -2,7 +2,7 @@
 <html>
 <head>
     <% include includes/head.ejs %>
-    <script type="text/javascript" src="/plugins/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="/plugins/Chart.min.js"></script>
 </head>
 
 <body class="hold-transition skin-black fixed sidebar-mini">
@@ -21,7 +21,12 @@
                 </div>
                 <div class="col-md-6">
                     <h2>Spending by Category</h2>
-                    <div id="categories-pie"></div>
+                    <div class="btn-group">
+                        <button type="button" class="btn">Week</button>
+                        <button type="button" class="btn">Month</button>
+                        <button type="button" class="btn">Quarter</button>
+                    </div>
+                    <canvas id="categories-pie"></canvas>
                 </div>
                 <div class="col-md-10">
 
