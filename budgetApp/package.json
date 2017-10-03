@@ -14,10 +14,6 @@
     "express": "^4.16.1",
     "express-ejs-layouts": "^2.3.1",
     "express-fileupload": "^0.2.0",
-<<<<<<< HEAD
-=======
-    "express-handlebars": "^3.0.0",
->>>>>>> Fixes to get view history working
     "express-session": "^1.15.6",
     "fast-csv": "^2.4.1",
     "jade": "~1.11.0",
@@ -28,11 +24,7 @@
     "node-array": "0.0.7",
     "sequelize": "^4.13.2",
     "sequelize-cli": "^3.0.0",
-<<<<<<< HEAD
     "serve-favicon": "^2.4.5",
     "express-handlebars": "3.0.0"
-=======
-    "serve-favicon": "^2.4.5"
->>>>>>> Fixes to get view history working
   }
 }
