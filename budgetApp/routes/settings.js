@@ -9,19 +9,51 @@ var user;
 router.get('/', function(req, res, next) {
     res.render('settings', {
         title: 'Profile Settings',
-        user: req.session.user
+        user: req.session.user,
+        editsettings : req.flash('editsettings')
     })
 });
 
 /* POST settings */
 router.post('/', function(req, res) {
-    console.log("ff received");
+
     var salt = auth.genSalt(128);
+    var email;
+    var firstName;
+    var lastName;
+    //if fields are empty, use existing details
+    if (Object.keys(req.body.email).length === 0) {
+        email = req.session.user.email;
+    } else {
+        email = req.body.email;
+    }
+    if (Object.keys(req.body.firstName).length === 0) {
+        firstName = req.session.user.firstName;
+    } else { 
+        firstName = req.body.firstName;
+    }
+    if (Object.keys(req.body.lastName).length === 0) {
+        lastName = req.session.user.lastName;
+    } else {
+        lastName = req.body.lastName;
+    }
+
     models.User.update({
-        email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        salt : salt,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        },
+        {
+        where: {
+            "id": req.session.user.id,
+        }
+    }).catch(function (err) {
+    console.log("oh no");
+    });
+
+    if (Object.keys(req.body.password).length !== 0) {
+    models.User.update({
+        salt : salt,        
         password : auth.sha512(req.body.password, salt)
         },
         {
@@ -29,13 +61,9 @@ router.post('/', function(req, res) {
             "id": req.session.user.id,
         }
     }).catch(function (err) {
-        console.error(err);
-        res.status(err.status || 500);
-        res.render('error', {
-            user: req.session.user
-        });
+    console.log("oh no");
     });
+    }
 })
-
 
 module.exports = router;

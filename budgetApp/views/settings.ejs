@@ -2,6 +2,7 @@
 <html>
 <head>
     <% include includes/head.ejs %>
+    <link rel="stylesheet" type="text/css" href="css/custom.css">    
 
     <style>
         </style>
@@ -19,9 +20,8 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <div class="col-sm-12 content-header">
-                    <h1>
-                        <%= title %>
-                    </h1>
+                    <h1><%= title %></h1>
+                    <div id="messageBox" class="alert alert-danger" style="display:none"></div>                    
                 </div>
             </section>
             <!-- Main content -->
@@ -40,8 +40,6 @@
                       
                       <!-- edit form column -->
                       <div class="col-md-9 personal-info">
-                        <h3>Personal info</h3>
-                        
                         <form class="form-horizontal" id="editSettingsForm" onsubmit="editSettings(); return false;" role="form">
                           <div class="form-group">
                             <label class="col-lg-3 control-label">First Name:</label>
@@ -64,13 +62,13 @@
                           <div class="form-group">
                             <label class="col-md-3 control-label">Password:</label>
                             <div class="col-md-8">
-                              <input class="form-control" type="password" name=password>
+                              <input class="form-control" type="password" name=password id=password>
                             </div>
                           </div>
                           <div class="form-group">
                             <label class="col-md-3 control-label">Confirm password:</label>
                             <div class="col-md-8">
-                              <input class="form-control" type="password">
+                              <input class="form-control" type="password" name=confirmPassword id=confirmPassword>
                             </div>
                           </div>
                           <div class="form-group">
