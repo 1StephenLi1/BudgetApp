@@ -8,13 +8,23 @@
         </style>
 </head>
 <!-- template from: https://www.bootply.com/sY7gQy6XF7 -->
+<% include includes/top-nav.ejs %>
+<% include includes/side-nav.ejs %>
 
-<body class="hold-transition skin-black fixed sidebar-mini">
+<script type="text/javascript">
+function displayPic()
+{
+  var imgs = document.getElementsByTagName("img");
+  for(var i=0, l=imgs.length;i<l;i++){
+    imgs[i].src = "/images/profilePic-2.png";
+  }
+}
+</script>
+
+
+
+<body onload ="displayPic()" class="hold-transition skin-black fixed sidebar-mini">
     <div class="wrapper">
-
-        <% include includes/top-nav.ejs %>
-        <% include includes/side-nav.ejs %>
-
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -31,10 +41,14 @@
                       <!-- left column -->
                       <div class="col-md-3">
                         <div class="text-center">
-                          <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
-                          <h6>Upload a different photo...</h6>
-                          
-                          <input type="file" class="form-control">
+                          <br>
+                          <img src="displayPic.jpg" class="avatar img-circle" alt="" id="profilePicSettings" width="180">
+                          <h6>Upload a profile photo...</h6>
+                          <h6><%= user.profilePic %> <%= user.lastName %></h6>                         
+                          <form method="post" enctype="multipart/form-data" action="settings/uploadPhoto">
+                          <input type="file" class="form-control" name="profilePic">
+                          <input type="submit" class="form-control" value="Update Photo" style="color:white; background:#3c8dbc"> 
+                          </form>                         
                         </div>
                       </div>
                       

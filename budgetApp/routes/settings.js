@@ -3,6 +3,8 @@ var router = express.Router();
 var models = require('../models');
 var session = require('express-session');
 var auth = require('../auth.js');
+var fs = require('fs');
+var path = require('path');
 
 var user;
 /* GET settings page. */
@@ -10,7 +12,6 @@ router.get('/', function(req, res, next) {
     res.render('settings', {
         title: 'Profile Settings',
         user: req.session.user,
-        editsettings : req.flash('editsettings')
     })
 });
 
@@ -64,6 +65,34 @@ router.post('/', function(req, res) {
     console.log("oh no");
     });
     }
+})
+
+router.post('/uploadPhoto', function(req, res) {
+    console.log(req.files.profilePic);
+    let profilePic = req.files.profilePic;
+    var profilePicName = 'profilePic-'+req.session.user.id+'.png';
+    var profilePicDir = 'public/images/'+profilePicName;
+
+    profilePic.mv(profilePicDir, function(err) {
+        if (err)
+          return res.status(500).send(err);
+     
+            models.User.update({
+                profilePic : profilePicName
+                },
+                {
+                where: {
+                    "id": req.session.user.id,
+                }
+        }).catch(function (err) {
+            console.error(err);
+            res.status(err.status || 500);
+            res.render('error', {
+                user: req.session.user
+            });
+        });
+        
+      });
 })
 
 module.exports = router;
