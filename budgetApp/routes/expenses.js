@@ -99,13 +99,13 @@ router.post('/uploadCsv', function(req, res) {
         csv
         .fromStream(stream, {headers : true})
         .on("data", function(data){
-            console.log('whole data: ' + data);
+            // console.log('whole data: ' + data);
             amount = data['Amount'],
             shortDescription = data['Short Description'],
             longDescription = data['Long Description'],
             date = data['Expense Date'],
             category = data['Category'],
-            console.log('Amount: ' + amount);
+            // console.log('Amount: ' + amount);
             models.Category.findOrCreate({
                 where: {
                     "UserId": req.session.user.id,
@@ -145,7 +145,7 @@ router.post('/uploadCsv', function(req, res) {
 
         })//for on
         .on("end", function(){
-            console.log("done");
+            // console.log("done");
         });
     }
 });
@@ -198,12 +198,11 @@ router.get('/', function(req, res) {
         page:1,
         total_page:cashflows.length
 
-        }),
-        console.log(cashflows)
-       }
-        )
-
+        })
+        // console.log(cashflows)
+    })
 })
+
 router.post('/', function(req, res) {
 
     models.Cashflow.findAll().then(function(cashflows){console.log(cashflows)})
