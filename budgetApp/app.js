@@ -18,6 +18,7 @@ var settings = require('./routes/settings');
 var forgotPassword = require('./routes/forgotPassword');
 var resetPassword = require('./routes/resetPassword');
 var incomes = require('./routes/incomes');
+var dashboard = require('./routes/dashboard');
 
 var app = express();
 
@@ -59,6 +60,7 @@ app.use('/settings', settings);
 app.use('/forgotPassword', forgotPassword);
 app.use('/resetPassword', resetPassword);
 app.use('/incomes', incomes);
+app.use('/dashboard', dashboard);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
