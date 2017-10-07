@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include includes/head.ejs %>
+</head>
+
+<body class="hold-transition skin-black fixed sidebar-mini">
+    <div class="wrapper">
+
+        <% include includes/top-nav.ejs %>
+        <% include includes/side-nav.ejs %>
+
+        <div class="content-wrapper container-fluid">
+            <!-- Main content -->
+            <br>                            
+            <form method="post" action="/settings/deleteAccConfirm" enctype="multipart/form-data">
+                <h4>Are you sure you want to delete your account?</h4>
+                <input class="btn btn-primary" type="submit" name="submit" value="Yes"> 
+                <a href="/"><input class="btn btn-danger" type="button" value="No"></a>
+            </form>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <% include includes/footer.ejs %>
+    </div>
+    <!-- ./wrapper -->
+    <% include includes/jsDefaults.ejs %>
+</body>
+</html>

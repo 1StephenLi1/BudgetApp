@@ -7,6 +7,7 @@ var fs = require('fs');
 var path = require('path');
 
 var user;
+
 /* GET settings page. */
 router.get('/', function(req, res, next) {
     res.render('settings', {
@@ -95,5 +96,26 @@ router.post('/uploadPhoto', function(req, res) {
         res.redirect('/');      
       });
 })
+
+router.post('/deleteAccConfirm', function(req, res) {
+    var profilePicName = 'profilePic-'+req.session.user.id+'.png';
+    var profilePicDir = 'public/images/'+profilePicName;
+            models.User.destroy({
+                where: {
+                    "id": req.session.user.id,
+                }
+        }).catch(function (err) {
+            console.error(err);
+            res.status(err.status || 500);
+            res.render('error', {
+                user: req.session.user
+            });
+        });
+        if (fs.existsSync(profilePicDir)) {            
+            fs.unlinkSync(profilePicDir);        
+        }
+        req.session.authenticated = false;
+        res.redirect('/login');              
+    })
 
 module.exports = router;
