@@ -65,6 +65,7 @@ router.post('/', function(req, res) {
     console.log("oh no");
     });
     }
+    res.redirect('/');          
 })
 
 router.post('/uploadPhoto', function(req, res) {
@@ -91,7 +92,7 @@ router.post('/uploadPhoto', function(req, res) {
                 user: req.session.user
             });
         });
-        
+        res.redirect('/');      
       });
 })
 

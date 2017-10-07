@@ -3,7 +3,6 @@
 <head>
     <% include includes/head.ejs %>
     <link rel="stylesheet" type="text/css" href="css/custom.css">    
-
     <style>
         </style>
 </head>
@@ -11,19 +10,7 @@
 <% include includes/top-nav.ejs %>
 <% include includes/side-nav.ejs %>
 
-<script type="text/javascript">
-function displayPic()
-{
-  var imgs = document.getElementsByTagName("img");
-  for(var i=0, l=imgs.length;i<l;i++){
-    imgs[i].src = "/images/profilePic-2.png";
-  }
-}
-</script>
-
-
-
-<body onload ="displayPic()" class="hold-transition skin-black fixed sidebar-mini">
+<body class="hold-transition skin-black fixed sidebar-mini">
     <div class="wrapper">
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -42,9 +29,8 @@ function displayPic()
                       <div class="col-md-3">
                         <div class="text-center">
                           <br>
-                          <img src="displayPic.jpg" class="avatar img-circle" alt="" id="profilePicSettings" width="180">
+                          <img src="" class="avatar img-circle" alt="" id="profilePicSettings" width="180" onerror="this.src='images/user-icon-placeholder.png';">
                           <h6>Upload a profile photo...</h6>
-                          <h6><%= user.profilePic %> <%= user.lastName %></h6>                         
                           <form method="post" enctype="multipart/form-data" action="settings/uploadPhoto">
                           <input type="file" class="form-control" name="profilePic">
                           <input type="submit" class="form-control" value="Update Photo" style="color:white; background:#3c8dbc"> 
@@ -113,3 +99,11 @@ function displayPic()
     
 </body>
 </html>
+
+<script type="text/javascript">
+  function displayPic()
+  {
+      document.getElementById('profilePicSettings').src = "/images/profilePic-"+<%= user.id%>+".png";
+  }
+  displayPic();
+</script>
