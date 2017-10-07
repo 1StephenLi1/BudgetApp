@@ -9,14 +9,20 @@
     "body-parser": "~1.17.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
+    "datatables": "1.10.13",
+    "datatables.net": "^1.10.16",
+    "datatables.net-dt": "^1.10.16",
     "debug": "^2.6.9",
     "ejs": "^2.5.7",
     "express": "^4.16.1",
     "express-ejs-layouts": "^2.3.1",
     "express-fileupload": "^0.2.0",
+    "express-handlebars": "3.0.0",
     "express-session": "^1.15.6",
     "fast-csv": "^2.4.1",
     "jade": "~1.11.0",
+    "jquery": "^3.2.1",
+    "jsdom": "^11.3.0",
     "json2csv": "^3.11.2",
     "morgan": "~1.8.1",
     "mv": "^2.1.1",
@@ -25,6 +31,6 @@
     "sequelize": "^4.13.2",
     "sequelize-cli": "^3.0.0",
     "serve-favicon": "^2.4.5",
-    "express-handlebars": "3.0.0"
+    "window": "^4.2.1"
   }
 }

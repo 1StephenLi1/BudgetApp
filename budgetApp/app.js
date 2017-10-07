@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var flash = require('connect-flash');
 
+var $ = require( 'jquery' );
+
 const fileUpload = require('express-fileupload');
 
 var index = require('./routes/index');
@@ -19,6 +21,7 @@ var forgotPassword = require('./routes/forgotPassword');
 var resetPassword = require('./routes/resetPassword');
 var incomes = require('./routes/incomes');
 
+
 var app = express();
 
 app.use(fileUpload());
@@ -29,6 +32,7 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
