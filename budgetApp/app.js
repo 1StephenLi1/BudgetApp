@@ -20,6 +20,8 @@ var settings = require('./routes/settings');
 var forgotPassword = require('./routes/forgotPassword');
 var resetPassword = require('./routes/resetPassword');
 var incomes = require('./routes/incomes');
+var dashboard = require('./routes/dashboard');
+var autocomplete = require('./routes/autocomplete');
 
 
 var app = express();
@@ -44,13 +46,13 @@ app.use(session({ authenticated: false, cookie: { maxAge: 600000 }, secret: 'sec
 
 // authentication
 app.use(function(req, res, next) {
-	console.log("Authentication " + req.url);
+	// console.log("Authentication " + req.url);
 	if ((req.url != '/login' && req.url != '/signup' && req.url !='/forgotPassword' && req.url !='/resetPassword') && !req.session.authenticated) {
 		console.log("Redirecting to login page");
 		res.redirect('/login');
 		return;
 	}
-	console.log("Authenticated");
+	// console.log("Authenticated");
 	next();
 });
 
@@ -63,6 +65,8 @@ app.use('/settings', settings);
 app.use('/forgotPassword', forgotPassword);
 app.use('/resetPassword', resetPassword);
 app.use('/incomes', incomes);
+app.use('/dashboard', dashboard);
+app.use('/autocomplete', autocomplete);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

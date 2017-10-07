@@ -2,7 +2,6 @@
 <html>
 <head>
     <% include includes/head.ejs %>
-    <script type="text/javascript" src="/plugins/plotly-latest.min.js"></script>
 </head>
 
 <body class="hold-transition skin-black fixed sidebar-mini">
@@ -17,10 +16,10 @@
             <h1><%= title %></h1>
             <form method="post" action="/expenses/uploadCsv" enctype="multipart/form-data">
                 <span class="btn btn-default btn-file">
-                    Please Choose your csv file<input type="file" name="mycsv">
+                    Select CSV File<input type="file" name="mycsv">
                 </span>
                 <div \>
-                <input class="btn btn-default btn-file" type="submit" name="submit" value="submit"> 
+                <input class="btn btn-default btn-file" type="submit" name="submit" value="Upload"> 
 
             </form>  
         
@@ -34,7 +33,6 @@
     <!-- ./wrapper -->
 
     <% include includes/jsDefaults.ejs %>
-    <script type="text/javascript" src="/javascripts/dashboard.js"></script>
 
 </body>
 </html>

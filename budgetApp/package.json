@@ -17,13 +17,14 @@
     "express": "^4.16.1",
     "express-ejs-layouts": "^2.3.1",
     "express-fileupload": "^0.2.0",
-    "express-handlebars": "3.0.0",
+    "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "fast-csv": "^2.4.1",
     "jade": "~1.11.0",
     "jquery": "^3.2.1",
     "jsdom": "^11.3.0",
     "json2csv": "^3.11.2",
+    "moment": "^2.18.1",
     "morgan": "~1.8.1",
     "mv": "^2.1.1",
     "mysql2": "^1.4.2",
@@ -32,5 +33,6 @@
     "sequelize-cli": "^3.0.0",
     "serve-favicon": "^2.4.5",
     "window": "^4.2.1"
+
   }
 }

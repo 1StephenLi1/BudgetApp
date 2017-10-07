@@ -14,19 +14,25 @@
         <div class="content-wrapper container-fluid">
             <!-- Main content -->
             <h1><%= title %></h1>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="filter" id="month" checked>1 Month</input>
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="filter" id="quarter">3 Months</input>
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="filter" id="year">1 Year</input>
+                    </label>
+                </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Welcome to your dashboard</h2>
-                    More text goes here. All the graphs on this page have not yet been populated with data.
+                    <h2>$500 remaining</h2>
+                    (Hardcoded.)
+                    <canvas id="categories-pie"></canvas>
                 </div>
                 <div class="col-md-6">
-                    <h2>Spending by Category</h2>
-                    <div class="btn-group">
-                        <button type="button" class="btn">Week</button>
-                        <button type="button" class="btn">Month</button>
-                        <button type="button" class="btn">Quarter</button>
-                    </div>
-                    <canvas id="categories-pie"></canvas>
+                    <canvas id="time-bar"></canvas>
                 </div>
                 <div class="col-md-10">
 
