@@ -22,7 +22,7 @@ var resetPassword = require('./routes/resetPassword');
 var incomes = require('./routes/incomes');
 var dashboard = require('./routes/dashboard');
 var autocomplete = require('./routes/autocomplete');
-
+var deleteAcc = require('./routes/deleteAcc');
 
 var app = express();
 
@@ -67,6 +67,7 @@ app.use('/resetPassword', resetPassword);
 app.use('/incomes', incomes);
 app.use('/dashboard', dashboard);
 app.use('/autocomplete', autocomplete);
+app.use('/deleteAcc', deleteAcc);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
