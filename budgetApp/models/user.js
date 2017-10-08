@@ -28,7 +28,9 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       defaultValue: 0,
       allowNull: false
-    }
+    },
+    resetPasswordToken : DataTypes.STRING,
+    resetPasswordExpires : DataTypes.DATE
   });
 
   User.associate = function(models) {
