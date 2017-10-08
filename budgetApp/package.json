@@ -33,6 +33,5 @@
     "sequelize-cli": "^3.0.0",
     "serve-favicon": "^2.4.5",
     "window": "^4.2.1"
-
   }
 }

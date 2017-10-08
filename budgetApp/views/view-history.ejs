@@ -26,6 +26,7 @@
               <th>Amount </th> 
               <th>ShortDescription </th>
               <th>LongDescription </th>
+              <th>Category</th>>
           </tr>
         </thead>
           
@@ -36,11 +37,13 @@
               <td><%= cashflows[i].amount %></td> 
               <td><%= cashflows[i].shortDescription %></td>
               <td><%= cashflows[i].longDescription %></td>
+              <td><%= cashflows[i].Category.name %></td>
           </tr>
           <% } %>
         </tbody>
        </table>
-
+       
+      
       <script type="text/javascript">
         $(document).ready(function() {
           $('#example').DataTable();

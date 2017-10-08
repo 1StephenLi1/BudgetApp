@@ -189,17 +189,31 @@ router.get('/export', function(req, res) {
 })
 
 router.get('/', function(req, res) {
-    models.Cashflow.findAll().then(function(cashflows){
+
+    models.Cashflow.findAll({
+
+        where:{
+            "UserId": req.session.user.id
+        },
+        include:[
+            {model:models.Category,
+            
+            }
+
+
+            ]
+
+        }).then(function(cashflows){
         
         res.render('view-history', {
         title: 'view-history',
         user: req.session.user,
         cashflows:cashflows,
-        page:1,
-        total_page:cashflows.length
 
         })
-        // console.log(cashflows)
+         console.log(JSON.stringify(cashflows))
+         console.log("-----------------")
+         console.log(JSON.stringify(cashflows[0].dataValues))
     })
 })
 
