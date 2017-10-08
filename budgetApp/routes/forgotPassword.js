@@ -21,10 +21,9 @@ router.post('/', function(req, res) {
 		}
 	}).then(user => {
 		if (user == null) {
-			req.flash('forgot', 'No accout with email ' + req.body.email + ' exists');
+			req.flash('forgot', 'No account with email ' + req.body.email + ' exists');
 		} else {
 			req.flash('reset', 'A password reset e-mail has been sent to ' + req.body.email);			
-			console.log(req.body.email);	
 		}
 
 		
