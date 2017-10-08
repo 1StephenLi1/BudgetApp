@@ -3,6 +3,8 @@ var router = express.Router();
 var models  = require('../models');
 var auth = require('../auth.js');
 var nodemailer = require('nodemailer');
+var randtoken = require('rand-token');
+var mg = require('nodemailer-mailgun-transport');
 
 /* GET login page */
 router.get('/', function(req, res, next) {
@@ -23,9 +25,38 @@ router.post('/', function(req, res) {
 		if (user == null) {
 			req.flash('forgot', 'No account with email ' + req.body.email + ' exists');
 		} else {
+			var token = randtoken.generate(20);
+
+			user.update({
+				resetPasswordToken : token,
+				resetPasswordExpires : Date.now() + 360000,
+			});
+
+			var smtpTransport = nodemailer.createTransport({
+				service: "gmail",
+				host: "smtp.gmail.com",
+				auth: {
+					user: "budgetApp4920@gmail.com",
+					pass: "budgetApp./"
+				}
+			});
+			let mailOptions = {
+				from: 'Budget App <budgetApp4920@gmail.com>', 
+				to: user.email, 
+				subject: 'Budget App - Password Reset', 
+				html: '<b>Click or paste the following link into your browser to reset your password: <br> http://' + req.headers.host + '/resetPassword/' + token + '</b>' 
+			};
+		
+			smtpTransport.sendMail(mailOptions, (error, info) => {
+				if (error) {
+					return console.log(error);
+				}
+				console.log('Message sent: %s', info.messageId);
+
+			});
+			req.session.resetPassword = true;
 			req.flash('reset', 'A password reset e-mail has been sent to ' + req.body.email);			
 		}
-
 		
 		res.redirect('/forgotPassword');
 	})
