@@ -206,10 +206,7 @@ router.get('/deleteExpense', function(req, res) {
             id: req.query['id']
         }
     })
-    res.render('index', {
-        title: 'Dashboard',
-        user: req.session.user,
-    })
+    res.redirect("/expenses");
 
 })
 
@@ -280,11 +277,7 @@ router.get('/', function(req, res) {
         },
         include:[
             {model:models.Category,
-            
-            }
-
-
-            ]
+            }]
 
         }).then(function(cashflows){
         
@@ -296,7 +289,6 @@ router.get('/', function(req, res) {
         })
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
-         console.log(JSON.stringify(cashflows[0].dataValues))
     })
 })
 
