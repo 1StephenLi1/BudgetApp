@@ -28,6 +28,7 @@
               <th>LongDescription </th>
               <th>Category</th>
               <th></th>
+              <th></th>
           </tr>
         </thead>
       
@@ -40,6 +41,7 @@
               <td><%= cashflows[i].longDescription %></td>
               <td><%= cashflows[i].Category.name %></td>
               <td><a href="expenses/editExpense?id=<%= cashflows[i].id %>">edit</a></td>
+              <td><a href="expenses/deleteExpense?id=<%= cashflows[i].id %>">delete</a></td>
           </tr>
           <% } %>
         </tbody>
