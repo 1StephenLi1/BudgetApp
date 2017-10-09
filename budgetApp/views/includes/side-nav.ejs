@@ -1,10 +1,3 @@
-<script type="text/javascript">
-  function displayPicSide()
-  {
-  document.getElementById('profilePicSide').src = "/images/profilePic-"+<%= user.id%>+".png";
-  }
-</script>
-
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
 
@@ -14,8 +7,7 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="/images/user-icon-place"class="img-circle" alt="" id="profilePicSide" onerror="this.src='/images/user-icon-placeholder.png';">
-        <script>displayPicSide();</script>                
+        <img src="/images/user-icon-placeholder.png" class="img-circle" alt="User Image">
       </div>
       <div class="pull-left info">
         <p><%= user.firstName %> <%= user.lastName %></p>
@@ -31,7 +23,7 @@
       <li><a href="/"><i class="fa fa-bar-chart"></i> <span>Dashboard</span></a></li>
       <li><a href="/expenses"><i class="fa fa-list-alt"></i> <span>View Expenses</span></a></li>
       <li><a href="/expenses/addExpense"><i class="fa fa-plus"></i> <span>Add Expense</span></a></li>
-
+       <li><a href="/expenses/searchExpense"><i class="fa fa-pencil-square-o"></i> <span>Edit Expense (hardcoded)</span></a></li>
     </ul>
     <!-- /.sidebar-menu -->
   </section>
