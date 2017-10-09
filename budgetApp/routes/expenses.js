@@ -302,7 +302,6 @@ router.get('/', function(req, res) {
 })
 
 router.post('/', function(req, res) {
-
     models.Cashflow.findAll().then(function(cashflows){console.log(cashflows)})
     res.status(200).json({
                     msg: " view history"
