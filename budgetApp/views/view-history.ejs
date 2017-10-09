@@ -26,10 +26,11 @@
               <th>Amount </th> 
               <th>ShortDescription </th>
               <th>LongDescription </th>
-              <th>Category</th>>
+              <th>Category</th>
+              <th></th>
           </tr>
         </thead>
-          
+      
         <tbody>
           <% for(var i=0; i < cashflows.length; i++) {%>
           <tr>
@@ -38,9 +39,12 @@
               <td><%= cashflows[i].shortDescription %></td>
               <td><%= cashflows[i].longDescription %></td>
               <td><%= cashflows[i].Category.name %></td>
+              <td><a href="expenses/editExpense?id=<%= cashflows[i].id %>">edit</a></td>
           </tr>
           <% } %>
         </tbody>
+
+   
        </table>
        
       
