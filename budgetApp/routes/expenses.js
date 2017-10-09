@@ -200,12 +200,24 @@ router.get('/export', function(req, res) {
         })
 })
 
+router.get('/deleteExpense', function(req, res) {
+    models.Cashflow.destroy({
+        where: {
+            id: req.query['id']
+        }
+    })
+    res.render('index', {
+        title: 'Dashboard',
+        user: req.session.user,
+    })
+
+})
 
 router.get('/editExpense', function(req, res) {
-            res.render('editExpense', {
-                title: 'Edit Expenses',
-                user: req.session.user,
-            })
+        res.render('editExpense', {
+            title: 'Edit Expenses',
+            user: req.session.user,
+        })
         
         expenseId = req.query['id'];
         console.log("expenseId :"  + expenseId);
