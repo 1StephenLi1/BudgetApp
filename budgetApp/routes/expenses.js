@@ -7,7 +7,7 @@ var fs = require('fs');
 var mv = require('mv');
 var http = require('http');
 var json2csv = require('json2csv');
-
+var dialog = require('dialog');
 
 
 /* GET home page. */
@@ -200,20 +200,6 @@ router.get('/export', function(req, res) {
         })
 })
 
-router.get('/searchExpense', function(req, res) {
-        models.Cashflow.findAll().then(function(cashflows){
-        
-        res.render('searchExpense', {
-            title: 'Search Expense',
-            user: req.session.user,
-            cashflows:cashflows,
-            page:1,
-            total_page:cashflows.length
-
-        })
-     })
-        
-})
 
 router.get('/editExpense', function(req, res) {
             res.render('editExpense', {
@@ -221,17 +207,18 @@ router.get('/editExpense', function(req, res) {
                 user: req.session.user,
             })
         
-        expenseId = req.query['selectpicker'];
+        expenseId = req.query['id'];
+        console.log("expenseId :"  + expenseId);
 
 })
 
 router.post('/editExpense', function(req, res) {
     if (req.body.category.length == 0) {
         dialog.info("Category can't be null");
-        res.redirect("/expenses/editExpense?selectpicker="+expenseId);
+        res.redirect("/expenses/editExpense?id="+expenseId);
     } else if (req.body.amount <= 0) {
         dialog.info("Please enter an amount");
-        res.redirect("/expenses/editExpense?selectpicker="+expenseId);
+        res.redirect("/expenses/editExpense?id="+expenseId);
     } else {
          models.Cashflow.find({
         where: {
