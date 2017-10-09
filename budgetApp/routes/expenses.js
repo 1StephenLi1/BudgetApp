@@ -200,6 +200,78 @@ router.get('/export', function(req, res) {
         })
 })
 
+router.get('/searchExpense', function(req, res) {
+        models.Cashflow.findAll().then(function(cashflows){
+        
+        res.render('searchExpense', {
+            title: 'Search Expense',
+            user: req.session.user,
+            cashflows:cashflows,
+            page:1,
+            total_page:cashflows.length
+
+        })
+     })
+        
+})
+
+router.get('/editExpense', function(req, res) {
+            res.render('editExpense', {
+                title: 'Edit Expenses',
+                user: req.session.user,
+            })
+        
+        expenseId = req.query['selectpicker'];
+
+})
+
+router.post('/editExpense', function(req, res) {
+    if (req.body.category.length == 0) {
+        dialog.info("Category can't be null");
+        res.redirect("/expenses/editExpense?selectpicker="+expenseId);
+    } else if (req.body.amount <= 0) {
+        dialog.info("Please enter an amount");
+        res.redirect("/expenses/editExpense?selectpicker="+expenseId);
+    } else {
+         models.Cashflow.find({
+        where: {
+            id: expenseId
+        }
+    }).then(function(cashflow) {
+        models.Category.find({
+            where: {
+                id: cashflow.CategoryId
+            }
+        }).then(function(category) {
+            
+            if (category) {
+                category.updateAttributes({
+                    name: req.body.category
+                })        
+            }
+        })
+        if (cashflow) {
+            cashflow.updateAttributes({
+                amount: req.body.amount,
+                shortDescription: req.body.shortDescription,
+                longDescription: req.body.longDescription,
+            })
+        } else {
+            res.status(400).json({
+                errorMsg: "An error occured, try again later"
+            })
+        }
+    })
+    res.render('index', {
+        title: 'Dashboard',
+        user: req.session.user
+    })
+    }
+   
+
+})
+
+
 router.get('/', function(req, res) {
 
     models.Cashflow.findAll({
