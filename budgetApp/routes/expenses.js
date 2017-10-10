@@ -33,7 +33,7 @@ router.post('/addExpense', function(req, res) {
         }
     }).then(function([category, isNewlyCreated]) {
         models.Cashflow.create({
-            dateTime: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
+            dateTime: moment(req.body.expenseDate,"l").tz("Australia/Sydney"),
             amount: req.body.amount,
             shortDescription: req.body.shortDescription,
             longDescription: req.body.longDescription,

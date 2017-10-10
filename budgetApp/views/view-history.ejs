@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html>
   <head>
-    
     <% include includes/head.ejs %>
-    
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
   </head>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+  <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
   <body class="hold-transition skin-black fixed sidebar-mini">
   <div class="wrapper">
 
     <% include includes/top-nav.ejs %>
     <% include includes/side-nav.ejs %>
     <div class="content-wrapper">
-      <section class="content-header">
+    
         <h1>
           <%= title %>
         </h1>
-      </section>
+  
       <table id="example" class="display" cellspacing="0" width="100%">
         <thead>
           <tr>
-              <th>DateTime </th>
-              <th>Amount </th> 
+              <th>Date </th>
               <th>ShortDescription </th>
-              <th>LongDescription </th>
               <th>Category</th>
+              <th>Amount </th> 
+              <th>LongDescription </th>
+              
               <th></th>
               <th></th>
           </tr>
@@ -36,10 +36,10 @@
           <% for(var i=0; i < cashflows.length; i++) {%>
           <tr>
               <td><%= cashflows[i].dateTime %></td>
-              <td><%= cashflows[i].amount %></td> 
               <td><%= cashflows[i].shortDescription %></td>
-              <td><%= cashflows[i].longDescription %></td>
               <td><%= cashflows[i].Category.name %></td>
+              <td><%= cashflows[i].amount %></td> 
+              <td><%= cashflows[i].longDescription %></td>
               <td><a href="expenses/editExpense?id=<%= cashflows[i].id %>">edit</a></td>
               <td><a href="expenses/deleteExpense?id=<%= cashflows[i].id %>">delete</a></td>
           </tr>
