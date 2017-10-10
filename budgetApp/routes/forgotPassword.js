@@ -4,14 +4,19 @@ var models  = require('../models');
 var auth = require('../auth.js');
 var nodemailer = require('nodemailer');
 var randtoken = require('rand-token');
-var mg = require('nodemailer-mailgun-transport');
 
 /* GET login page */
 router.get('/', function(req, res, next) {
 	if (req.session.authenticated) {
 		res.redirect('/');
 	} else {
-		res.render('forgotPassword', { title: 'Forgot Password', forgot: req.flash('forgot'), reset: req.flash('reset')});
+		res.render('forgotPassword', 
+			{ 
+				title: 'Forgot Password',
+				forgot: req.flash('forgot'),
+				reset: req.flash('reset'),
+				invalidToken : req.flash('invalidToken')
+			});
 	}
 });
 
