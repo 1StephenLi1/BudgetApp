@@ -8,6 +8,7 @@ var mv = require('mv');
 var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
+var googleFinance = require('google-finance');
 
 
 /* GET home page. */
@@ -291,6 +292,50 @@ router.post('/editExpense', function(req, res) {
 
 router.get('/', function(req, res) {
 
+
+
+
+//just for testing google finance api
+    googleFinance.historical({
+      symbol: 'ABBV',
+      from: '2017-10-01',
+      to: '2017-10-8'
+    }, function (err, quotes) {
+        /*console.log(quotes);
+        quotes.findOne({
+            where:{"volume":4563796}
+        }).then(funciton(test){
+            console.log("-------------")
+            console.log(JSON.stringify(test))
+        }
+      //...*/
+      console.log(getvaluebyvolume('8927630',quotes));
+      
+
+
+
+    });
+    function getvaluebyvolume(key,data){
+        var i;
+        var len=data.length;
+        for(i=0;i<len;i++){
+            if(data[i]&&data[i].volume==key){
+                return data[i];
+            }
+        }
+
+
+    }
+    
+
+//testing end
+
+
+
+
+
+
+
     models.Cashflow.findAll({
 
         where:{
@@ -315,7 +360,7 @@ router.get('/', function(req, res) {
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
          console.log(JSON.stringify(cashflows[0].dataValues))
-    })
+        })
 })
 
 router.post('/', function(req, res) {

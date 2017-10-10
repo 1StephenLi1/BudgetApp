@@ -21,6 +21,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "fast-csv": "^2.4.1",
+    "google-finance": "^0.1.9",
     "jade": "~1.11.0",
     "jquery": "^3.2.1",
     "jsdom": "^11.3.0",
