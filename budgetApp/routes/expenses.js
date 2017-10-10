@@ -33,7 +33,7 @@ router.post('/addExpense', function(req, res) {
         }
     }).then(function([category, isNewlyCreated]) {
         models.Cashflow.create({
-            dateTime: moment(req.body.expenseDate,"l").tz("Australia/Sydney"),
+            dateTime: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
             amount: req.body.amount,
             shortDescription: req.body.shortDescription,
             longDescription: req.body.longDescription,
@@ -162,31 +162,34 @@ router.get('/export', function(req, res) {
         models.Cashflow.findAll({
         where: {
             "isExpense": true
-        }
+        },
+        include: [
+            {
+                model: models.Category,
+            }
+        ]
     }).then(function(cashflow) {
             if (cashflow == null) {
                 res.status(400).json({
                     errorMsg: "An error occured, try again later"
                 })
             } else {
-                var fields = ['Expense Date', 'Amount', 'Short Description', 'Long Description'];
+                var fields = ['Category' ,'Expense Date', 'Amount', 'Short Description', 'Long Description'];
                 // var arrayList;
                     var data=[];
-                    
+                    console.log("Category: +++ " + cashflow);
                     for (var i = 0; i < cashflow.length; i++) {
-                        
-                        data[data.length] = {
-                            "Amount": cashflow[i].dataValues.amount,
-                            "Short Description": cashflow[i].dataValues.shortDescription,
-                            "Long Description": cashflow[i].dataValues.longDescription,
-                            "Expense Date": cashflow[i].dataValues.dateTime
+                            
+                            data[data.length] = {
+                                "Category": cashflow[i].Category.name,
+                                "Amount": cashflow[i].dataValues.amount,
+                                "Short Description": cashflow[i].dataValues.shortDescription,
+                                "Long Description": cashflow[i].dataValues.longDescription,
+                                "Expense Date": cashflow[i].dataValues.dateTime
                             }
+                    
+                       
                     }
-                    //var obj = JSON.parse(myCsv);
-                    // arrayList.push(obj);
-                // }
-                // var finalCsv = JSON.stringify(arrayList);
-                //var csv = json2csv({ data: data, fields: fields });
                  json2csv({ data: data, fields: fields }, function(err, csv) {
                   if (err) console.log(err);
                   console.log(csv);
@@ -206,19 +209,37 @@ router.get('/deleteExpense', function(req, res) {
             id: req.query['id']
         }
     })
-    res.redirect("/expenses");
+    res.render('index', {
+        title: 'Dashboard',
+        user: req.session.user,
+    })
 
 })
-
+var cashflow;
 router.get('/editExpense', function(req, res) {
-        res.render('editExpense', {
-            title: 'Edit Expenses',
-            user: req.session.user,
+        
+        models.Cashflow.findOne({
+            where: {
+                id: req.query['id']
+            }
+        }).then(function(cf){
+            models.Category.findOne({
+                where: {
+                    id: cf.dataValues.CategoryId
+                }
+            }).then(function(cat) {
+                res.render('editExpense', {
+                    title: 'Edit Expenses',
+                    user: req.session.user,
+                    cashflow: cf,
+                    category: cat
+                })        
+            })
         })
+        
         
         expenseId = req.query['id'];
         console.log("expenseId :"  + expenseId);
-
 })
 
 router.post('/editExpense', function(req, res) {
@@ -277,7 +298,11 @@ router.get('/', function(req, res) {
         },
         include:[
             {model:models.Category,
-            }]
+            
+            }
+
+
+            ]
 
         }).then(function(cashflows){
         
@@ -289,6 +314,7 @@ router.get('/', function(req, res) {
         })
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
+         console.log(JSON.stringify(cashflows[0].dataValues))
     })
 })
 
