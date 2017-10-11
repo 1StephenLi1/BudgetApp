@@ -9,6 +9,7 @@ var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
 var googleFinance = require('google-finance');
+var yahooFinance = require('yahoo-finance');
 
 
 /* GET home page. */
@@ -293,13 +294,11 @@ router.post('/editExpense', function(req, res) {
 router.get('/', function(req, res) {
 
 
-
-
 //just for testing google finance api
-    googleFinance.historical({
-      symbol: 'ABBV',
-      from: '2017-10-01',
-      to: '2017-10-8'
+    yahooFinance.historical({
+      symbol: 'BXB.AX',
+      from: '2017-03-01T13:00:00.000Z',
+      to: '2017-03-07T13:00:00.000Z'
     }, function (err, quotes) {
         /*console.log(quotes);
         quotes.findOne({
@@ -309,7 +308,7 @@ router.get('/', function(req, res) {
             console.log(JSON.stringify(test))
         }
       //...*/
-      console.log(getvaluebyvolume('8927630',quotes));
+      console.log(quotes);
       
 
 
@@ -327,6 +326,12 @@ router.get('/', function(req, res) {
 
     }
     
+
+
+
+
+
+
 
 //testing end
 
