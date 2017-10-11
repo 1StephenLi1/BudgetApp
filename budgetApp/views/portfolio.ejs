@@ -2,8 +2,11 @@
 <html>
 <head>
     <% include includes/head.ejs %>
-    <script type="text/javascript" src="/plugins/Chart.min.js"></script>
 </head>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
 <body class="hold-transition skin-black fixed sidebar-mini">
     <div class="wrapper">
@@ -16,6 +19,49 @@
             <h1><%= title %></h1>
                 <a href="/portfolio/addInvestment" class="btn btn-success"><i class="fa fa-plus"></i>add investment</a>
             <!-- /.content -->
+            <table id="portfolios" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+              <th>Symbol </th>
+              <th>Bought Price </th>
+              <th>Share Amount</th>
+              <th>First Trade </th> 
+              <th>Status </th>
+              <th>Last Price</th>
+              <th>Change</th>
+              <th>%Change</th>
+              <th>Volumn</th>
+              <th>profit</th>
+
+              
+              <th></th>
+              <th></th>
+            </tr>
+            </thead>
+      
+            <tbody>
+                <% for(var i=0; i < portfolios.length; i++) {%>
+                <tr>
+                <td><%= portfolios[i].Symbol %></td>
+                <td><%= portfolios[i].boughtPrice %></td>
+                <td><%= portfolios[i].shareAmount %></td>
+                <td><%= portfolios[i].firstTrade %></td> 
+                <td>emmmmm</td>
+                <td><a href="expenses/editPortfolio?id=<%= portfolios[i].id %>">edit</a></td>
+                <td><a href="expenses/deletePortfolio?id=<%= portfolios[i].id %>">delete</a></td>
+                </tr>
+                <% } %>
+            </tbody>
+
+   
+            </table>
+           
+          
+            <script type="text/javascript">
+                $(document).ready(function() {
+                $('#portfolios').DataTable();
+                } );
+            </script>
         </div>
         <!-- /.content-wrapper -->
 
@@ -24,7 +70,6 @@
     </div>
     <!-- ./wrapper -->
 
-    <% include includes/jsDefaults.ejs %>
 
 </body>
 </html>

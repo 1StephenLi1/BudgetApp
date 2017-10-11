@@ -11,11 +11,22 @@ var dialog = require('dialog');
 
 
 router.get('/', function(req, res) {
+    models.Portfolio.findAll({
 
+    where:{
+        "UserId": req.session.user.id
+    }}).then(function(portfolios){
+    
     res.render('portfolio', {
-        title: 'Investment Portfolio',
-        user: req.session.user
+    title: 'Investment Portfolio',
+    user: req.session.user,
+    portfolios:portfolios
+
     })
+     console.log(JSON.stringify(portfolios))
+     console.log("-----------------")
+    })
+   
 })
 
 router.get('/addInvestment', function(req, res) {

@@ -325,6 +325,9 @@ router.get('/', function(req, res) {
 
 
     }
+
+
+    
     
 
 
@@ -364,7 +367,6 @@ router.get('/', function(req, res) {
         })
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
-         console.log(JSON.stringify(cashflows[0].dataValues))
         })
 })
 
