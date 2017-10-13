@@ -8,7 +8,7 @@ router.get('/categories', function(req, res, next) {
 	models.Category.findAll({
 		where: {
 			"UserId": req.session.user.id,
-			"type": "expense",
+			"type": req.query.type,
 			"name": {
 				$like: req.query.key + '%'
 			}
@@ -32,10 +32,16 @@ router.get('/categories', function(req, res, next) {
 /* Returns JSON of short descriptions based on query */
 router.get('/shortDescs', function(req, res, next) {
 	var autocompletes = [];
+	var isExpense = true;
+	if (req.query.type != undefined) {
+		if (req.query.type == "income") {
+			isExpense = false;
+		}
+	}
 	models.Cashflow.findAll({
 		where: {
 			"UserId": req.session.user.id,
-			"isExpense": 1,
+			"isExpense": isExpense,
 			"shortDescription": {
 				$like: req.query.key + '%'
 			}

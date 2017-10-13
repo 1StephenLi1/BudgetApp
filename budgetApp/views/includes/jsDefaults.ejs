@@ -17,7 +17,21 @@
 
 <script src="/plugins/iCheck/icheck.min.js"></script>
 
+<script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
+
+<script type="text/javascript" src="/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+
+<script type="text/javascript" src="/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
+
 <script>
+    function roundToTwo(number){
+        if (number != "" && number != null){
+            return parseFloat(number).toFixed(2);
+        } else {
+            return '0.00'
+        }
+    }
+
     function selectCurrentMenuItem() {
         /** add active class and stay opened when selected */
         var url = window.location;
