@@ -100,10 +100,10 @@ router.post('/uploadPhoto', function(req, res) {
 router.post('/deleteAccConfirm', function(req, res) {
     var profilePicName = 'profilePic-'+req.session.user.id+'.png';
     var profilePicDir = 'public/images/'+profilePicName;
-    
-        models.User.destroy({
+
+        models.Portfolio.destroy({
             where: {
-            "id": req.session.user.id,
+                "UserId" : req.session.user.id
             }
         }).catch(function (err) {
             console.error(err);
@@ -111,6 +111,19 @@ router.post('/deleteAccConfirm', function(req, res) {
             res.render('error', {
                 user: req.session.user
             });
+        })
+
+        models.User.destroy({
+            where: {
+            "id": req.session.user.id
+            }
+        }).catch(function (err) {
+            console.error(err);
+            res.status(err.status || 500);
+            res.render('error', {
+                user: req.session.user
+            });
+
         });
         if (fs.existsSync(profilePicDir)) {            
             fs.unlinkSync(profilePicDir);        
