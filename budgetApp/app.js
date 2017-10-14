@@ -49,7 +49,7 @@ app.use(session({ authenticated: false, cookie: { maxAge: 600000 }, secret: 'sec
 // authentication
 app.use(function(req, res, next) {
 	// console.log("Authentication " + req.url);
-	if ((req.url != '/login' && req.url != '/signup' && req.url !='/forgotPassword' && req.url !='/resetPassword') && !req.session.authenticated) {
+	if ((req.url != '/login' && req.url != '/signup' && req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword') && !req.session.authenticated) {
 		console.log("Redirecting to login page");
 		res.redirect('/login');
 		return;

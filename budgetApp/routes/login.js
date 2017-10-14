@@ -40,7 +40,7 @@ router.post('/', function(req, res, next) {
 
 				res.redirect('/');
 			} else {
-				req.flash('login', 'Incorrect password or account does not exist for ' + user.email);
+				req.flash('login', 'Incorrect password');
 				res.redirect('/login');
 			}
 		}

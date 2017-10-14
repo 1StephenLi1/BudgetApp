@@ -10,11 +10,14 @@
             <a href="/"><b>Budget</b>App</a>
         </div>
         <% if (login != null && login.length > 0) { %>
-            <div class="alert alert-danger"><%= login %></div>
+            <div class="alert login-box-body"><%= login %>
+                <br><br>
+                <a href="/forgotPassword" class="btn btn-danger btn-block btn-flat">Reset Password</a>
+            </div>
         <% } %>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">Sign in, or get started by signing up.</p>
 
             <form id="login" action="/login", method="post">
                 <div class="form-group has-feedback">
@@ -26,18 +29,13 @@
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
-                    <!-- /.col -->
-                    <div class="col-xs-offset-4 col-xs-4">
+                    <div class="col-sm-6">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
                     </div>
-                    <!-- /.col -->
-                    <div class="col-xs-offset-8 col-xs-8">
-                        <br>
-                        <a href="/forgotPassword" class="text-center">Forgot Password</a>
+                    <div class="col-sm-6">
+                        <a href="/signup" class="btn btn-success btn-block btn-flat">Sign Up</a>
                     </div>
                 </div>
-                <br>
-                <a href="/signup" style="text-align:center;display:block;" class="text-center">Sign up now to get started</a>
             </div>
         </form>
 
