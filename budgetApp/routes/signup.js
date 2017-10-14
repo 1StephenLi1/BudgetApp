@@ -26,6 +26,13 @@ router.post('/', function(req, res, next) {
 	user.password = auth.sha512(user.password, user.salt);
 
 	models.User.create(user).then(function(u) {
+		req.session.authenticated = true;
+		req.session.user = {
+			id: u.dataValues.id,
+			email: u.dataValues.email,
+			firstName: u.dataValues.firstName,
+			lastName: u.dataValues.lastName
+		}
 		res.redirect('/');
 	}).catch(function(error) {
 		req.flash('signup', 'An account already exists with email ' + user.email);
