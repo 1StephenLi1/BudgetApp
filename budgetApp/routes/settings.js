@@ -100,12 +100,10 @@ router.post('/uploadPhoto', function(req, res) {
 router.post('/deleteAccConfirm', function(req, res) {
     var profilePicName = 'profilePic-'+req.session.user.id+'.png';
     var profilePicDir = 'public/images/'+profilePicName;
-        models.User.update({
-            isDeleted : "1"
-            },
-            {
+    
+        models.User.destroy({
             where: {
-                "id": req.session.user.id,
+            "id": req.session.user.id,
             }
         }).catch(function (err) {
             console.error(err);
