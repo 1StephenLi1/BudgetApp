@@ -25,6 +25,7 @@ var dashboard = require('./routes/dashboard');
 var autocomplete = require('./routes/autocomplete');
 var deleteAcc = require('./routes/deleteAcc');
 var portfolio = require('./routes/portfolio');
+var goals = require('./routes/goals');
 
 var app = express();
 
@@ -72,6 +73,7 @@ app.use('/dashboard', dashboard);
 app.use('/autocomplete', autocomplete);
 app.use('/deleteAcc', deleteAcc);
 app.use('/portfolio', portfolio);
+app.use('/goals', goals);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

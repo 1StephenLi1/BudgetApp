@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include includes/head.ejs %>
+</head>
+
+<body class="hold-transition skin-black fixed sidebar-mini">
+    <div class="wrapper">
+
+        <% include includes/top-nav.ejs %>
+        <% include includes/side-nav.ejs %>
+
+        <div class="content-wrapper container-fluid">
+        <!-- Main content -->
+        <h1><%= title %></h1>
+        <div id="messageBox" class="alert alert-danger"></div>
+
+        <div class="row">
+            <div id="goalMsg"></div>
+            <div class="box box-primary">
+            <form id="addGoalForm" onsubmit="addGoal(); return false;">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label for="category">Category</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="text" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="category" name="category" maxLength=30 placeholdeGoal.g. Food">
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="amount">Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.50" value="0.00" autocomplete="off"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                    	<div class="col-md-4 form-group">
+                            <label for="type">Type of Goal</label>
+                            <br><br>
+                            <select goalType="types">
+                            	<option value=""></option>
+  								<option value="spending">Spending</option>
+  								<option value="saving">Saving</option>
+							</select>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="startDate">Start Date</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                <input type="text" name="startDate" id="startDate" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="endDate">End Date</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                <input type="text" name="endDate" id="endDate" class="form-control">
+                            </div>
+                        </div>
+                   	</div>
+                <div class="box-footer">
+                  <button type="submit" class="btn btn-primary pull-right">Add Goal</button>
+                </div>
+            </form>
+        </div>
+            <!-- /.content -->
+    </div>
+        <!-- /.content-wrapper -->
+
+        <% include includes/footer.ejs %>
+
+</div>
+</div>
+    <!-- ./wrapper -->
+    <% include includes/jsDefaults.ejs %>
+
+    <script type="text/javascript" src="/javascripts/addGoal.js"></script>
+
+</body>
+</html>
