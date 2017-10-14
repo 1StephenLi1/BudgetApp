@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
 			res.redirect('/login');
 		} else {
 			var salt = user.dataValues.salt;
-			if (auth.sha512(creds.password, salt) == user.dataValues.password && user.dataValues.isDeleted == 0) {
+			if (auth.sha512(creds.password, salt) == user.dataValues.password) {
 				req.session.authenticated = true;
 				req.session.user = {
 					id: user.dataValues.id,
