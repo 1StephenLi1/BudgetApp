@@ -2,6 +2,26 @@ var date = moment().subtract(1, 'months').format('YYYY-MM-DD');;
 var timeBar;
 var categoriesPie;
 
+// Function from https://jsfiddle.net/x04ptfuu/
+Chart.plugins.register({
+    afterDraw: function(chart) {
+    if (chart.data.datasets[0].data == undefined || chart.data.datasets[0].data.length === 0) {
+        // No data is present
+      var ctx = chart.chart.ctx;
+      var width = chart.chart.width;
+      var height = chart.chart.height
+      chart.clear();
+      
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = "12px normal 'Helvetica Nueue'";
+      ctx.fillText('Add some data to get started', width / 2, height / 2);
+      ctx.restore();
+    }
+  }
+});
+
 $(document).ready(function() {
     $("input:radio[name=filter]").change(function() {
         var selectedFilter = $("input:radio[name=filter]:checked");
