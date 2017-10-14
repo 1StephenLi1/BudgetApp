@@ -274,7 +274,7 @@ router.post('/uploadCsv', function(req, res) {
                 }
 
             })
-             next();
+             res.redirect('/expenses')
             }).catch(function (err) {
                 console.error(err);
                 res.status(err.status || 500);

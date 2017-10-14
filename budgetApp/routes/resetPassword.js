@@ -52,7 +52,7 @@ router.post('/:token', function(req, res) {
 		} else {
 		   req.flash('unmatchedPasswords', 'Passwords do not match!');	
 		}
-		res.redirect('http://' + req.headers.host + '/resetPassword/' + req.params.token);			  		 
+		res.redirect('/resetPassword/' + req.params.token);			  		 
 	})
 	
 })	
