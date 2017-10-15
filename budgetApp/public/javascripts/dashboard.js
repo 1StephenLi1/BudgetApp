@@ -124,7 +124,7 @@ function updateCategoriesBox(data) {
     $("#categories-box").empty();
     for (var i = 0; i < data.length; i++) {
         var html = '<div class="col-md-4">';
-        html += '<a href="/expenses"><div class="bg-' + colours[i % colours.length] + ' category-box">';
+        html += '<a href="/expenses?category=' + data[i]["key"] + '"><div class="bg-' + colours[i % colours.length] + ' category-box">';
         html +='<h3>' + data[i]["key"] + '</h3>';
         // TODO: show progress towards goal
         html += '<div class="progress"><div class="progress-bar" style="width: 25%"></div></div>';
