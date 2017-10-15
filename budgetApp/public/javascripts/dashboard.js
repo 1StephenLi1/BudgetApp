@@ -41,14 +41,18 @@ function updatePage() {
     $.getJSON('/dashboard/categories?date=' + date, function (categories) {
         updateCategoriesPie(categories);
     });
-    var filter = $("input:radio[name=filter]:checked").attr('id');
+    var filter = $("input:radio[name=filter]:checked").attr('id'); // used to determine chart labels
     $.getJSON('/dashboard/time?date=' + date + '&filter=' + filter, function (data) {
         updateTimeBar(data);
+    });
+    $.getJSON('/dashboard/social?date=' + date, function (data) {
+        updateCategoriesBox(data);
     });
 }
 
 function updateTimeBar(data) {
     var timeBarCtx = document.getElementById('time-bar').getContext('2d');
+    $("#time-bar").attr('height', 220);
     if (timeBar != undefined) timeBar.destroy();
     timeBar = new Chart(timeBarCtx,{
         type: 'bar',
@@ -90,6 +94,7 @@ function updateTimeBar(data) {
 
 function updateCategoriesPie(categories) {
     var categoriesPieCtx = document.getElementById('categories-pie').getContext('2d');
+    $("#categories-pie").attr('height', 220);
     if (categoriesPie != undefined) categoriesPie.destroy();
     categoriesPie = new Chart(categoriesPieCtx,{
         type: 'pie',
@@ -112,4 +117,25 @@ function updateCategoriesPie(categories) {
             }
         }
     });
+}
+
+var colours = ["red", "aqua", "olive", "yellow", "orange", "teal", "fuchsia"];
+function updateCategoriesBox(data) {
+    $("#categories-box").empty();
+    for (var i = 0; i < data.length; i++) {
+        var html = '<div class="col-md-4">';
+        html += '<a href="/expenses"><div class="bg-' + colours[i % colours.length] + ' category-box">';
+        html +='<h3>' + data[i]["key"] + '</h3>';
+        // TODO: show progress towards goal
+        html += '<div class="progress"><div class="progress-bar" style="width: 25%"></div></div>';
+        // TODO: show goal
+        html += '<p><b>$' + data[i]['value']['me'] + '</b> of $???</p>';
+        html += '<p class="category-box-social">';
+        html += 'Spending more than ' + data[i]['value']['more_than'] + '/' + data[i]['value']['users'] + ' people';
+        html += '<br>';
+        html += 'Average spend is $' + data[i]['value']['average'].toFixed(0);
+        html += '<br></p>';
+        html += '</div></a></div>';
+        $("#categories-box").append(html);
+    }
 }
