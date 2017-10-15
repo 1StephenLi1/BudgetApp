@@ -10,6 +10,7 @@ var json2csv = require('json2csv');
 var dialog = require('dialog');
 var Sequelize = require("sequelize");
 
+var categoryUrlQuery;
 router.get('/', function(req, res) {
     models.Category.findAll({
         where: {
@@ -22,6 +23,7 @@ router.get('/', function(req, res) {
             categories: categories
         })
     })
+    categoryUrlQuery = req.query['category'];
 })
 
 router.post('/datatable', function(req, res) {
@@ -69,7 +71,70 @@ router.post('/datatable', function(req, res) {
             categoriesQuery.push({"CategoryId": categoryId});
         }
     } else {
-        categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];
+        if (categoryUrlQuery == null) {
+            categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];    
+        } else {
+            models.Category.findOne({
+                where: {
+                    name: categoryUrlQuery
+                }
+            }).then(function(category) {
+                categoriesQuery = [{"CategoryId": category.dataValues.id}];
+                models.Cashflow.count({
+        include: [
+            {
+                model: models.Category,
+                attributes: ['name'],
+                where: {
+                    type: 'expense'
+                }
+            },
+        ],
+        where: {
+            UserId: req.session.user.id,
+            isExpense: true,
+            searchQuery,
+            $or: categoriesQuery,
+            dateTime: {
+                $lte: endDate.toDate(),
+                $gte: startDate.toDate()
+            }
+        }
+    }).then(function(expensesCount) {
+        models.Cashflow.findAndCountAll({
+            include: [
+                {
+                    model: models.Category,
+                    attributes: ['name'],
+                    where: {
+                        type: 'expense'
+                    }
+                },
+            ],
+            where: {
+                UserId: req.session.user.id,
+                isExpense: true,
+                searchQuery,
+                $or: categoriesQuery,
+                dateTime: {
+                    $lte: endDate.toDate(),
+                    $gte: startDate.toDate()
+                }
+            },
+            order: order,
+            offset: start,
+            limit: limit
+        }).then(function(filteredExpenses) {
+            res.json({
+                data: filteredExpenses.rows,
+                recordsTotal: expensesCount,
+                recordsFiltered: filteredExpenses.count
+            })
+        })
+    })
+            })
+        }
+        
     }
 
     models.Cashflow.count({
