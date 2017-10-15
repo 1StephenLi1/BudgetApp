@@ -45,17 +45,21 @@ app.use(bodyParser({uploadDir:'/images'}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-app.use(session({ authenticated: false, cookie: { maxAge: 600000 }, secret: 'secret' }));
+app.use(session({ authenticated: false, reqPath: '/', cookie: { maxAge: 600000 }, secret: 'secret' }));
 
 // authentication
 app.use(function(req, res, next) {
 	// console.log("Authentication " + req.url);
-	if ((req.url != '/login' && req.url != '/signup' && req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword') && !req.session.authenticated) {
-		console.log("Redirecting to login page");
-		res.redirect('/login');
-		return;
-	}
-	// console.log("Authenticated");
+	if (!req.session.authenticated && (req.url != '/login' && req.url != '/signup' &&
+    req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword')) {
+      console.log("Redirecting to login page");
+      req.session.reqPath = req.path;
+      res.redirect('/login');
+      return;
+  }
+  if (req.url != '/login') {
+    req.session.reqPath = '/'; // default
+  }
 	next();
 });
 
