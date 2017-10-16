@@ -27,8 +27,6 @@ router.get('/', function(req, res, next) {
         })
     })
 
-    
-
     categoryUrlQuery = req.query['category'];
 });
 

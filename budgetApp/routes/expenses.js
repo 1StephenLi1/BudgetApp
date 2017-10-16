@@ -363,7 +363,8 @@ router.post('/uploadCsv', function(req, res) {
 router.get('/export', function(req, res) {
         models.Cashflow.findAll({
         where: {
-            "isExpense": true
+            "isExpense": true,
+            "UserId": req.session.user.id
         },
         include: [
             {
