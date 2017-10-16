@@ -7,22 +7,15 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: 0,
             allowNull: false
         },
-        goalType: {
+        name: {
             type: DataTypes.STRING,
-            allowNull: false
-        },
-        startDate: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        endDate: {
-            type: DataTypes.DATE,
-            allowNull: false
+            allowNull: true
         }
     });
 
     Goal.associate = function(models) {
-        Goal.belongsTo(models.User)
+        Goal.belongsTo(models.User),
+        Goal.belongsTo(models.Category)
     }
 
     return Goal;

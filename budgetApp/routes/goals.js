@@ -6,57 +6,78 @@ var csv = require('fast-csv');
 var fs = require('fs');
 var mv = require('mv');
 
-
 router.get('/', function(req, res, next) {
-  //res.render('index', { title: 'Show sonthing here...' });
-  models.User.findOne({where: {email: req.session.user.email}}).then(function(user) {
-  	// console.log("-----------------------------------------");
-  	// console.log(req.session.id);		//req.session.id is not the same id in our database
-  	// console.log("------------------------------------------");
-  	models.Category.findOne({where: {UserId: user.id, name: 'expense'}}).then(function(cat) {
-	    models.Cashflow.findOne({where: {CategoryId: cat.id}}).then(function(cash) {
-	    	res.render('expenses', {title: 'My Expense', cash: cash, user: user})
-    	})
-  	})
-  })
-});
-
-router.get('/addGoal', function(req, res, next) {
-	res.render('addGoal', {
-        title: 'Set Goal',
-        user: req.session.user
+    models.Category.findAll({
+        where: {
+            type: "expense",
+            UserId: req.session.user.id
+        }
+    }).then(function(categories) {
+        models.Goal.findAll({
+            where: {
+                UserId: req.session.user.id
+            }
+        }).then(function(goals) {
+            res.render('addGoal', {
+                title: 'Add Goal',
+                user: req.session.user,
+                categories: categories,
+                goals: goals
+            })
+        })
     })
+
+    
+
+    categoryUrlQuery = req.query['category'];
 });
 
 router.post('/addGoal', function(req, res) {
-	models.Category.findOrCreate({
-        where: {
-            "UserId": req.session.user.id,
-            "type": "goal",
-            "name": req.body.category
-        },
-        default: {
-            "isArchived": 0
-        }
-    }).then(function([category, isNewlyCreated]) {
-        models.Goal.create({
-            startDate: moment(req.body.startDate,'DD/MM/YYYY').tz("Australia/Sydney"),
-            endDate: moment(req.body.endDate,'DD/MM/YYYY').tz("Australia/Sydney"),
-            amount: req.body.amount,
-            goalType: req.body.goalType,
-            GoalId: goal.dataValues.id,
-            UserId: req.session.user.id
-        }).then(function(goal) {
-            if (goal == null) {
-                res.status(400).json({
-                    errorMsg: "An error occured, try again later"
-                })
-            } else {
-                res.status(200).json({
-                    msg: "Goal added successfully"
-                })
-            }
+    var query = {
+        UserId: req.session.user.id
+    };
+
+    req.body.category = parseInt(req.body.category);
+
+    if (req.body.category > 0) {
+        query['CategoryId'] = req.body.category;
+    } else if (req.body.category == 0) {
+        query['name'] = "Total Spending";
+    } else if (req.body.category == -1) {
+        query['name'] = "Savings Goal";
+    } else {
+        res.status(400).json({
+            errorMsg: "An error occured, try again later"
         })
+    }
+
+	models.Goal.findOrCreate({
+        where: query
+    }).then(function([goal, isNewlyCreated]) {
+        var isUpdated = false;
+        if (parseFloat(goal.dataValues['amount']) != parseFloat(req.body.amount)) {
+            goal.update({ amount: req.body.amount });
+            isUpdated = true;
+        }
+
+        var message;
+        if (isUpdated && !isNewlyCreated) {
+            message = "Goal updated successfully";
+        } else {
+            message = "Goal added successfully";
+        }
+
+        if (goal == null) {
+            res.status(400).json({
+                status: 400,
+                message: "An error occured, try again later"
+            })
+        } else {
+            res.status(200).json({
+                status: 200,
+                message: message
+            })
+        }
     }).catch(function (err) {
         console.error(err);
         res.status(err.status || 500);
@@ -65,6 +86,5 @@ router.post('/addGoal', function(req, res) {
         });
     });
 })
-
 
 module.exports = router;
