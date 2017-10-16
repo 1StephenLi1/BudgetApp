@@ -39,11 +39,20 @@ router.post('/:token', function(req, res) {
 				password : auth.sha512(req.body.newPassword, salt)
 				});
 
-		   req.flash('resetSuccess', 'Your password has been reset!')
+			req.session.authenticated = true;
+			req.session.user = {
+				id: user.dataValues.id,
+				email: user.dataValues.email,
+				firstName: user.dataValues.firstName,
+				lastName: user.dataValues.lastName
+			}
+
+			// req.flash('resetSuccess', 'Your password has been reset!');
+		   	res.redirect('/');
 		} else {
 		   req.flash('unmatchedPasswords', 'Passwords do not match!');	
 		}
-		res.redirect('http://' + req.headers.host + '/resetPassword/' + req.params.token);			  		 
+		res.redirect('/resetPassword/' + req.params.token);			  		 
 	})
 	
 })	

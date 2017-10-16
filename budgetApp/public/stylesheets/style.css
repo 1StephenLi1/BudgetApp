@@ -21,3 +21,24 @@
     /* Keeps the category input box from being cropped */
     width: 100%;
 }
+
+.progress {
+    background-color: rgba(0,0,0,.2);
+    height: 8px;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    background-color: white;
+}
+
+.category-box {
+    padding: 1px 10px 5px 10px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.category-box-social {
+    font-size: 0.7em;
+    text-align: right;
+}

@@ -68,24 +68,36 @@ router.post('/addInvestment', function(req, res) {
             dialog.info("Please enter a price");
             res.redirect("/portfolio/addInvestment");
         } else {
-            models.Portfolio.create({
-                firstTrade: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
-                sharePrice: req.body.boughtPrice,
-                shareAmount: req.body.shareAmount,
+            yahooFinance.historical({
                 symbol: req.body.symbol,
-                UserId: req.session.user.id
-            }).then(function(portfolio) {
-            if (portfolio == null) {
-                res.status(400).json({
-                    errorMsg: "An error occured, try again later"
-                })
+  // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
+            }, function (err, quotes) {
+                console.log("quotes : " + quotes.length );
+            if (quotes.length == 0) {
+                dialog.info("Please enter a valid symbol");
+                res.redirect("/portfolio/addInvestment");
             } else {
-               res.render('portfolio', {
-                    title: 'Investment Portfolio',
-                    user: req.session.user
+                models.Portfolio.create({
+                    firstTrade: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
+                    sharePrice: req.body.boughtPrice,
+                    shareAmount: req.body.shareAmount,
+                    symbol: req.body.symbol,
+                    UserId: req.session.user.id
+                }).then(function(portfolio) {
+                    if (portfolio == null) {
+                        res.status(400).json({
+                            errorMsg: "An error occured, try again later"
+                        })
+                    } else {
+                       res.render('portfolio', {
+                            title: 'Investment Portfolio',
+                            user: req.session.user
+                        })
+                    }
                 })
             }
-            })
+        });
+           
         }
 
     })

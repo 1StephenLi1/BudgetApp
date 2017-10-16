@@ -15,6 +15,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
+var signout = require('./routes/signout');
 var expenses = require('./routes/expenses');
 var settings = require('./routes/settings');
 var forgotPassword = require('./routes/forgotPassword');
@@ -24,6 +25,7 @@ var dashboard = require('./routes/dashboard');
 var autocomplete = require('./routes/autocomplete');
 var deleteAcc = require('./routes/deleteAcc');
 var portfolio = require('./routes/portfolio');
+var goals = require('./routes/goals');
 
 var app = express();
 
@@ -43,17 +45,21 @@ app.use(bodyParser({uploadDir:'/images'}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-app.use(session({ authenticated: false, cookie: { maxAge: 600000 }, secret: 'secret' }));
+app.use(session({ authenticated: false, reqPath: '/', cookie: { maxAge: 600000 }, secret: 'secret' }));
 
 // authentication
 app.use(function(req, res, next) {
 	// console.log("Authentication " + req.url);
-	if ((req.url != '/login' && req.url != '/signup' && req.url !='/forgotPassword' && req.url !='/resetPassword') && !req.session.authenticated) {
-		console.log("Redirecting to login page");
-		res.redirect('/login');
-		return;
-	}
-	// console.log("Authenticated");
+	if (!req.session.authenticated && (req.url != '/login' && req.url != '/signup' &&
+    req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword')) {
+      console.log("Redirecting to login page");
+      req.session.reqPath = req.path;
+      res.redirect('/login');
+      return;
+  }
+  if (req.url != '/login') {
+    req.session.reqPath = '/'; // default
+  }
 	next();
 });
 
@@ -61,6 +67,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/signup', signup);
+app.use('/signout', signout);
 app.use('/expenses', expenses);
 app.use('/settings', settings);
 app.use('/forgotPassword', forgotPassword);
@@ -70,6 +77,7 @@ app.use('/dashboard', dashboard);
 app.use('/autocomplete', autocomplete);
 app.use('/deleteAcc', deleteAcc);
 app.use('/portfolio', portfolio);
+app.use('/goals', goals);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

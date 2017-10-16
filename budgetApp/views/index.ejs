@@ -14,30 +14,29 @@
         <div class="content-wrapper container-fluid">
             <!-- Main content -->
             <h1><%= title %></h1>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary active">
-                        <input type="radio" name="filter" id="month" checked>1 Month</input>
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="radio" name="filter" id="quarter">3 Months</input>
-                    </label>
-                    <label class="btn btn-primary">
-                        <input type="radio" name="filter" id="year">1 Year</input>
-                    </label>
-                </div>
+            <center>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="filter" id="month" checked>1 Month</input>
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="filter" id="quarter">3 Months</input>
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="filter" id="year">1 Year</input>
+                </label>
+            </div>
+            </center>
             <div class="row">
                 <div class="col-md-6">
-                    <h2>$500 remaining</h2>
-                    (Hardcoded.)
                     <canvas id="categories-pie"></canvas>
                 </div>
                 <div class="col-md-6">
                     <canvas id="time-bar"></canvas>
                 </div>
-                <div class="col-md-10">
-
-                </div>
             </div>
+            <br>
+            <div class="row" id="categories-box"></div>
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->

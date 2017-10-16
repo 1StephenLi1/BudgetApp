@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
 			res.redirect('/login');
 		} else {
 			var salt = user.dataValues.salt;
-			if (auth.sha512(creds.password, salt) == user.dataValues.password && user.dataValues.isDeleted == 0) {
+			if (auth.sha512(creds.password, salt) == user.dataValues.password) {
 				req.session.authenticated = true;
 				req.session.user = {
 					id: user.dataValues.id,
@@ -37,10 +37,9 @@ router.post('/', function(req, res, next) {
 					firstName: user.dataValues.firstName,
 					lastName: user.dataValues.lastName
 				}
-
-				res.redirect('/');
+				res.redirect(req.session.reqPath);
 			} else {
-				req.flash('login', 'Incorrect password or account does not exist for ' + user.email);
+				req.flash('login', 'Incorrect password');
 				res.redirect('/login');
 			}
 		}

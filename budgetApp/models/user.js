@@ -24,11 +24,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     profilePic: DataTypes.STRING, // Link to picture
     contactNumber: DataTypes.INTEGER,
-    isDeleted:  {
-      type: DataTypes.BOOLEAN,
-      defaultValue: 0,
-      allowNull: false
-    },
     resetPasswordToken : DataTypes.STRING,
     resetPasswordExpires : DataTypes.DATE
   });

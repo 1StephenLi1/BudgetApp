@@ -3,9 +3,13 @@ var router = express.Router();
 var models = require('../models');
 var session = require('express-session');
 var moment = require('moment');
-var user;
+var Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 router.get('/categories', function(req, res, next) {
+	if (req.query.date == null) {
+		req.query.date = '1970-01-01';
+	}
 	models.Cashflow.findAll({
 		where: {
 			"UserId": req.session.user.id,
@@ -24,7 +28,7 @@ router.get('/categories', function(req, res, next) {
 			totals.push(categories[i].dataValues.total);
 			names.push(categories[i].dataValues.Category.name);
 		}
-		res.end(JSON.stringify({totals: totals, names: names}));
+		res.end(JSON.stringify({totals: totals, names: names}, null, '\t'));
 	}).catch(function (err) {
         console.error(err);
         res.status(err.status || 500);
@@ -35,6 +39,9 @@ router.get('/categories', function(req, res, next) {
 })
 
 router.get('/time', function(req, res, next) {
+	if (req.query.date == null) {
+		req.query.date = '1970-01-01';
+	}
 	models.Cashflow.findAll({
 		attributes: ['dateTime', 'amount'],
 		where: {
@@ -77,7 +84,57 @@ router.get('/time', function(req, res, next) {
 			totals.push(currTotal);
 		}
 		
-		res.end(JSON.stringify({totals: totals, dates: dates}));
+		res.end(JSON.stringify({totals: totals, dates: dates}, null, '\t'));
+	}).catch(function (err) {
+        console.error(err);
+        res.status(err.status || 500);
+        res.render('error', {
+            user: req.session.user
+        });
+    });
+})
+
+router.get('/social', function(req, res, next) {
+	if (req.query.date == null) {
+		req.query.date = '1970-01-01';
+	}
+
+	models.Cashflow.sequelize.query("SELECT Categories.name, sum(Cashflows.amount) as total, Cashflows.UserId FROM Cashflows INNER JOIN Categories on Cashflows.CategoryId = Categories.id WHERE Cashflows.dateTime > $1 AND Cashflows.isExpense = 1 AND Categories.name in (SELECT name from Categories WHERE UserId = $2 AND type = 'expense') GROUP BY Categories.name, Cashflows.UserId;", { bind: [req.query.date, req.session.user.id] }).then(function(result) {
+		var data = [];
+		var i = 0;
+		while (i < result[0].length) {
+			var categoryName = result[0][i]['name'];
+			var me = null; // how much I've spent
+			var everyone = 0; // total for everyone
+			var people_lt_me = 0; // users spending less than me
+			var users = 0; // total users
+			for (var j = i; j < result[0].length; j++) {
+				if (result[0][j]['UserId'] == req.session.user.id) {
+					me = parseFloat(result[0][j]['total']);
+					break;
+				}
+			}
+			while (i < result[0].length) {
+				var curr = result[0][i];
+				if (curr['name'] != categoryName) {
+					break;
+				}
+				everyone += parseFloat(curr['total']);
+				if (curr['total'] < me) {
+					people_lt_me += 1;
+				}
+				users += 1;
+				i += 1;
+			}
+
+			data.push({ key: categoryName, value: {
+				me: me,
+				average: everyone/users,
+				more_than: people_lt_me,
+				users: users
+			}})
+		}
+		res.end(JSON.stringify(data, null, '\t'));
 	}).catch(function (err) {
         console.error(err);
         res.status(err.status || 500);

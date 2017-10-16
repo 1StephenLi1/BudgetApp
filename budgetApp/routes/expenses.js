@@ -8,13 +8,191 @@ var mv = require('mv');
 var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
+var Sequelize = require("sequelize");
 
+var categoryUrlQuery;
+router.get('/', function(req, res) {
+    models.Category.findAll({
+        where: {
+            type: "expense"
+        }
+    }).then(function(categories) {
+        res.render('expenses/expenses', {
+            title: 'All Expenses',
+            user: req.session.user,
+            categories: categories
+        })
+    })
+    categoryUrlQuery = req.query['category'];
+})
 
-/* GET home page. */
+router.post('/datatable', function(req, res) {
+    var start = parseInt(req.body.start);
+    var limit = parseInt(req.body.length);
+    orderColTarget = req.body['order[0][column]'];
+    orderColName = req.body['columns['+orderColTarget+'][name]']
+    order = [[orderColName, req.body['order[0][dir]']]];
+
+    if (orderColName == "dateTime") {
+        order.push(['createdAt', req.body['order[0][dir]']])
+    }
+
+    var searchTerms = req.body['search[value]'];
+    if (searchTerms != null && searchTerms != undefined){
+        var searchQuery = {
+            $and: [
+                Sequelize.where(Sequelize.fn('concat', Sequelize.col('Category.name'), ' ', Sequelize.col('shortDescription'), ' ', Sequelize.col('longDescription')), {
+                    like: '%' + searchTerms + '%'
+                })
+            ]
+        };
+    }
+
+    //Set start date to start at midnight
+    var startDate = moment(req.body.startDate)
+    startDate.millisecond(0);
+    startDate.seconds(0);
+    startDate.minutes(0);
+    startDate.hours(0);
+
+    // Set end date to finish at 11:59:59 PM
+    var endDate = moment(req.body.endDate);
+    endDate.millisecond(999);
+    endDate.seconds(59);
+    endDate.minutes(59);
+    endDate.hours(23);
+
+    var categoriesQuery
+
+    // Categories Filters
+    if (req.body.categories != undefined) {
+        categoriesQuery = [];
+        for (categoryId of JSON.parse(req.body.categories)) {
+            categoriesQuery.push({"CategoryId": categoryId});
+        }
+    } else {
+        if (categoryUrlQuery == null) {
+            categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];    
+        } else {
+            models.Category.findOne({
+                where: {
+                    name: categoryUrlQuery
+                }
+            }).then(function(category) {
+                categoriesQuery = [{"CategoryId": category.dataValues.id}];
+                models.Cashflow.count({
+        include: [
+            {
+                model: models.Category,
+                attributes: ['name'],
+                where: {
+                    type: 'expense'
+                }
+            },
+        ],
+        where: {
+            UserId: req.session.user.id,
+            isExpense: true,
+            searchQuery,
+            $or: categoriesQuery,
+            dateTime: {
+                $lte: endDate.toDate(),
+                $gte: startDate.toDate()
+            }
+        }
+    }).then(function(expensesCount) {
+        models.Cashflow.findAndCountAll({
+            include: [
+                {
+                    model: models.Category,
+                    attributes: ['name'],
+                    where: {
+                        type: 'expense'
+                    }
+                },
+            ],
+            where: {
+                UserId: req.session.user.id,
+                isExpense: true,
+                searchQuery,
+                $or: categoriesQuery,
+                dateTime: {
+                    $lte: endDate.toDate(),
+                    $gte: startDate.toDate()
+                }
+            },
+            order: order,
+            offset: start,
+            limit: limit
+        }).then(function(filteredExpenses) {
+            res.json({
+                data: filteredExpenses.rows,
+                recordsTotal: expensesCount,
+                recordsFiltered: filteredExpenses.count
+            })
+        })
+    })
+            })
+        }
+        
+    }
+
+    models.Cashflow.count({
+        include: [
+            {
+                model: models.Category,
+                attributes: ['name'],
+                where: {
+                    type: 'expense'
+                }
+            },
+        ],
+        where: {
+            UserId: req.session.user.id,
+            isExpense: true,
+            searchQuery,
+            $or: categoriesQuery,
+            dateTime: {
+                $lte: endDate.toDate(),
+                $gte: startDate.toDate()
+            }
+        }
+    }).then(function(expensesCount) {
+        models.Cashflow.findAndCountAll({
+            include: [
+                {
+                    model: models.Category,
+                    attributes: ['name'],
+                    where: {
+                        type: 'expense'
+                    }
+                },
+            ],
+            where: {
+                UserId: req.session.user.id,
+                isExpense: true,
+                searchQuery,
+                $or: categoriesQuery,
+                dateTime: {
+                    $lte: endDate.toDate(),
+                    $gte: startDate.toDate()
+                }
+            },
+            order: order,
+            offset: start,
+            limit: limit
+        }).then(function(filteredExpenses) {
+            res.json({
+                data: filteredExpenses.rows,
+                recordsTotal: expensesCount,
+                recordsFiltered: filteredExpenses.count
+            })
+        })
+    })
+})
 
 router.get('/addExpense', function(req, res) {
-
-    res.render('addExpense', {
+    res.render('expenses/addExpense', {
         title: 'Add Expense',
         user: req.session.user
     })
@@ -22,44 +200,67 @@ router.get('/addExpense', function(req, res) {
 
 
 router.post('/addExpense', function(req, res) {
-    models.Category.findOrCreate({
-        where: {
-            "UserId": req.session.user.id,
-            "type": "expense",
-            "name": req.body.category
-        },
-        default: {
-            "isArchived": 0
-        }
-    }).then(function([category, isNewlyCreated]) {
-        models.Cashflow.create({
-            dateTime: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
-            amount: req.body.amount,
-            shortDescription: req.body.shortDescription,
-            longDescription: req.body.longDescription,
-            isExpense: true,
-            CategoryId: category.dataValues.id,
-            UserId: req.session.user.id
-        }).then(function(expense) {
-            if (expense == null) {
-                res.status(400).json({
-                    errorMsg: "An error occured, try again later"
-                })
-            } else {
-                res.status(200).json({
-                    msg: "Expense added successfully"
-                })
-            }
+    if (req.session.user == null || req.session.user.id == null) {
+        res.json({
+            status: "error",
+            message: "You must be logged in to create an expense"
         })
-    }).catch(function (err) {
-        console.error(err);
-        res.status(err.status || 500);
-        res.render('error', {
-            user: req.session.user
+    } else if (req.body.category == null || req.body.category.length == 0) {
+        res.json({
+            status: "error",
+            message: "Category is a required field"
+        })
+    } else if (req.body.shortDescription.length > 100) {
+        res.json({
+            status: "error",
+            message: "Short Description of an expense can not be greater than 100 characters"
+        })
+    } else if (req.body.amount == null || req.body.amount <= 0) {
+        // error must have amount > 0
+        res.json({
+            status: "error",
+            message: "Expense amount must be greater than $0.00"
+        })
+    } else {
+        models.Category.findOrCreate({
+            where: {
+                UserId: req.session.user.id,
+                type: "expense",
+                name: req.body.category
+            },
+            default: {
+                "isArchived": 0
+            }
+        }).then(function([category, isNewlyCreated]) {
+            models.Cashflow.create({
+                dateTime: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
+                amount: req.body.amount,
+                shortDescription: req.body.shortDescription,
+                longDescription: req.body.longDescription,
+                isExpense: true,
+                CategoryId: category.dataValues.id,
+                UserId: req.session.user.id
+            }).then(function(income) {
+                if (income == null) {
+                    res.json({
+                        status: "error",
+                        message: "An error occured while adding expense, try again later"
+                    })
+                } else {
+                    res.json({
+                        status: "success",
+                        message: "expense was added successfully"
+                    })
+                }
+            })
+        }).catch(function (err) {
+            res.json({
+                status: "error",
+                message: "An error occured while adding expense, try again later"
+            })
         });
-    });
+    }
 })
-
 
 router.get('/uploadCsv', function(req, res) {
     res.render('uploadCsv', {
@@ -134,11 +335,11 @@ router.post('/uploadCsv', function(req, res) {
                     // res.status(200).json({
                     //     msg: "Expense added successfully"
                     // })
-                   
+
                 }
 
             })
-             next();
+             res.redirect('/expenses')
             }).catch(function (err) {
                 console.error(err);
                 res.status(err.status || 500);
@@ -148,11 +349,11 @@ router.post('/uploadCsv', function(req, res) {
             });
 
         })
-            
+
         .on("data", function(data){
 
         }).on("end", function(){
-           
+
         });
     }
 });
@@ -179,7 +380,7 @@ router.get('/export', function(req, res) {
                     var data=[];
                     console.log("Category: +++ " + cashflow);
                     for (var i = 0; i < cashflow.length; i++) {
-                            
+
                             data[data.length] = {
                                 "Category": cashflow[i].Category.name,
                                 "Amount": cashflow[i].dataValues.amount,
@@ -187,8 +388,8 @@ router.get('/export', function(req, res) {
                                 "Long Description": cashflow[i].dataValues.longDescription,
                                 "Expense Date": cashflow[i].dataValues.dateTime
                             }
-                    
-                       
+
+
                     }
                  json2csv({ data: data, fields: fields }, function(err, csv) {
                   if (err) console.log(err);
@@ -198,26 +399,13 @@ router.get('/export', function(req, res) {
                   res.download('expense.csv');
                 });
                 });
-                
+
                 }
         })
 })
 
-router.get('/deleteExpense', function(req, res) {
-    models.Cashflow.destroy({
-        where: {
-            id: req.query['id']
-        }
-    })
-    res.render('index', {
-        title: 'Dashboard',
-        user: req.session.user,
-    })
-
-})
-var cashflow;
 router.get('/editExpense', function(req, res) {
-        
+
         models.Cashflow.findOne({
             where: {
                 id: req.query['id']
@@ -233,11 +421,11 @@ router.get('/editExpense', function(req, res) {
                     user: req.session.user,
                     cashflow: cf,
                     category: cat
-                })        
+                })
             })
         })
-        
-        
+
+
         expenseId = req.query['id'];
         console.log("expenseId :"  + expenseId);
 })
@@ -260,11 +448,11 @@ router.post('/editExpense', function(req, res) {
                 id: cashflow.CategoryId
             }
         }).then(function(category) {
-            
+
             if (category) {
                 category.updateAttributes({
                     name: req.body.category
-                })        
+                })
             }
         })
         if (cashflow) {
@@ -284,24 +472,9 @@ router.post('/editExpense', function(req, res) {
         user: req.session.user
     })
     }
-   
-
-})
 
 
-router.get('/', function(req, res) {
-
-    models.Cashflow.findAll({
-
-        where:{
-            "UserId": req.session.user.id
-        },
-        include:[
-            {model:models.Category,
-            
-            }
-
-
+<<<<<<< HEAD
             ]
 
         }).then(function(cashflows){
@@ -315,15 +488,24 @@ router.get('/', function(req, res) {
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
         })
+=======
+>>>>>>> 78f12350c0cfcac4412636219a331361959b4cce
 })
 
-router.post('/', function(req, res) {
-    models.Cashflow.findAll().then(function(cashflows){console.log(cashflows)})
-    res.status(200).json({
-                    msg: " view history"
+router.delete('/:id', function(req, res) {
+    models.Cashflow.destroy({
+        where: {
+            id: req.params.id,
+            isExpense: true,
+            UserId: req.session.user.id
+        }
+    }).then(function() {
+        res.json({
+            status: "success",
+            message: "Expense has been deleted"
+        })
     })
 })
-
 
 
 module.exports = router;
