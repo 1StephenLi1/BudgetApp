@@ -8,23 +8,43 @@ var mv = require('mv');
 var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
+var yahooFinance = require('yahoo-finance');
 
 
 router.get('/', function(req, res) {
+
     models.Portfolio.findAll({
 
     where:{
         "UserId": req.session.user.id
     }}).then(function(portfolios){
-    
-    res.render('portfolio', {
-    title: 'Investment Portfolio',
-    user: req.session.user,
-    portfolios:portfolios
 
-    })
-     console.log(JSON.stringify(portfolios))
-     console.log("-----------------")
+
+        var i,len = portfolios.length;
+        for(i=0;i<len;i++){
+            
+            yahooFinance.historical({
+              symbol: portfolios[i]['symbol'],
+              from: portfolios[i]['firstTrade']
+            }, function (err, quotes) {
+                lastestQuote = quotes[quotes.len],
+                portfolios[i]['Change'] = 100,
+                console.log(quotes)
+
+            });
+            portfolios[i]['Change'] = 100;
+        }
+
+        res.render('portfolio', {
+        title: 'Investment Portfolio',
+        user: req.session.user,
+        portfolios:portfolios
+        })
+         console.log(JSON.stringify(portfolios[0]))
+         console.log("-----------------~")
+         console.log(JSON.stringify(portfolios[0]['Change']))
+         
+         
     })
    
 })

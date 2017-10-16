@@ -8,8 +8,6 @@ var mv = require('mv');
 var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
-var googleFinance = require('google-finance');
-var yahooFinance = require('yahoo-finance');
 
 
 /* GET home page. */
@@ -292,57 +290,6 @@ router.post('/editExpense', function(req, res) {
 
 
 router.get('/', function(req, res) {
-
-
-//just for testing google finance api
-    yahooFinance.historical({
-      symbol: 'BXB.AX',
-      from: '2017-03-01T13:00:00.000Z',
-      to: '2017-03-07T13:00:00.000Z'
-    }, function (err, quotes) {
-        /*console.log(quotes);
-        quotes.findOne({
-            where:{"volume":4563796}
-        }).then(funciton(test){
-            console.log("-------------")
-            console.log(JSON.stringify(test))
-        }
-      //...*/
-      console.log(quotes);
-      
-
-
-
-    });
-    function getvaluebyvolume(key,data){
-        var i;
-        var len=data.length;
-        for(i=0;i<len;i++){
-            if(data[i]&&data[i].volume==key){
-                return data[i];
-            }
-        }
-
-
-    }
-
-
-    
-    
-
-
-
-
-
-
-
-//testing end
-
-
-
-
-
-
 
     models.Cashflow.findAll({
 
