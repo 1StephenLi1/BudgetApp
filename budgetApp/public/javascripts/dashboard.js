@@ -2,6 +2,8 @@ var date = moment().subtract(1, 'months').format('YYYY-MM-DD');;
 var timeBar;
 var categoriesPie;
 
+var colours = ["red", "aqua", "olive", "yellow", "orange", "teal", "fuchsia", "maroon", "silver", "navy", "green", "purple"];
+
 // Function from https://jsfiddle.net/x04ptfuu/
 Chart.plugins.register({
     afterDraw: function(chart) {
@@ -59,11 +61,7 @@ function updateTimeBar(data) {
         data: {
             datasets: [{
                 data: data.totals,
-                backgroundColor: [
-                    "rgb(255, 99, 132)",
-                    "rgb(54, 162, 235)",
-                    "rgb(255, 205, 86)"
-                ]
+                backgroundColor: colours
             }],
             labels: data.dates
         },
@@ -101,11 +99,7 @@ function updateCategoriesPie(categories) {
         data: {
             datasets: [{
                 data: categories.totals,
-                backgroundColor: [
-                    "rgb(255, 99, 132)",
-                    "rgb(54, 162, 235)",
-                    "rgb(255, 205, 86)"
-                ]
+                backgroundColor: colours
             }],
             labels: categories.names
         },
@@ -119,7 +113,7 @@ function updateCategoriesPie(categories) {
     });
 }
 
-var colours = ["red", "aqua", "olive", "yellow", "orange", "teal", "fuchsia"];
+
 function updateCategoriesBox(data) {
     $("#categories-box").empty();
     for (var i = 0; i < data.length; i++) {
