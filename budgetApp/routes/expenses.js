@@ -14,8 +14,7 @@ var categoryUrlQuery;
 router.get('/', function(req, res) {
     models.Category.findAll({
         where: {
-            type: "expense",
-            UserId: req.session.user.id
+            type: "expense"
         }
     }).then(function(categories) {
         res.render('expenses/expenses', {
@@ -297,7 +296,7 @@ router.post('/uploadCsv', function(req, res) {
         return res.status(500).render('uploadCsv', { title: err, user: req.session.user.id});
     } else {
         var stream = fs.createReadStream(newFilePath + '/bin/' + csvFile.name);
-        res.render('addExpense', {
+        res.render('expenses/addExpense', {
         title: 'Add Expense',
         user: req.session.user
     })
@@ -340,7 +339,7 @@ router.post('/uploadCsv', function(req, res) {
                 }
 
             })
-             res.redirect('/expenses')
+            res.redirect('/expenses')
             }).catch(function (err) {
                 console.error(err);
                 res.status(err.status || 500);
