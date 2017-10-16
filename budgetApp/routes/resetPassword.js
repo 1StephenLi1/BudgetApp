@@ -39,16 +39,7 @@ router.post('/:token', function(req, res) {
 				password : auth.sha512(req.body.newPassword, salt)
 				});
 
-			req.session.authenticated = true;
-			req.session.user = {
-				id: user.dataValues.id,
-				email: user.dataValues.email,
-				firstName: user.dataValues.firstName,
-				lastName: user.dataValues.lastName
-			}
-
-			// req.flash('resetSuccess', 'Your password has been reset!');
-		   	res.redirect('/');
+			req.flash('resetSuccess', 'Your password has been reset! Please try logging in again.');
 		} else {
 		   req.flash('unmatchedPasswords', 'Passwords do not match!');	
 		}
