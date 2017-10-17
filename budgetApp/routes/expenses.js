@@ -405,6 +405,7 @@ router.get('/export', function(req, res) {
         })
 })
 
+var newCategoryId;
 router.get('/editExpense', function(req, res) {
 
         models.Cashflow.findOne({
@@ -439,29 +440,61 @@ router.post('/editExpense', function(req, res) {
         dialog.info("Please enter an amount");
         res.redirect("/expenses/editExpense?id="+expenseId);
     } else {
-         models.Cashflow.find({
+        // models.Category.findOrCreate({
+        //      where: {
+        //         UserId: req.session.user.id,
+        //         type: "expense",
+        //         name: req.body.category
+        //     },
+        //     default: {
+        //         "isArchived": 0
+        //     }
+        // }).then(function(category) {
+        //     models.Cashflow.findOne({
+        //         where: {
+        //             id: expenseId
+        //         }
+        //     }).then(function(cashflow) {
+        //         cashflow.updateAttributes({
+        //             CategoryId: category.dataValues.id,
+        //             amount: req.body.amount,
+        //             shortDescription: req.body.shortDescription,
+        //             longDescription: req.body.longDescription,
+        //         })
+        //     })
+        // })
+    models.Cashflow.find({
         where: {
             id: expenseId
         }
     }).then(function(cashflow) {
-        models.Category.find({
-            where: {
-                id: cashflow.CategoryId
-            }
-        }).then(function(category) {
+        console.log("category from web: +++++++++++++++++++++" + req.body.category);
+        console.log("category from web: +++++++++++++++++++++" + req.body.category);
+        console.log("category from web: +++++++++++++++++++++" + req.body.category);
+        console.log("category from web: +++++++++++++++++++++" + req.body.category);
+        models.Category.findOrCreate({
 
-            if (category) {
-                category.updateAttributes({
-                    name: req.body.category
-                })
+             where: {
+                "UserId": req.session.user.id,
+                "type": "expense",
+                "name": req.body.category
+            },
+            default: {
+                "isArchived": 0
             }
+        }).then(function([category, isNewlyCreated]) {
+            console.log("Category found: +++++++++++++++++" + category.dataValues.id);
+             cashflow.updateAttributes({
+            CategoryId: category.dataValues.id,
+            amount: req.body.amount,
+            shortDescription: req.body.shortDescription,
+            longDescription: req.body.longDescription,
         })
+        })
+
+        
         if (cashflow) {
-            cashflow.updateAttributes({
-                amount: req.body.amount,
-                shortDescription: req.body.shortDescription,
-                longDescription: req.body.longDescription,
-            })
+            
         } else {
             res.status(400).json({
                 errorMsg: "An error occured, try again later"
