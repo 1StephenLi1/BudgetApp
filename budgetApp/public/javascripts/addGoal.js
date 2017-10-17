@@ -26,3 +26,20 @@ function addGoal() {
         })
     }
 }
+
+function deleteGoal(button) {
+    $("#messageBox").hide();
+
+    $.ajax({
+        type: "POST",
+        url: "/goals/deleteGoal",
+        data: { goal: button.value },
+    }).then(function(result) {
+        if (result.status == 200) {
+            window.location.href = "/goals";
+            // $.notify({message: result.message}, {type: "success"});
+        } else {
+            $.notify({message: result.message}, {type: "danger", delay: 10000});
+        }
+    })
+}

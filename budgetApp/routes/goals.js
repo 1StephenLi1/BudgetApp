@@ -57,6 +57,17 @@ router.post('/addGoal', function(req, res) {
             goal.update({ amount: req.body.amount });
             isUpdated = true;
         }
+        if (goal.dataValues['name'] == null || goal.dataValues['name'] == undefined) {
+        	models.Category.findOne({
+		        where: {
+		            type: "expense",
+		            UserId: req.session.user.id,
+		            id: req.body.category
+		        }
+		    }).then(function(category) {
+		        goal.update({ name: category.dataValues['name'] });
+		    })
+        }
 
         var message;
         if (isUpdated && !isNewlyCreated) {
@@ -74,6 +85,33 @@ router.post('/addGoal', function(req, res) {
             res.status(200).json({
                 status: 200,
                 message: message
+            })
+        }
+    }).catch(function (err) {
+        console.error(err);
+        res.status(err.status || 500);
+        res.render('error', {
+            user: req.session.user
+        });
+    });
+})
+
+router.post('/deleteGoal', function(req, res) {
+	models.Goal.destroy({
+        where: {
+        	UserId: req.session.user.id,
+        	id: req.body.goal
+        }
+    }).then(function(status) {
+        if (status != true) {
+            res.status(400).json({
+                status: 400,
+                message: "An error occured, try again later"
+            })
+        } else {
+            res.status(200).json({
+                status: 200,
+                message: "Goal deleted successfully"
             })
         }
     }).catch(function (err) {

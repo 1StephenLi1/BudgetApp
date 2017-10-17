@@ -51,7 +51,7 @@
             <tr>
                 <td><%= goal.name %></td>
                 <td>$<%= goal.amount %> per month</td>
-                <td><button class="btn btn-danger">Delete</button></td>
+                <td><button onclick="deleteGoal(this)" value="<%= goal.id %>" class="btn btn-danger">Delete</button></td>
             </tr>
             <% } %>
         </table>
