@@ -440,57 +440,29 @@ router.post('/editExpense', function(req, res) {
         dialog.info("Please enter an amount");
         res.redirect("/expenses/editExpense?id="+expenseId);
     } else {
-        // models.Category.findOrCreate({
-        //      where: {
-        //         UserId: req.session.user.id,
-        //         type: "expense",
-        //         name: req.body.category
-        //     },
-        //     default: {
-        //         "isArchived": 0
-        //     }
-        // }).then(function(category) {
-        //     models.Cashflow.findOne({
-        //         where: {
-        //             id: expenseId
-        //         }
-        //     }).then(function(cashflow) {
-        //         cashflow.updateAttributes({
-        //             CategoryId: category.dataValues.id,
-        //             amount: req.body.amount,
-        //             shortDescription: req.body.shortDescription,
-        //             longDescription: req.body.longDescription,
-        //         })
-        //     })
-        // })
-    models.Cashflow.find({
-        where: {
-            id: expenseId
-        }
-    }).then(function(cashflow) {
-        console.log("category from web: +++++++++++++++++++++" + req.body.category);
-        console.log("category from web: +++++++++++++++++++++" + req.body.category);
-        console.log("category from web: +++++++++++++++++++++" + req.body.category);
-        console.log("category from web: +++++++++++++++++++++" + req.body.category);
-        models.Category.findOrCreate({
-
-             where: {
-                "UserId": req.session.user.id,
-                "type": "expense",
-                "name": req.body.category
-            },
-            default: {
-                "isArchived": 0
+        models.Cashflow.find({
+            where: {
+                id: expenseId
             }
-        }).then(function([category, isNewlyCreated]) {
-            console.log("Category found: +++++++++++++++++" + category.dataValues.id);
-             cashflow.updateAttributes({
-            CategoryId: category.dataValues.id,
-            amount: req.body.amount,
-            shortDescription: req.body.shortDescription,
-            longDescription: req.body.longDescription,
-        })
-        })
+        }).then(function(cashflow) {
+            models.Category.findOrCreate({
+
+                 where: {
+                    "UserId": req.session.user.id,
+                    "type": "expense",
+                    "name": req.body.category
+                },
+                default: {
+                    "isArchived": 0
+                }
+            }).then(function([category, isNewlyCreated]) {
+                cashflow.updateAttributes({
+                    CategoryId: category.dataValues.id,
+                    amount: req.body.amount,
+                    shortDescription: req.body.shortDescription,
+                    longDescription: req.body.longDescription,
+                })
+            })
 
         
         if (cashflow) {
@@ -501,10 +473,10 @@ router.post('/editExpense', function(req, res) {
             })
         }
     })
-    res.render('index', {
-        title: 'Dashboard',
-        user: req.session.user
-    })
+        res.render('index', {
+            title: 'Dashboard',
+            user: req.session.user
+        })
     }
 
 
