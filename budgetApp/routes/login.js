@@ -35,7 +35,8 @@ router.post('/', function(req, res, next) {
 					id: user.dataValues.id,
 					email: user.dataValues.email,
 					firstName: user.dataValues.firstName,
-					lastName: user.dataValues.lastName
+					lastName: user.dataValues.lastName,
+					twoFactorAuth : user.twoFactorAuth
 				}
 				res.redirect(req.session.reqPath);
 			} else {

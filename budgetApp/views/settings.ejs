@@ -6,7 +6,7 @@
     <style>
         </style>
 </head>
-<!-- template from: https://www.bootply.com/sY7gQy6XF7 -->
+<!-- template adapted from: https://www.bootply.com/sY7gQy6XF7 -->
 <% include includes/top-nav.ejs %>
 <% include includes/side-nav.ejs %>
 
@@ -73,10 +73,15 @@
                           </div>
                           <div class="form-group">
                             <label class="col-md-3 control-label"></label>
-                            <div class="col-md-8">
+                            <div class="col-md-8">                              
+                              <% if (user.twoFactorAuth) { %>
+                                  <input type="checkbox" name="twoFactorAuth" value="1" checked>&nbsp Two Factor Authentication on Login<br>                                  
+                              <% } else {%>
+                                <input type="checkbox" name="twoFactorAuth" value="1">&nbsp Two Factor Authentication on Login<br>
+                              <% } %>
+                              <br>                                
                               <button type="submit" class="btn btn-primary">Save Changes</button>
-                              <input type="reset" class="btn btn-default" value="Cancel">
-                              <br>
+                              <input type="reset" class="btn btn-default" value="Cancel"><br>
                               <br>
                               <a href ="/deleteAcc">I Wish to Delete My Account</a>
                             </div>

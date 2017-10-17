@@ -22,6 +22,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    twoFactorAuth:  {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
     profilePic: DataTypes.STRING, // Link to picture
     contactNumber: DataTypes.INTEGER,
     resetPasswordToken : DataTypes.STRING,
