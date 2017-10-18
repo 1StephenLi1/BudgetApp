@@ -2,7 +2,7 @@ var date = moment().subtract(1, 'months').format('YYYY-MM-DD');;
 var timeBar;
 var categoriesPie;
 
-var colours = ["red", "aqua", "olive", "yellow", "orange", "teal", "fuchsia", "maroon", "silver", "navy", "green", "purple"];
+var colours = ["red", "aqua", "yellow", "purple", "orange", "maroon", "silver", "navy", "green", "teal", "fuchsia", "olive"];
 
 // Function from https://jsfiddle.net/x04ptfuu/
 Chart.plugins.register({
@@ -47,7 +47,7 @@ function updatePage() {
     $.getJSON('/dashboard/time?date=' + date + '&filter=' + filter, function (data) {
         updateTimeBar(data);
     });
-    $.getJSON('/dashboard/social?date=' + date, function (data) {
+    $.getJSON('/dashboard/social?date=' + date + '&filter=' + filter, function (data) {
         updateCategoriesBox(data);
     });
 }
@@ -120,10 +120,17 @@ function updateCategoriesBox(data) {
         var html = '<div class="col-md-4">';
         html += '<a href="/expenses?category=' + data[i]["key"] + '"><div class="bg-' + colours[i % colours.length] + ' category-box">';
         html +='<h3>' + data[i]["key"] + '</h3>';
-        // TODO: show progress towards goal
-        html += '<div class="progress"><div class="progress-bar" style="width: 25%"></div></div>';
+        //if (data[i]['value']['goal_percentage']) {
+            // layout issues when boxes of different height
+            html += '<div class="progress"><div class="progress-bar" style="width: ' + data[i]['value']['goal_percentage'] + '%"></div></div>';
+        //}
         // TODO: show goal
-        html += '<p><b>$' + data[i]['value']['me'] + '</b> of $???</p>';
+        html += '<p><b>$' + data[i]['value']['me'];
+        if (data[i]['value']['goal']) {
+            html += '</b> of $' + data[i]['value']['goal'] + '</p>';
+        } else {
+            html += '</b></p>';
+        }
         html += '<p class="category-box-social">';
         html += 'Spending more than ' + data[i]['value']['more_than'] + '/' + data[i]['value']['users'] + ' people';
         html += '<br>';

@@ -99,42 +99,66 @@ router.get('/social', function(req, res, next) {
 		req.query.date = '1970-01-01';
 	}
 
-	models.Cashflow.sequelize.query("SELECT Categories.name, sum(Cashflows.amount) as total, Cashflows.UserId FROM Cashflows INNER JOIN Categories on Cashflows.CategoryId = Categories.id WHERE Cashflows.dateTime > $1 AND Cashflows.isExpense = 1 AND Categories.name in (SELECT name from Categories WHERE UserId = $2 AND type = 'expense') GROUP BY Categories.name, Cashflows.UserId;", { bind: [req.query.date, req.session.user.id] }).then(function(result) {
-		var data = [];
-		var i = 0;
-		while (i < result[0].length) {
-			var categoryName = result[0][i]['name'];
-			var me = null; // how much I've spent
-			var everyone = 0; // total for everyone
-			var people_lt_me = 0; // users spending less than me
-			var users = 0; // total users
-			for (var j = i; j < result[0].length; j++) {
-				if (result[0][j]['UserId'] == req.session.user.id) {
-					me = parseFloat(result[0][j]['total']);
-					break;
-				}
+	models.Cashflow.sequelize.query("SELECT Categories.name, Categories.id, sum(Cashflows.amount) as total, Cashflows.UserId FROM Cashflows INNER JOIN Categories on Cashflows.CategoryId = Categories.id WHERE Cashflows.dateTime > $1 AND Cashflows.isExpense = 1 AND Categories.name in (SELECT name from Categories WHERE UserId = $2 AND type = 'expense') GROUP BY Categories.name, Categories.id, Cashflows.UserId;", { bind: [req.query.date, req.session.user.id] }).then(function(result) {
+		models.Goal.findAll({
+			where: {
+				"UserId": req.session.user.id
+			},
+			order: [['CategoryId', 'ASC']]
+		}).then(function(goals_db) {
+			goals = {};
+			for (var i = 0; i < goals_db.length; i++) {
+				goals[goals_db[i].dataValues['CategoryId']] = goals_db[i].amount;
 			}
+			var data = [];
+			var i = 0;
 			while (i < result[0].length) {
-				var curr = result[0][i];
-				if (curr['name'] != categoryName) {
-					break;
+				var categoryName = result[0][i]['name'];
+				var me = null; // how much I've spent
+				var everyone = 0; // total for everyone
+				var people_lt_me = 0; // users spending less than me
+				var users = 0; // total users
+				var goal = null;
+				var goal_percentage = 0;
+				// find my total, used to make comparisons with others
+				for (var j = i; j < result[0].length; j++) {
+					if (result[0][j]['UserId'] == req.session.user.id) {
+						me = parseFloat(result[0][j]['total']);
+						break;
+					}
 				}
-				everyone += parseFloat(curr['total']);
-				if (curr['total'] < me) {
-					people_lt_me += 1;
+				while (i < result[0].length) {
+					var curr = result[0][i];
+					if (curr['name'] != categoryName) {
+						break;
+					}
+					everyone += parseFloat(curr['total']);
+					if (curr['total'] < me) {
+						people_lt_me += 1;
+					}
+					if (goals[curr['id']]) {
+						goal = goals[curr['id']];
+						if (req.query.filter == "quarter") {
+							goal *= 4;
+						} else if (req.query.filter == "year") {
+							goal *= 12;
+						}
+						goal_percentage = me*100/goal;
+					}
+					users += 1;
+					i += 1;
 				}
-				users += 1;
-				i += 1;
+				data.push({ key: categoryName, value: {
+					me: me,
+					average: everyone/users,
+					more_than: people_lt_me,
+					users: users,
+					goal: goal,
+					goal_percentage: goal_percentage
+				}})
 			}
-
-			data.push({ key: categoryName, value: {
-				me: me,
-				average: everyone/users,
-				more_than: people_lt_me,
-				users: users
-			}})
-		}
-		res.end(JSON.stringify(data, null, '\t'));
+			res.end(JSON.stringify(data, null, '\t'));
+		})
 	}).catch(function (err) {
         console.error(err);
         res.status(err.status || 500);
