@@ -46,6 +46,7 @@
                 <td><%= portfolios[i].boughtPrice %></td>
                 <td><%= portfolios[i].shareAmount %></td>
                 <td><%= portfolios[i].firstTrade %></td> 
+
                 <td>emmmmm</td>
                 <td><a href="expenses/editPortfolio?id=<%= portfolios[i].id %>">edit</a></td>
                 <td><a href="expenses/deletePortfolio?id=<%= portfolios[i].id %>">delete</a></td>
@@ -55,7 +56,37 @@
 
    
             </table>
-           
+           <script>yahooFinance.historical({
+  symbol: SYMBOL,
+  from: START_DATE,
+  to: END_DATE
+}, function (err, quotes) {
+  /*
+  [
+    {
+      date: Thu Nov 07 2013 00:00:00 GMT-0500 (EST),
+      open: 45.1,
+      high: 50.09,
+      low: 44,
+      close: 44.9,
+      volume: 117701700,
+      adjClose: 44.9,
+      symbol: 'TWTR'
+    },
+    ...
+    {
+      date: Thu Nov 14 2013 00:00:00 GMT-0500 (EST),
+      open: 42.34,
+      high: 45.67,
+      low: 42.24,
+      close: 44.69,
+      volume: 11090800,
+      adjClose: 44.69,
+      symbol: 'TWTR'
+    }
+  ]
+  */
+});</script>
           
             <script type="text/javascript">
                 $(document).ready(function() {

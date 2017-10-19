@@ -467,18 +467,6 @@ router.post('/editExpense', function(req, res) {
             })
         }
     })
-    res.render('index', {
-        title: 'Dashboard',
-        user: req.session.user
-    })
-    }
-
-
-<<<<<<< HEAD
-            ]
-
-        }).then(function(cashflows){
-        
         res.render('view-history', {
         title: 'view-history',
         user: req.session.user,
@@ -487,10 +475,9 @@ router.post('/editExpense', function(req, res) {
         })
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
-        })
-=======
->>>>>>> 78f12350c0cfcac4412636219a331361959b4cce
-})
+    }})
+
+
 
 router.delete('/:id', function(req, res) {
     models.Cashflow.destroy({

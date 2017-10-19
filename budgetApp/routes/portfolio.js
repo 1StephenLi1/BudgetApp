@@ -9,9 +9,12 @@ var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
 var yahooFinance = require('yahoo-finance');
+var Sync = require('sync');
+var Q = require('q');
 
 
 router.get('/', function(req, res) {
+    var p = null
 
     models.Portfolio.findAll({
 
@@ -19,35 +22,42 @@ router.get('/', function(req, res) {
         "UserId": req.session.user.id
     }}).then(function(portfolios){
 
-
         var i,len = portfolios.length;
         for(i=0;i<len;i++){
             
             yahooFinance.historical({
               symbol: portfolios[i]['symbol'],
               from: portfolios[i]['firstTrade']
-            }, function (err, quotes) {
-                lastestQuote = quotes[quotes.len],
-                portfolios[i]['Change'] = 100,
-                console.log(quotes)
+            },function(err,quotes){
+                quotesLen = quotes[quotes.len]
 
-            });
+                
+                console.log("in function")
+                
+            })
+
             portfolios[i]['Change'] = 100;
+            
+           
+           
         }
-
         res.render('portfolio', {
-        title: 'Investment Portfolio',
-        user: req.session.user,
-        portfolios:portfolios
+            title: 'Investment Portfolio',
+            user: req.session.user,
+            portfolios:portfolios
         })
-         console.log(JSON.stringify(portfolios[0]))
-         console.log("-----------------~")
-         console.log(JSON.stringify(portfolios[0]['Change']))
-         
+        
+        
+        
+        //console.log(JSON.stringify(portfolios[i]['Change']))
+        
          
     })
+    
+
+    
    
-})
+
 
 router.get('/addInvestment', function(req, res) {
 
