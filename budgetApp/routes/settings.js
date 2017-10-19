@@ -16,6 +16,13 @@ router.get('/', function(req, res, next) {
     })
 });
 
+router.get('/deleteAcc', function(req, res, next) {
+    res.render('deleteAcc', {
+        title: 'Profile Settings',
+        user: req.session.user,
+    })
+  });
+
 /* POST settings */
 router.post('/', function(req, res) {
 
@@ -127,7 +134,19 @@ router.post('/deleteAccConfirm', function(req, res) {
             res.render('error', {
                 user: req.session.user
             });
-        })
+        });
+
+        models.Cashflow.destroy({
+            where: {
+                "UserId" : req.session.user.id
+            }
+        }).catch(function (err) {
+            console.error(err);
+            res.status(err.status || 500);
+            res.render('error', {
+                user: req.session.user
+            });
+        });
 
         models.User.destroy({
             where: {
