@@ -15,10 +15,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
-var signout = require('./routes/signout');
 var expenses = require('./routes/expenses');
 var settings = require('./routes/settings');
-var forgotPassword = require('./routes/forgotPassword');
 var resetPassword = require('./routes/resetPassword');
 var incomes = require('./routes/incomes');
 var dashboard = require('./routes/dashboard');
@@ -52,7 +50,7 @@ app.use(session({ authenticated: false, reqPath: '/', cookie: { maxAge: 600000 }
 app.use(function(req, res, next) {
 	// console.log("Authentication " + req.url);
 	if (!req.session.authenticated && (req.url != '/login' && req.url != '/signup' &&
-    req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword' && req.url.substring(0, 14) != '/twoFactorAuth' )) {
+    req.url !='/users/forgotPassword' && req.url.substring(0, 14) !='/resetPassword' && req.url.substring(0, 14) != '/twoFactorAuth' )) {
       console.log("Redirecting to login page");
       req.session.reqPath = req.path;
       res.redirect('/login');
@@ -68,10 +66,8 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/signup', signup);
-app.use('/signout', signout);
 app.use('/expenses', expenses);
 app.use('/settings', settings);
-app.use('/forgotPassword', forgotPassword);
 app.use('/resetPassword', resetPassword);
 app.use('/incomes', incomes);
 app.use('/dashboard', dashboard);
