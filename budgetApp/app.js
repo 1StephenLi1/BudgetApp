@@ -50,7 +50,7 @@ app.use(session({ authenticated: false, reqPath: '/', cookie: { maxAge: 600000 }
 app.use(function(req, res, next) {
 	// console.log("Authentication " + req.url);
 	if (!req.session.authenticated && (req.url != '/login' && req.url != '/signup' &&
-    req.url !='/users/forgotPassword' && req.url.substring(0, 14) !='/resetPassword' && req.url.substring(0, 14) != '/twoFactorAuth' )) {
+    req.url !='/login/forgotPassword' && req.url.substring(0, 20) !='/login/resetPassword' && req.url.substring(0, 20) != '/login/twoFactorAuth' )) {
       console.log("Redirecting to login page");
       req.session.reqPath = req.path;
       res.redirect('/login');
