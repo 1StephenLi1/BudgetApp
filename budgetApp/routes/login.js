@@ -76,9 +76,8 @@ router.post('/', function(req, res, next) {
 							console.log('Message sent: %s', info.messageId);
 			
 						});
+						res.redirect('/login/twoFactorAuth/' + token);						
 							}
-					res.redirect('/login/twoFactorAuth/' + token);
-
 			} else {
 				req.flash('login', 'Incorrect password');
 				res.redirect('/login');
