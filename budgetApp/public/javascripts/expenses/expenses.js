@@ -38,11 +38,11 @@ $(document).ready(function() {
         info: true,
         pagingType: "full_numbers",
         language: {
-            lengthMenu: "Display _MENU_ stocktakes per page",
-            zeroRecords: "No stocktakes found",
-            info: "Showing _START_ to _END_ of _TOTAL_ stocktakes",
-            infoEmpty: "No stocktakes available",
-            infoFiltered: "(filtered from _MAX_ total stocktakes)",
+            lengthMenu: "Display _MENU_ expenses per page",
+            zeroRecords: "No expenses found",
+            info: "Showing _START_ to _END_ of _TOTAL_ expenses",
+            infoEmpty: "No expenses available",
+            infoFiltered: "(filtered from _MAX_ total expenses)",
             paginate: {
                 first: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>',
                 previous: '<i class="fa fa-angle-left" aria-hidden="true"></i>',
