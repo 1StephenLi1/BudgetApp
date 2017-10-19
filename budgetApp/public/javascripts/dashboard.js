@@ -122,9 +122,34 @@ function updateCategoriesBox(data) {
         html +='<h3>' + data[i]["key"] + '</h3>';
         //if (data[i]['value']['goal_percentage']) {
             // layout issues when boxes of different height
-            html += '<div class="progress"><div class="progress-bar" style="width: ' + data[i]['value']['goal_percentage'] + '%"></div></div>';
+            html += '<div class="progress progress-box"><div class="progress-bar progress-bar-box" style="width: ' + data[i]['value']['goal_percentage'] + '%"></div></div>';
         //}
-        // TODO: show goal
+        html += '<p><b>$' + data[i]['value']['me'];
+        if (data[i]['value']['goal']) {
+            html += '</b> of $' + data[i]['value']['goal'] + '</p>';
+        } else {
+            html += '</b></p>';
+        }
+        html += '<p class="category-box-social">';
+        html += 'Spending more than ' + data[i]['value']['more_than'] + '/' + data[i]['value']['users'] + ' people';
+        html += '<br>';
+        html += 'Average spend is $' + data[i]['value']['average'].toFixed(0);
+        html += '<br></p>';
+        html += '</div></a></div>';
+        $("#categories-box").append(html);
+    }
+}
+
+function updateProgressBars(data) {
+    $("#categories-box").empty();
+    for (var i = 0; i < data.length; i++) {
+        var html = '<div class="col-md-4">';
+        html += '<a href="/expenses?category=' + data[i]["key"] + '"><div class="bg-' + colours[i % colours.length] + ' category-box">';
+        html +='<h3>' + data[i]["key"] + '</h3>';
+        //if (data[i]['value']['goal_percentage']) {
+            // layout issues when boxes of different height
+            html += '<div class="progress-box"><div class="progress-bar-box" style="width: ' + data[i]['value']['goal_percentage'] + '%"></div></div>';
+        //}
         html += '<p><b>$' + data[i]['value']['me'];
         if (data[i]['value']['goal']) {
             html += '</b> of $' + data[i]['value']['goal'] + '</p>';

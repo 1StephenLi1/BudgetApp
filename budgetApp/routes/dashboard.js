@@ -168,4 +168,29 @@ router.get('/social', function(req, res, next) {
     });
 })
 
+router.get('/goals', function(req, res, next) {
+	if (req.query.date == null) {
+		req.query.date = '1970-01-01';
+	}
+
+	models.Goal.findAll({
+		where: {
+			"UserId": req.session.user.id,
+			"CategoryId": {
+				or: [-1, 0]
+			}
+		}
+	}).then(function(goals_db) {
+		var data = {};
+		console.log(goals_db.dataValues);
+		// res.end(JSON.stringify(data, null, '\t'));
+	}).catch(function (err) {
+        console.error(err);
+        res.status(err.status || 500);
+        res.render('error', {
+            user: req.session.user
+        });
+    });
+})
+
 module.exports = router;

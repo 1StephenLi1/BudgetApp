@@ -22,13 +22,35 @@
     width: 100%;
 }
 
-.progress {
+.progress-goal {
+    background-color: rgba(255,255,255,.5);
+    height: 50px;
+    margin: 20px;
+    line-height: 40px;
+    font-size: 1.5em;
+    padding: 5px;
+    text-align: center;
+}
+
+.progress-bar-spending {
+    background-color: orange;
+    line-height: inherit;
+    font-size: inherit;
+}
+
+.progress-bar-saving {
+    background-color: green;
+    line-height: inherit;
+    font-size: inherit;
+}
+
+.progress-box {
     background-color: rgba(0,0,0,.2);
     height: 8px;
     margin-bottom: 8px;
 }
 
-.progress-bar {
+.progress-bar-box {
     background-color: white;
 }
 
