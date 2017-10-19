@@ -5,8 +5,6 @@ var auth = require('../auth.js');
 var randtoken = require('rand-token');
 var nodemailer = require('nodemailer');
 
-
-
 /* GET login page */
 router.get('/', function(req, res, next) {
 	if (req.session.authenticated) {
@@ -50,34 +48,34 @@ router.post('/', function(req, res, next) {
 					var token = randtoken.generate(20);
 					var code = randtoken.generate(6)
 					
-								user.update({
-									twoFactorAuthCode : code,
-									twoFactorAuthToken : token,
-									twoFactorExpires : Date.now() + 90000,
-								});
+						user.update({
+							twoFactorAuthCode : code,
+							twoFactorAuthToken : token,
+							twoFactorExpires : Date.now() + 90000,
+						});
+			
+						var smtpTransport = nodemailer.createTransport({
+							service: "gmail",
+							host: "smtp.gmail.com",
+							auth: {
+								user: "budgetApp4920@gmail.com",
+								pass: "budgetApp./"
+							}
+						});
+						let mailOptions = {
+							from: 'Budget App <budgetApp4920@gmail.com>', 
+							to: user.email, 
+							subject: 'Login Code', 
+							html: 'Your login code is: <br><b>' + code + '</b>' 
+						};
 					
-								var smtpTransport = nodemailer.createTransport({
-									service: "gmail",
-									host: "smtp.gmail.com",
-									auth: {
-										user: "budgetApp4920@gmail.com",
-										pass: "budgetApp./"
-									}
-								});
-								let mailOptions = {
-									from: 'Budget App <budgetApp4920@gmail.com>', 
-									to: user.email, 
-									subject: 'Login Code', 
-									html: 'Your login code is: <br><b>' + code + '</b>' 
-								};
-							
-								smtpTransport.sendMail(mailOptions, (error, info) => {
-									if (error) {
-										return console.log(error);
-									}
-									console.log('Message sent: %s', info.messageId);
-					
-								});
+						smtpTransport.sendMail(mailOptions, (error, info) => {
+							if (error) {
+								return console.log(error);
+							}
+							console.log('Message sent: %s', info.messageId);
+			
+						});
 							}
 					res.redirect('/login/twoFactorAuth/' + token);
 
