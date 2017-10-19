@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include includes/head.ejs %>
+</head>
+
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="/"><b>Budget</b>App</a>
+        </div>
+       
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            <p class="login-box-msg">Please enter the authentication code sent to your e-mail.</p>
+
+            <% if (incorrectCode != null && incorrectCode.length > 0) { %>
+                <div class="alert alert-warning"><%= incorrectCode %></div>
+            <% } %>
+
+            <form method="post">
+                <div class="form-group has-feedback">
+                    <input type="text" name="twoFaCode" class="form-control" placeholder="Code" required autofocus>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <!-- /.login-box-body -->
+    <% include includes/jsDefaults.ejs %>
+
+</body>
+</html>

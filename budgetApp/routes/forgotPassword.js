@@ -59,7 +59,6 @@ router.post('/', function(req, res) {
 				console.log('Message sent: %s', info.messageId);
 
 			});
-			req.session.resetPassword = true;
 			req.flash('reset', 'A password reset e-mail has been sent to ' + req.body.email);			
 		}
 		

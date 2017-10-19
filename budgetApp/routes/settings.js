@@ -44,13 +44,18 @@ router.post('/', function(req, res) {
         email: email,
         firstName: firstName,
         lastName: lastName,
+        twoFactorAuth : req.body.twoFactorAuth
         },
         {
         where: {
             "id": req.session.user.id,
         }
     }).catch(function (err) {
-    console.log("oh no");
+   console.error(err);
+            res.status(err.status || 500);
+            res.render('error', {
+                user: req.session.user
+            });
     });
 
     if (Object.keys(req.body.password).length !== 0) {
@@ -63,8 +68,19 @@ router.post('/', function(req, res) {
             "id": req.session.user.id,
         }
     }).catch(function (err) {
-    console.log("oh no");
+   console.error(err);
+            res.status(err.status || 500);
+            res.render('error', {
+                user: req.session.user
+            });
     });
+    }
+    req.session.user = {
+        id : req.session.user.id,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        twoFactorAuth : req.body.twoFactorAuth
     }
     res.redirect('/');          
 })

@@ -296,7 +296,7 @@ router.post('/uploadCsv', function(req, res) {
         return res.status(500).render('uploadCsv', { title: err, user: req.session.user.id});
     } else {
         var stream = fs.createReadStream(newFilePath + '/bin/' + csvFile.name);
-        res.render('addExpense', {
+        res.render('expenses/addExpense', {
         title: 'Add Expense',
         user: req.session.user
     })
@@ -339,7 +339,7 @@ router.post('/uploadCsv', function(req, res) {
                 }
 
             })
-             res.redirect('/expenses')
+            res.redirect('/expenses')
             }).catch(function (err) {
                 console.error(err);
                 res.status(err.status || 500);
@@ -362,7 +362,8 @@ router.post('/uploadCsv', function(req, res) {
 router.get('/export', function(req, res) {
         models.Cashflow.findAll({
         where: {
-            "isExpense": true
+            "isExpense": true,
+            "UserId": req.session.user.id
         },
         include: [
             {
@@ -404,6 +405,7 @@ router.get('/export', function(req, res) {
         })
 })
 
+var newCategoryId;
 router.get('/editExpense', function(req, res) {
 
         models.Cashflow.findOne({
@@ -438,35 +440,40 @@ router.post('/editExpense', function(req, res) {
         dialog.info("Please enter an amount");
         res.redirect("/expenses/editExpense?id="+expenseId);
     } else {
-         models.Cashflow.find({
-        where: {
-            id: expenseId
-        }
-    }).then(function(cashflow) {
-        models.Category.find({
+        models.Cashflow.find({
             where: {
-                id: cashflow.CategoryId
+                id: expenseId
             }
-        }).then(function(category) {
+        }).then(function(cashflow) {
+            models.Category.findOrCreate({
 
-            if (category) {
-                category.updateAttributes({
-                    name: req.body.category
+                 where: {
+                    "UserId": req.session.user.id,
+                    "type": "expense",
+                    "name": req.body.category
+                },
+                default: {
+                    "isArchived": 0
+                }
+            }).then(function([category, isNewlyCreated]) {
+                cashflow.updateAttributes({
+                    CategoryId: category.dataValues.id,
+                    amount: req.body.amount,
+                    shortDescription: req.body.shortDescription,
+                    longDescription: req.body.longDescription,
                 })
-            }
-        })
-        if (cashflow) {
-            cashflow.updateAttributes({
-                amount: req.body.amount,
-                shortDescription: req.body.shortDescription,
-                longDescription: req.body.longDescription,
             })
+
+        
+        if (cashflow) {
+            
         } else {
             res.status(400).json({
                 errorMsg: "An error occured, try again later"
             })
         }
     })
+
         res.render('view-history', {
         title: 'view-history',
         user: req.session.user,
@@ -476,6 +483,7 @@ router.post('/editExpense', function(req, res) {
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
     }})
+
 
 
 
