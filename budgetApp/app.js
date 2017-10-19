@@ -26,6 +26,7 @@ var autocomplete = require('./routes/autocomplete');
 var deleteAcc = require('./routes/deleteAcc');
 var portfolio = require('./routes/portfolio');
 var goals = require('./routes/goals');
+var twoFactorAuth = require('./routes/twoFactorAuth');
 
 var app = express();
 
@@ -51,7 +52,7 @@ app.use(session({ authenticated: false, reqPath: '/', cookie: { maxAge: 600000 }
 app.use(function(req, res, next) {
 	// console.log("Authentication " + req.url);
 	if (!req.session.authenticated && (req.url != '/login' && req.url != '/signup' &&
-    req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword')) {
+    req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword' && req.url.substring(0, 14) != '/twoFactorAuth' )) {
       console.log("Redirecting to login page");
       req.session.reqPath = req.path;
       res.redirect('/login');
@@ -78,6 +79,7 @@ app.use('/autocomplete', autocomplete);
 app.use('/deleteAcc', deleteAcc);
 app.use('/portfolio', portfolio);
 app.use('/goals', goals);
+app.use('/twoFactorAuth', twoFactorAuth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
