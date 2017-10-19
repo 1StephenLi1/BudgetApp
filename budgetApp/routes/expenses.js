@@ -14,7 +14,8 @@ var categoryUrlQuery;
 router.get('/', function(req, res) {
     models.Category.findAll({
         where: {
-            type: "expense"
+            type: "expense",
+            UserId: req.session.user.id,
         }
     }).then(function(categories) {
         res.render('expenses/expenses', {
@@ -352,7 +353,8 @@ router.get('/editExpense', function(req, res) {
     }).then(function(cf){
         models.Category.findOne({
             where: {
-                id: cf.dataValues.CategoryId
+                id: cf.dataValues.CategoryId,
+                UserId: req.session.user.id,
             }
         }).then(function(cat) {
             res.render('editExpense', {
