@@ -28,14 +28,12 @@
             </div>
             </center>
             <div class="row">
-                <div class="progress progress-goal">
-                    <div class="progress-bar progress-bar-spending" role="progressbar" style="width:40%">Spending (hardcoded)
-                    </div>
-                    <div class="progress-bar progress-bar-saving" role="progressbar" style="width:10%">Savings (hardcoded)
-                    </div>
-                    $X Remaining
+                <div class="col-md-12">
+                <canvas id="summary-bar"></canvas>
                 </div>
             </div>
+            <br>
+            <div class="row" id="categories-box"></div>
             <div class="row">
                 <div class="col-md-6">
                     <canvas id="categories-pie"></canvas>
@@ -44,8 +42,6 @@
                     <canvas id="time-bar"></canvas>
                 </div>
             </div>
-            <br>
-            <div class="row" id="categories-box"></div>
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
