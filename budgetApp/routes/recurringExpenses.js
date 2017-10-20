@@ -3,7 +3,10 @@ var router = express.Router();
 var models = require('../models');
 var moment = require('moment-timezone');
 var later = require('later');
+var CronJob = require('cron').CronJob;
 var Sequelize = require("sequelize");
+
+var activeJobs = [];
 
 // Get View Recurring Expenses Page
 router.get('/', function(req, res) {
@@ -166,7 +169,12 @@ router.post('/addRecurringExpense', function(req, res) {
             var interval = req.body.interval;
             var startsOn;
             var endsOn;
-            var repeatsOn = "";
+            var repeatsOn;
+            if (req.body.repeatsOn != null && req.body.repeatsOn != undefined) {
+                repeatsOn = req.body.repeatsOn;
+            } else {
+                repeatsOn = null;
+            }
 
             if (req.body.startsOnRadio == "now") {
                 startsOn = new Date();
@@ -190,31 +198,41 @@ router.post('/addRecurringExpense', function(req, res) {
                 startDate: startsOn,
                 endDate: endsOn,
                 frequency: frequency,
-                interval: interval
+                interval: interval,
+                repeatsOn: repeatsOn
             }).then(function(recurring) {
-                var textSched = "";
+                // var textSched = "";
+                var cronTime = ""
                 var recurringId = recurring.id;
 
-                if (frequency == "days") {
-                    textSched = 'every ' + interval + ' minutes';
-
+                if (frequency == "minutes") {
+                    cronTime = '*/' + interval + ' * * * *'
+                } else if (frequency == "days") {
+                    // textSched = 'every ' + interval + ' minutes';
                     // var s = later.parse.recur()
                     //     .every(interval*24).hour()
-                    var s = later.parse.text(textSched);
+                    // var s = later.parse.text(textSched);
+                    cronTime = '* * */' + interval + ' * *'
                 } else if (frequency == "weeks") {
                     repeatsOn = req.body.repeatsOn;
+                    cronTime = '* * */' + (7*interval) + ' * ' + repeatsOn
+
                     // var s = later.parse.recur()
                     //     //.on('08:00:00').time()
                     //     .on(repeatsOn).dayOfWeek()
-                    textSched = 'every ' + interval + ' weeks on ' + repeatsOn;
-                    var s = later.parse.text(textSched);
+                    // textSched = 'every ' + interval + ' weeks on ' + repeatsOn;
+                    // var s = later.parse.text(textSched);
 
                 } else {
-                    textSched = 'every ' + interval + ' months';
-                    var s = later.parse.text(textSched);
+                    cronTime = '* * * */' + interval + ' *'
+
+                    // textSched = 'every ' + interval + ' months';
+                    // var s = later.parse.text(textSched);
+
+
                 }
 
-                setSchedule(s, recurringId)
+                setSchedule(cronTime, recurringId)
 
                 res.json({
                     status: "success",
@@ -222,6 +240,7 @@ router.post('/addRecurringExpense', function(req, res) {
                 })
             })
         }).catch(function (err) {
+            console.error(err)
             res.json({
                 status: "error",
                 message: "An error occured while adding expense, try again later"
@@ -231,26 +250,57 @@ router.post('/addRecurringExpense', function(req, res) {
 })
 
 
-function setSchedule(schedule, recurringId) {
-    var t = later.setInterval(function() {
-        models.Recurring.findOne({
-            where: {
-                id: recurringId
-            }
-        }).then(function(oldRecurring) {
-            models.Cashflow.create({
-                dateTime: moment().tz("Australia/Sydney"),
-                amount: oldRecurring.amount,
-                shortDescription: oldRecurring.shortDescription,
-                longDescription: oldRecurring.longDescription,
-                isExpense: true,
-                CategoryId: oldRecurring.CategoryId,
-                UserId: oldRecurring.UserId,
-                RecurringId: oldRecurring.id
-            })
-        });
-    }, schedule);
+function setSchedule(cronTime, recurringId) {
+    // IF startDate not set start immediately
+    // IF END date is set set up a job to cancel this
 
-    return t
+
+    var job = new CronJob({
+        cronTime: cronTime,
+        onTick: function() {
+            models.Recurring.findOne({
+                where: {
+                    id: recurringId
+                }
+            }).then(function(oldRecurring) {
+                models.Cashflow.create({
+                    dateTime: moment().tz("Australia/Sydney"),
+                    amount: oldRecurring.amount,
+                    shortDescription: oldRecurring.shortDescription,
+                    longDescription: oldRecurring.longDescription,
+                    isExpense: true,
+                    CategoryId: oldRecurring.CategoryId,
+                    UserId: oldRecurring.UserId,
+                    RecurringId: oldRecurring.id
+                })
+            });
+        },
+        start: false,
+        timeZone: 'Australia/Sydney'
+    });
+
+    job.start();
+    job.recurringId = recurringId;
+    // var t = later.setInterval(function() {
+    //     models.Recurring.findOne({
+    //         where: {
+    //             id: recurringId
+    //         }
+    //     }).then(function(oldRecurring) {
+    //         models.Cashflow.create({
+    //             dateTime: moment().tz("Australia/Sydney"),
+    //             amount: oldRecurring.amount,
+    //             shortDescription: oldRecurring.shortDescription,
+    //             longDescription: oldRecurring.longDescription,
+    //             isExpense: true,
+    //             CategoryId: oldRecurring.CategoryId,
+    //             UserId: oldRecurring.UserId,
+    //             RecurringId: oldRecurring.id
+    //         })
+    //     });
+    // }, schedule);
+
+    activeJobs.push(job);
+    return job
 }
 module.exports = router;

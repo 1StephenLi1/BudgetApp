@@ -3,7 +3,7 @@
 module.exports = function(sequelize, DataTypes) {
     var Cashflow = sequelize.define("Cashflow", {
         dateTime: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATE,
             allowNull: false
         },
         amount: {

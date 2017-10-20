@@ -18,7 +18,11 @@ module.exports = function(sequelize, DataTypes) {
         frequency: DataTypes.STRING,
         interval: DataTypes.INTEGER,
         repeatsOn: DataTypes.STRING,
-        laterSchedule: DataTypes.STRING,
+        isActive:  {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+          allowNull: false
+        },
         isArchived:  {
           type: DataTypes.BOOLEAN,
           defaultValue: false,

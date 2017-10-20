@@ -109,13 +109,13 @@ $('#frequency').on('change', function() {
     } else if ($('#frequency').val() == "weeks") {
         var repeatsOnHtml = '<label for="repeatsOn">Repeats On:</label>';
         repeatsOnHtml += '<select id="repeatsOn" class="form-control" name="repeatsOn">'
-        repeatsOnHtml += '<option value="Sunday">Sunday</option>'
-        repeatsOnHtml += '<option value="Monday">Monday</option>'
-        repeatsOnHtml += '<option value="Tuesday">Tuesday</option>'
-        repeatsOnHtml += '<option value="Wednesday">Wednesday</option>'
-        repeatsOnHtml += '<option value="Thursday">Thursday</option>'
-        repeatsOnHtml += '<option value="Friday">Friday</option>'
-        repeatsOnHtml += '<option value="Saturday">Saturday</option>'
+        repeatsOnHtml += '<option value="0">Sunday</option>'
+        repeatsOnHtml += '<option value="1">Monday</option>'
+        repeatsOnHtml += '<option value="2">Tuesday</option>'
+        repeatsOnHtml += '<option value="3">Wednesday</option>'
+        repeatsOnHtml += '<option value="4">Thursday</option>'
+        repeatsOnHtml += '<option value="5">Friday</option>'
+        repeatsOnHtml += '<option value="6">Saturday</option>'
         repeatsOnHtml += '</select>'
         $('#repeatsOnDiv').html(repeatsOnHtml)
     } else if ($('#frequency').val() == "months") {

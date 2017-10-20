@@ -81,7 +81,7 @@ $(document).ready(function() {
                     if (expense.dateTime == null) {
                         return "";
                     } else {
-                        return moment(expense.dateTime).format('DD/MM/YY');
+                        return moment(expense.dateTime).format('DD/MM/YY LTS');
                     }
                 }
             }, {
