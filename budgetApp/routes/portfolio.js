@@ -13,50 +13,65 @@ var Sync = require('sync');
 var Q = require('q');
 
 
+
+
 router.get('/', function(req, res) {
-    var p = null
 
     models.Portfolio.findAll({
-
     where:{
         "UserId": req.session.user.id
     }}).then(function(portfolios){
 
-        var i,len = portfolios.length;
+        var i,k,len = portfolios.length;
+        var a = [];
         for(i=0;i<len;i++){
-            
-            yahooFinance.historical({
-              symbol: portfolios[i]['symbol'],
-              from: portfolios[i]['firstTrade']
-            },function(err,quotes){
-                quotesLen = quotes[quotes.len]
-
-                
-                console.log("in function")
-                
-            })
-
-            portfolios[i]['Change'] = 100;
-            
-           
+            a.push(getQuotes(i,portfolios));
            
         }
-        res.render('portfolio', {
+
+        Promise.all(a).then(function(quotesArr) {
+            for (portfolio of portfolios) {
+                for (quote of quotesArr) {
+                    console.log(quotesArr)
+                    console.log("portfolio.symbol:" + portfolio.symbol);
+                    console.log("quote.symbol:" + quote[0].symbol);
+
+                    if (portfolio.symbol == quote[quote.length-1].symbol) {
+                        lastQuote = quote[0];
+                        console.log("lastQuote"+quote[0].close);
+                        portfolio['lastestPrice'] = lastQuote.close;
+                        portfolio['change'] = lastQuote.close-portfolio.boughtPrice;
+                        //portfolio['percentChange']= (lastQuote.close-portfolio.boughtPrice)/portfolio.boughtPrice;
+
+                    }
+                }
+                
+            }
+            console.log("check portfolios value:");
+            //console.log(portfolios);
+            console.log(portfolios[0]['change']);
+
+            res.render('portfolio', {
             title: 'Investment Portfolio',
             user: req.session.user,
             portfolios:portfolios
+            
+            })
         })
-        
-        
-        
-        //console.log(JSON.stringify(portfolios[i]['Change']))
+
         
          
     })
     
+   })
 
-    
-   
+function getQuotes(i,portfolios){
+ return yahooFinance.historical({
+        symbol: portfolios[i]['symbol'],
+        from: portfolios[i]['firstTrade']
+    });
+
+}
 
 
 router.get('/addInvestment', function(req, res) {
@@ -89,7 +104,7 @@ router.post('/addInvestment', function(req, res) {
             } else {
                 models.Portfolio.create({
                     firstTrade: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
-                    sharePrice: req.body.boughtPrice,
+                    boughtPrice: req.body.boughtPrice,
                     shareAmount: req.body.shareAmount,
                     symbol: req.body.symbol,
                     UserId: req.session.user.id

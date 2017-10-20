@@ -46,8 +46,10 @@
                 <td><%= portfolios[i].boughtPrice %></td>
                 <td><%= portfolios[i].shareAmount %></td>
                 <td><%= portfolios[i].firstTrade %></td> 
-
-                <td>emmmmm</td>
+                <td></td>
+                <td><%= portfolios[i].lastestPrice %></td>
+                <td><%= portfolios[i].change %></td>
+                <td><%= portfolios[i].percentChange %></td>
                 <td><a href="expenses/editPortfolio?id=<%= portfolios[i].id %>">edit</a></td>
                 <td><a href="expenses/deletePortfolio?id=<%= portfolios[i].id %>">delete</a></td>
                 </tr>
@@ -61,6 +63,7 @@
   from: START_DATE,
   to: END_DATE
 }, function (err, quotes) {
+
   /*
   [
     {
