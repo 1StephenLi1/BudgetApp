@@ -13,85 +13,75 @@
 <body class="hold-transition skin-black fixed sidebar-mini">
     <div class="wrapper">
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <div class="col-sm-12 content-header">
-                    <h1><%= title %></h1>
-                    <div id="messageBox" class="alert alert-danger" style="display:none"></div>                    
-                </div>
-            </section>
-            <!-- Main content -->
-            <div class="container">
-                      <hr>
-                    <div class="row">
-                      <!-- left column -->
-                      <div class="col-md-3">
-                        <div class="text-center">
-                          <br>
-                          <img src="" class="avatar img-circle" alt="" id="profilePicSettings" width="180" height="180" onerror="this.src='/images/user-icon-placeholder.png';">
-                          <h6>Upload a profile photo...</h6>
-                          <form method="post" enctype="multipart/form-data" action="settings/uploadPhoto">
-                          <input type="file" class="form-control" name="profilePic">
-                          <input type="submit" class="form-control" value="Update Photo" style="color:white; background:#3c8dbc"> 
-                          </form>                         
-                        </div>
-                      </div>
-                      
-                      <!-- edit form column -->
-                      <div class="col-md-9 personal-info">
-                        <form class="form-horizontal" id="editSettingsForm" onsubmit="editSettings(); return false;" role="form">
-                          <div class="form-group">
-                            <label class="col-lg-3 control-label">First Name:</label>
-                            <div class="col-lg-8">
-                              <input class="form-control" type="text" name=firstName>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-lg-3 control-label">Last Name:</label>
-                            <div class="col-lg-8">
-                              <input class="form-control" type="text" name=lastName>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-lg-3 control-label">Email:</label>
-                            <div class="col-lg-8">
-                              <input class="form-control" type="text" name=email>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-md-3 control-label">Password:</label>
-                            <div class="col-md-8">
-                              <input class="form-control" type="password" name=password id=password>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-md-3 control-label">Confirm password:</label>
-                            <div class="col-md-8">
-                              <input class="form-control" type="password" name=confirmPassword id=confirmPassword>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-md-3 control-label"></label>
-                            <div class="col-md-8">                              
-                              <% if (user.twoFactorAuth) { %>
-                                  <input type="checkbox" name="twoFactorAuth" value="1" checked>&nbsp Two Factor Authentication on Login<br>                                  
-                              <% } else {%>
-                                <input type="checkbox" name="twoFactorAuth" value="1">&nbsp Two Factor Authentication on Login<br>
-                              <% } %>
-                              <br>                                
-                              <button type="submit" class="btn btn-primary">Save Changes</button>
-                              <input type="reset" class="btn btn-default" value="Cancel"><br>
-                              <br>
-                              <a href ="/deleteAcc">I Wish to Delete My Account</a>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
+        <div class="content-wrapper container-fluid">
+          <h1><%= title %></h1>
+            <div id="messageBox" class="alert alert-danger" style="display:none"></div>
+              <div class="row">
+                <!-- left column -->
+                <div class="col-md-4">
+                  <div class="text-center">
+                    <br>
+                    <img src="" class="avatar img-circle" alt="" id="profilePicSettings" width="180" height="180" onerror="this.src='/images/user-icon-placeholder.png';">
+                    <h6>Upload a profile photo...</h6>
+                    <form method="post" enctype="multipart/form-data" action="settings/uploadPhoto">
+                    <input type="file" class="form-control" name="profilePic">
+                    <input type="submit" class="form-control" value="Update Photo" style="color:white; background:#3c8dbc"> 
+                    </form>                         
                   </div>
                 </div>
-                <hr>
-
+                
+                <!-- edit form column -->
+                <div class="col-md-8 personal-info">
+                  <form class="form-horizontal" id="editSettingsForm" onsubmit="editSettings(); return false;" role="form">
+                    <div class="form-group">
+                      <label class="col-lg-3 control-label">First Name:</label>
+                      <div class="col-lg-8">
+                        <input class="form-control" type="text" name=firstName>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-lg-3 control-label">Last Name:</label>
+                      <div class="col-lg-8">
+                        <input class="form-control" type="text" name=lastName>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-lg-3 control-label">Email:</label>
+                      <div class="col-lg-8">
+                        <input class="form-control" type="text" name=email>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Password:</label>
+                      <div class="col-md-8">
+                        <input class="form-control" type="password" name=password id=password>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Confirm password:</label>
+                      <div class="col-md-8">
+                        <input class="form-control" type="password" name=confirmPassword id=confirmPassword>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-3 control-label"></label>
+                      <div class="col-md-8">                              
+                        <% if (user.twoFactorAuth) { %>
+                            <input type="checkbox" name="twoFactorAuth" value="1" checked>&nbsp Two Factor Authentication on Login<br>                                  
+                        <% } else {%>
+                          <input type="checkbox" name="twoFactorAuth" value="1">&nbsp Two Factor Authentication on Login<br>
+                        <% } %>
+                        <br>                                
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <input type="reset" class="btn btn-default" value="Cancel"><br>
+                        <br>
+                        <a href="/settings/deleteAcc" class="btn btn-danger">I Wish to Delete My Account</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->

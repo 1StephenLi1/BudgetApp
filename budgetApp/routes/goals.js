@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
             }
         }).then(function(goals) {
             res.render('addGoal', {
-                title: 'Add Goal',
+                title: 'Add or Update Goal',
                 user: req.session.user,
                 categories: categories,
                 goals: goals

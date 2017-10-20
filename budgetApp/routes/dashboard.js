@@ -173,17 +173,54 @@ router.get('/goals', function(req, res, next) {
 		req.query.date = '1970-01-01';
 	}
 
-	models.Goal.findAll({
+	models.Cashflow.findAll({
 		where: {
 			"UserId": req.session.user.id,
-			"CategoryId": {
-				or: [-1, 0]
+			"dateTime": { gt: req.query.date }
+		},
+		attributes: [
+			[models.sequelize.fn('sum', models.sequelize.col('amount')), 'total']
+		],
+		group: ['isExpense'],
+		order: [['isExpense', 'ASC']]
+	}).then(function(cashflows) {
+		var actual_income = null;
+		var actual_spending = null;
+		for (var i = 0; i < cashflows.length; i++) {
+			console.log(cashflows[i]['dataValues']['isExpense']);
+			if (cashflows[i]['dataValues']['isExpense']) {
+				actual_spending = cashflows[1]['dataValues']['total'];
+			} else {
+				actual_income = cashflows[0]['dataValues']['total'];
 			}
 		}
-	}).then(function(goals_db) {
-		var data = {};
-		console.log(goals_db.dataValues);
-		// res.end(JSON.stringify(data, null, '\t'));
+
+		models.Goal.findAll({
+			where: {
+				"UserId": req.session.user.id,
+				$or: {
+					"name": ["Total Spending", "Savings Goal"]
+				}
+			}
+		}).then(function(goals_db) {
+			var saving_goal = null;
+			var spending_goal = null;
+			for (var i = 0; i < goals_db.length; i++) {
+				if (goals_db[i]['dataValues']['name'] == "Total Spending") {
+					spending_goal = goals_db[i]['dataValues']['amount'];
+				} else if (goals_db[i]['dataValues']['name'] == "Savings Goal") {
+					saving_goal = goals_db[i]['dataValues']['amount'];
+				}
+			}
+
+			var data;
+			if (actual_income == null && actual_spending == null & spending_goal == null && saving_goal == null) {
+				data = { data: [], labels: [] };
+			} else {
+				data = { data: [actual_income, actual_spending, spending_goal, saving_goal], labels: ["Your income", "Your spending", "Budgeted spending", "Savings goal"] };
+			}
+			res.end(JSON.stringify(data, null, '\t'));
+		})
 	}).catch(function (err) {
         console.error(err);
         res.status(err.status || 500);

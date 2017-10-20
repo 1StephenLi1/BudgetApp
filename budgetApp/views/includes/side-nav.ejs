@@ -7,7 +7,7 @@
       document.getElementById('profilePicSide').src = "/images/profilePic-"+<%= user.id%>+".png";
       }
   </script>
-  
+
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
 
@@ -15,7 +15,7 @@
     <div class="user-panel">
       <div class="pull-left image">
           <img src="/images/user-icon-place"class="img-circle" alt="" id="profilePicSide" onerror="this.src='/images/user-icon-placeholder.png';">
-          <script>displayPicSide();</script>       
+          <script>displayPicSide();</script>
           </div>
       <div class="pull-left info">
         <p><%= user.firstName %> <%= user.lastName %></p>
@@ -27,15 +27,26 @@
       <li class="header">MAIN NAVIGATION</li>
       <!-- Optionally, you can add icons to the links -->
       <li><a href="/"><i class="fa fa-bar-chart"></i> <span>Dashboard</span></a></li>
-      <li><a href="/expenses"><i class="fa fa-list-alt"></i> <span>View Expenses</span></a></li>
-      <li><a href="/expenses/addExpense"><i class="fa fa-plus"></i> <span>Add Expense</span></a></li>
-      <li><a href="/incomes"><i class="fa fa-list-alt"></i> <span>View Incomes</span></a></li>
-      <li><a href="/incomes/addIncome"><i class="fa fa-plus"></i> <span>Add Income</span></a></li>
+      <li><a href="#"><i class="fa fa-share"></i> <span>Expenses</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+          <ul class="treeview-menu" style="display: none;">
+              <li><a href="/expenses"><i class="fa fa-list-alt"></i> <span>View Expenses</span></a></li>
+              <li><a href="/expenses/addExpense"><i class="fa fa-plus"></i> <span>Add Expense</span></a></li>
+              <li><a href="/recurringExpenses"><i class="fa fa-list-alt"></i> <span>View Recurring Expenses</span></a></li>
+              <li><a href="/recurringExpenses/addRecurringExpense"><i class="fa fa-plus"></i> <span>Add Recurring Expense</span></a></li>
+          </ul>
+      </li>
+      <li><a href="#"><i class="fa fa-share"></i> <span>Incomes</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+          <ul class="treeview-menu" style="display: none;">
+              <li><a href="/incomes"><i class="fa fa-list-alt"></i> <span>View Incomes</span></a></li>
+              <li><a href="/incomes/addIncome"><i class="fa fa-plus"></i> <span>Add Income</span></a></li>
+              <li><a href="/recurringExpenses"><i class="fa fa-list-alt"></i> <span>View Recurring Incomes</span></a></li>
+              <li><a href="/recurringExpenses/addRecurringExpense"><i class="fa fa-plus"></i> <span>Add Recurring Incomes</span></a></li>
+          </ul>
+      </li>
       <li><a href="/portfolio"><i class="fa fa-money"></i> <span>Investment Portfolio</span></a></li>
-      <li><a href="/goals"><i class="fa fa-diamond"></i> <span>Add Goals</span></a></li>
+      <li><a href="/goals"><i class="fa fa-diamond"></i> <span>Goals</span></a></li>
     </ul>
     <!-- /.sidebar-menu -->
   </section>
   <!-- /.sidebar -->
 </aside>
-

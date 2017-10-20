@@ -15,18 +15,14 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
-var signout = require('./routes/signout');
 var expenses = require('./routes/expenses');
+var recurringExpenses = require('./routes/recurringExpenses');
 var settings = require('./routes/settings');
-var forgotPassword = require('./routes/forgotPassword');
-var resetPassword = require('./routes/resetPassword');
 var incomes = require('./routes/incomes');
 var dashboard = require('./routes/dashboard');
 var autocomplete = require('./routes/autocomplete');
-var deleteAcc = require('./routes/deleteAcc');
 var portfolio = require('./routes/portfolio');
 var goals = require('./routes/goals');
-var twoFactorAuth = require('./routes/twoFactorAuth');
 
 var app = express();
 
@@ -52,7 +48,7 @@ app.use(session({ authenticated: false, reqPath: '/', cookie: { maxAge: 600000 }
 app.use(function(req, res, next) {
 	// console.log("Authentication " + req.url);
 	if (!req.session.authenticated && (req.url != '/login' && req.url != '/signup' &&
-    req.url !='/forgotPassword' && req.url.substring(0, 14) !='/resetPassword' && req.url.substring(0, 14) != '/twoFactorAuth' )) {
+    req.url !='/login/forgotPassword' && req.url.substring(0, 20) !='/login/resetPassword' && req.url.substring(0, 20) != '/login/twoFactorAuth' )) {
       console.log("Redirecting to login page");
       req.session.reqPath = req.path;
       res.redirect('/login');
@@ -68,18 +64,14 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/signup', signup);
-app.use('/signout', signout);
 app.use('/expenses', expenses);
+app.use('/recurringExpenses', recurringExpenses);
 app.use('/settings', settings);
-app.use('/forgotPassword', forgotPassword);
-app.use('/resetPassword', resetPassword);
 app.use('/incomes', incomes);
 app.use('/dashboard', dashboard);
 app.use('/autocomplete', autocomplete);
-app.use('/deleteAcc', deleteAcc);
 app.use('/portfolio', portfolio);
 app.use('/goals', goals);
-app.use('/twoFactorAuth', twoFactorAuth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

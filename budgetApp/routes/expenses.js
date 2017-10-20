@@ -14,7 +14,8 @@ var categoryUrlQuery;
 router.get('/', function(req, res) {
     models.Category.findAll({
         where: {
-            type: "expense"
+            type: "expense",
+            UserId: req.session.user.id,
         }
     }).then(function(categories) {
         res.render('expenses/expenses', {
@@ -71,70 +72,7 @@ router.post('/datatable', function(req, res) {
             categoriesQuery.push({"CategoryId": categoryId});
         }
     } else {
-        if (categoryUrlQuery == null) {
-            categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];    
-        } else {
-            models.Category.findOne({
-                where: {
-                    name: categoryUrlQuery
-                }
-            }).then(function(category) {
-                categoriesQuery = [{"CategoryId": category.dataValues.id}];
-                models.Cashflow.count({
-        include: [
-            {
-                model: models.Category,
-                attributes: ['name'],
-                where: {
-                    type: 'expense'
-                }
-            },
-        ],
-        where: {
-            UserId: req.session.user.id,
-            isExpense: true,
-            searchQuery,
-            $or: categoriesQuery,
-            dateTime: {
-                $lte: endDate.toDate(),
-                $gte: startDate.toDate()
-            }
-        }
-    }).then(function(expensesCount) {
-        models.Cashflow.findAndCountAll({
-            include: [
-                {
-                    model: models.Category,
-                    attributes: ['name'],
-                    where: {
-                        type: 'expense'
-                    }
-                },
-            ],
-            where: {
-                UserId: req.session.user.id,
-                isExpense: true,
-                searchQuery,
-                $or: categoriesQuery,
-                dateTime: {
-                    $lte: endDate.toDate(),
-                    $gte: startDate.toDate()
-                }
-            },
-            order: order,
-            offset: start,
-            limit: limit
-        }).then(function(filteredExpenses) {
-            res.json({
-                data: filteredExpenses.rows,
-                recordsTotal: expensesCount,
-                recordsFiltered: filteredExpenses.count
-            })
-        })
-    })
-            })
-        }
-        
+        categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];
     }
 
     models.Cashflow.count({
@@ -270,97 +208,97 @@ router.get('/uploadCsv', function(req, res) {
 })
 
 router.post('/uploadCsv', function(req, res) {
-   if (!req.files)
+    if (!req.files)
     return res.status(400).send('No files were uploaded.');
 
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  let csvFile = req.files.mycsv;
-  let filePath = __dirname+'';
-  let newFilePath = '';
-  let arr = filePath.split('/');
-  console.log("filePath: " + filePath);
-  console.log("array after split: " + arr);
-  for (let i = 0; i < arr.length -1; i++) {
-    newFilePath += arr[i]+'/';
-  }
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let csvFile = req.files.mycsv;
+    let filePath = __dirname+'';
+    let newFilePath = '';
+    let arr = filePath.split('/');
+    console.log("filePath: " + filePath);
+    console.log("array after split: " + arr);
+    for (let i = 0; i < arr.length -1; i++) {
+        newFilePath += arr[i]+'/';
+    }
 
-  console.log("newFilePath: " + newFilePath);
-  // Use the mv() method to place the file somewhere on your server
-  csvFile.mv(newFilePath + '/bin/' + csvFile.name, function(err) {
-    var amount = 0;
-    var shortDescription = null;
-    var longDescription = null;
-    var date = null;
-    var category = null;
-    if (err) {
-        return res.status(500).render('uploadCsv', { title: err, user: req.session.user.id});
-    } else {
-        var stream = fs.createReadStream(newFilePath + '/bin/' + csvFile.name);
-        res.render('expenses/addExpense', {
-        title: 'Add Expense',
-        user: req.session.user
-    })
-        csv
-        .fromStream(stream, {headers: true})
-        .transform(function(data, next){
-            amount = data['Amount'],
-            shortDescription = data['Short Description'],
-            longDescription = data['Long Description'],
-            date = data['Expense Date'],
-            category = data['Category'],
-            models.Category.findOrCreate({
-            where: {
-                "UserId": req.session.user.id,
-                "type": "expense",
-                "name": category
-            },
-            default: {
-                "isArchived": 0
-            }
-            }).then(function([category, isNewlyCreated]) {
-                models.Cashflow.create({
-                dateTime: moment(date,'DD/MM/YYYY').tz("Australia/Sydney"),
-                amount: amount,
-                shortDescription: shortDescription,
-                longDescription: longDescription,
-                isExpense: true,
-                CategoryId: category.dataValues.id,
-                UserId: req.session.user.id
-            }).then(function(expense) {
-                if (expense == null) {
-                    res.status(400).json({
-                        errorMsg: "An error occured, try again later"
+    console.log("newFilePath: " + newFilePath);
+    // Use the mv() method to place the file somewhere on your server
+    csvFile.mv(newFilePath + '/bin/' + csvFile.name, function(err) {
+        var amount = 0;
+        var shortDescription = null;
+        var longDescription = null;
+        var date = null;
+        var category = null;
+        if (err) {
+            return res.status(500).render('uploadCsv', { title: err, user: req.session.user.id});
+        } else {
+            var stream = fs.createReadStream(newFilePath + '/bin/' + csvFile.name);
+            res.render('expenses/addExpense', {
+                title: 'Add Expense',
+                user: req.session.user
+            })
+            csv
+            .fromStream(stream, {headers: true})
+            .transform(function(data, next){
+                amount = data['Amount'],
+                shortDescription = data['Short Description'],
+                longDescription = data['Long Description'],
+                date = data['Expense Date'],
+                category = data['Category'],
+                models.Category.findOrCreate({
+                    where: {
+                        "UserId": req.session.user.id,
+                        "type": "expense",
+                        "name": category
+                    },
+                    default: {
+                        "isArchived": 0
+                    }
+                }).then(function([category, isNewlyCreated]) {
+                    models.Cashflow.create({
+                        dateTime: moment(date,'DD/MM/YYYY').tz("Australia/Sydney"),
+                        amount: amount,
+                        shortDescription: shortDescription,
+                        longDescription: longDescription,
+                        isExpense: true,
+                        CategoryId: category.dataValues.id,
+                        UserId: req.session.user.id
+                    }).then(function(expense) {
+                        if (expense == null) {
+                            res.status(400).json({
+                                errorMsg: "An error occured, try again later"
+                            })
+                        } else {
+                            // res.status(200).json({
+                            //     msg: "Expense added successfully"
+                            // })
+
+                        }
+
                     })
-                } else {
-                    // res.status(200).json({
-                    //     msg: "Expense added successfully"
-                    // })
-
-                }
+                    res.redirect('/expenses')
+                }).catch(function (err) {
+                    console.error(err);
+                    res.status(err.status || 500);
+                    res.render('error', {
+                        user: req.session.user
+                    });
+                });
 
             })
-            res.redirect('/expenses')
-            }).catch(function (err) {
-                console.error(err);
-                res.status(err.status || 500);
-                    res.render('error', {
-                    user: req.session.user
-                });
+
+            .on("data", function(data){
+
+            }).on("end", function(){
+
             });
-
-        })
-
-        .on("data", function(data){
-
-        }).on("end", function(){
-
-        });
-    }
-});
+        }
+    });
 })
 
 router.get('/export', function(req, res) {
-        models.Cashflow.findAll({
+    models.Cashflow.findAll({
         where: {
             "isExpense": true,
             "UserId": req.session.user.id
@@ -371,65 +309,66 @@ router.get('/export', function(req, res) {
             }
         ]
     }).then(function(cashflow) {
-            if (cashflow == null) {
-                res.status(400).json({
-                    errorMsg: "An error occured, try again later"
-                })
-            } else {
-                var fields = ['Category' ,'Expense Date', 'Amount', 'Short Description', 'Long Description'];
-                // var arrayList;
-                    var data=[];
-                    console.log("Category: +++ " + cashflow);
-                    for (var i = 0; i < cashflow.length; i++) {
+        if (cashflow == null) {
+            res.status(400).json({
+                errorMsg: "An error occured, try again later"
+            })
+        } else {
+            var fields = ['Category' ,'Expense Date', 'Amount', 'Short Description', 'Long Description'];
+            // var arrayList;
+            var data=[];
+            console.log("Category: +++ " + cashflow);
+            for (var i = 0; i < cashflow.length; i++) {
 
-                            data[data.length] = {
-                                "Category": cashflow[i].Category.name,
-                                "Amount": cashflow[i].dataValues.amount,
-                                "Short Description": cashflow[i].dataValues.shortDescription,
-                                "Long Description": cashflow[i].dataValues.longDescription,
-                                "Expense Date": cashflow[i].dataValues.dateTime
-                            }
-
-
-                    }
-                 json2csv({ data: data, fields: fields }, function(err, csv) {
-                  if (err) console.log(err);
-                  console.log(csv);
-                  fs.writeFile('expense.csv', csv, function(err) {
-                  if (err) throw err;
-                  res.download('expense.csv');
-                });
-                });
-
+                data[data.length] = {
+                    "Category": cashflow[i].Category.name,
+                    "Amount": cashflow[i].dataValues.amount,
+                    "Short Description": cashflow[i].dataValues.shortDescription,
+                    "Long Description": cashflow[i].dataValues.longDescription,
+                    "Expense Date": cashflow[i].dataValues.dateTime
                 }
-        })
+
+
+            }
+            json2csv({ data: data, fields: fields }, function(err, csv) {
+                if (err) console.log(err);
+                console.log(csv);
+                fs.writeFile('expense.csv', csv, function(err) {
+                    if (err) throw err;
+                    res.download('expense.csv');
+                });
+            });
+
+        }
+    })
 })
 
 var newCategoryId;
 router.get('/editExpense', function(req, res) {
 
-        models.Cashflow.findOne({
+    models.Cashflow.findOne({
+        where: {
+            id: req.query['id']
+        }
+    }).then(function(cf){
+        models.Category.findOne({
             where: {
-                id: req.query['id']
+                id: cf.dataValues.CategoryId,
+                UserId: req.session.user.id,
             }
-        }).then(function(cf){
-            models.Category.findOne({
-                where: {
-                    id: cf.dataValues.CategoryId
-                }
-            }).then(function(cat) {
-                res.render('editExpense', {
-                    title: 'Edit Expenses',
-                    user: req.session.user,
-                    cashflow: cf,
-                    category: cat
-                })
+        }).then(function(cat) {
+            res.render('editExpense', {
+                title: 'Edit Expenses',
+                user: req.session.user,
+                cashflow: cf,
+                category: cat
             })
         })
+    })
 
 
-        expenseId = req.query['id'];
-        console.log("expenseId :"  + expenseId);
+    expenseId = req.query['id'];
+    console.log("expenseId :"  + expenseId);
 })
 
 router.post('/editExpense', function(req, res) {
@@ -447,7 +386,7 @@ router.post('/editExpense', function(req, res) {
         }).then(function(cashflow) {
             models.Category.findOrCreate({
 
-                 where: {
+                where: {
                     "UserId": req.session.user.id,
                     "type": "expense",
                     "name": req.body.category
@@ -464,20 +403,18 @@ router.post('/editExpense', function(req, res) {
                 })
             })
 
-        
-        if (cashflow) {
-            
-        } else {
-            res.status(400).json({
-                errorMsg: "An error occured, try again later"
-            })
-        }
-    })
 
-        res.render('view-history', {
-        title: 'view-history',
-        user: req.session.user,
-        cashflows:cashflows,
+            if (cashflow) {
+
+            } else {
+                res.status(400).json({
+                    errorMsg: "An error occured, try again later"
+                })
+            }
+        })
+        res.render('index', {
+            title: 'Dashboard',
+            user: req.session.user
 
         })
          console.log(JSON.stringify(cashflows))

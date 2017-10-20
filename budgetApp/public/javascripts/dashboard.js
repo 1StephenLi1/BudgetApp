@@ -1,6 +1,7 @@
 var date = moment().subtract(1, 'months').format('YYYY-MM-DD');;
 var timeBar;
 var categoriesPie;
+var summaryBar;
 
 var colours = ["red", "aqua", "yellow", "purple", "orange", "maroon", "silver", "navy", "green", "teal", "fuchsia", "olive"];
 
@@ -50,6 +51,59 @@ function updatePage() {
     $.getJSON('/dashboard/social?date=' + date + '&filter=' + filter, function (data) {
         updateCategoriesBox(data);
     });
+    $.getJSON('/dashboard/goals?date=' + date + '&filter=' + filter, function (data) {
+        updateSummaryBar(data);
+    });
+}
+
+function updateSummaryBar(data) {
+    var summaryBarCtx = document.getElementById('summary-bar').getContext('2d');
+    $("#summary-bar").attr('height', 100);
+    if (summaryBar != undefined) summaryBar.destroy();
+    summaryBar = new Chart(summaryBarCtx,{
+        type: 'horizontalBar',
+        data: {
+            datasets: [{
+                data: data['data'],
+                backgroundColor: colours
+            }
+            ],
+            labels: data['labels']
+        },
+        options: {
+            title: {
+                display: true,
+                fontSize: 24,
+                text: "Summary"
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: false,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '$' + value;
+                        },
+                        fontSize: 20,
+                        padding: 20
+                    },
+                    stacked: true
+                }],
+                yAxes: [{
+                    gridLines: false,
+                    ticks: {
+                        min: 0,
+                        maxTicksLimit: 4,
+                        fontSize: 20
+                    },
+                    stacked: true
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: false
+        }
+    });
 }
 
 function updateTimeBar(data) {
@@ -73,13 +127,20 @@ function updateTimeBar(data) {
             },
             scales: {
                 xAxes: [{
-                    gridLines: false
+                    gridLines: false,
+                    ticks: {
+                        fontSize: 14
+                    }
                 }],
                 yAxes: [{
                     gridLines: false,
                     ticks: {
                         min: 0,
-                        maxTicksLimit: 4
+                        maxTicksLimit: 4,
+                        callback: function(value, index, values) {
+                            return '$' + value;
+                        },
+                        fontSize: 16
                     }
                 }]
             },
@@ -108,6 +169,11 @@ function updateCategoriesPie(categories) {
                 display: true,
                 fontSize: 24,
                 text: "Spending by Category"
+            },
+            legend: {
+                labels: {
+                    fontSize: 20
+                }
             }
         }
     });
