@@ -66,10 +66,6 @@ function updateSummaryBar(data) {
             datasets: [{
                 data: data['data'],
                 backgroundColor: colours
-            },
-            {
-                data: [0, 50],
-                backgroundColor: colours
             }
             ],
             labels: data['labels']

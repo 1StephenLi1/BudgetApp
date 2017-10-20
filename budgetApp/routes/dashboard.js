@@ -184,8 +184,16 @@ router.get('/goals', function(req, res, next) {
 		group: ['isExpense'],
 		order: [['isExpense', 'ASC']]
 	}).then(function(cashflows) {
-		var actual_income = cashflows[0]['dataValues']['total'];
-		var actual_spending = cashflows[1]['dataValues']['total'];
+		var actual_income = null;
+		var actual_spending = null;
+		for (var i = 0; i < cashflows.length; i++) {
+			console.log(cashflows[i]['dataValues']['isExpense']);
+			if (cashflows[i]['dataValues']['isExpense']) {
+				actual_spending = cashflows[1]['dataValues']['total'];
+			} else {
+				actual_income = cashflows[0]['dataValues']['total'];
+			}
+		}
 
 		models.Goal.findAll({
 			where: {
@@ -205,8 +213,12 @@ router.get('/goals', function(req, res, next) {
 				}
 			}
 
-			var data = { data: [actual_income, actual_spending, spending_goal, saving_goal], labels: ["Your income", "Your spending", "Budgeted spending", "Savings goal"] };
-
+			var data;
+			if (actual_income == null && actual_spending == null & spending_goal == null && saving_goal == null) {
+				data = { data: [], labels: [] };
+			} else {
+				data = { data: [actual_income, actual_spending, spending_goal, saving_goal], labels: ["Your income", "Your spending", "Budgeted spending", "Savings goal"] };
+			}
 			res.end(JSON.stringify(data, null, '\t'));
 		})
 	}).catch(function (err) {
