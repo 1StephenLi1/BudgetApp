@@ -89,7 +89,7 @@ router.post('/', function(req, res) {
         lastName: lastName,
         twoFactorAuth : req.body.twoFactorAuth
     }
-    res.redirect('/');          
+    res.redirect('/settings');          
 })
 
 router.post('/uploadPhoto', function(req, res) {

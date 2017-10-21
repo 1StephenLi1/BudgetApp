@@ -9,6 +9,7 @@ var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
 var Sequelize = require("sequelize");
+var nodemailer = require('nodemailer');
 
 var categoryUrlQuery;
 router.get('/', function(req, res) {
@@ -209,6 +210,16 @@ router.post('/addExpense', function(req, res) {
                         status: "success",
                         message: "expense was added successfully"
                     })
+
+                    var expenseDate = moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney");
+                    var monthCheck = new Date();
+                    var firstDayOfMonth = new Date(monthCheck.getFullYear(), monthCheck.getMonth(), 1);
+                    var lastDayOfMonth = new Date(monthCheck.getFullYear(), monthCheck.getMonth() + 1, 0);
+                    console.log("JLASD;KFJASLDKFJ" + expenseDate + firstDayOfMonth + lastDayOfMonth);
+                    if (expenseDate >= firstDayOfMonth && expenseDate <= lastDayOfMonth) {
+                        console.log('YEAHYFAHEFEHWF');
+                    checkBudget(req,res);
+                    }
                 }
             })
         }).catch(function (err) {
@@ -423,8 +434,8 @@ router.post('/editExpense', function(req, res) {
                     longDescription: req.body.longDescription,
                 })
             })
-
-
+            
+            
             if (cashflow) {
 
             } else {
@@ -437,7 +448,7 @@ router.post('/editExpense', function(req, res) {
             title: 'Dashboard',
             user: req.session.user
 
-        })
+        })        
          console.log(JSON.stringify(cashflows))
          console.log("-----------------")
     }})
@@ -460,5 +471,84 @@ router.delete('/:id', function(req, res) {
     })
 })
 
+function checkBudget(req, res){
+
+    var monthCheck = new Date();
+    var firstDayOfMonth = new Date(monthCheck.getFullYear(), monthCheck.getMonth(), 1);
+    var lastDayOfMonth = new Date(monthCheck.getFullYear(), monthCheck.getMonth() + 1, 0);
+
+    if (req.query.date == null) {
+		req.query.date = '1970-01-01';
+	}
+
+    models.Cashflow.findAll({
+        where: {
+            "UserId": req.session.user.id,
+            "dateTime": { gte: firstDayOfMonth, lte: lastDayOfMonth},
+        },
+        attributes: [
+            [models.sequelize.fn('sum', models.sequelize.col('amount')), 'total'], 'isExpense'
+        ],
+        group: ['isExpense'],
+        order: [['isExpense', 'ASC']]
+    }).then(function(cashflows) {
+        var actual_spending = null;
+        for (var i = 0; i < cashflows.length; i++) {
+            if (cashflows[i]['dataValues']['isExpense']) {
+                actual_spending = cashflows[i]['dataValues']['total'];
+             }
+         }
+
+        models.Goal.findAll({
+            where: {
+                "UserId": req.session.user.id,
+                $or: {
+                    "name": ["Total Spending", "Savings Goal"]
+                }
+            }
+        }).then(function(goals_db) {
+            var spending_goal = null;
+            for (var i = 0; i < goals_db.length; i++) {
+                if (goals_db[i]['dataValues']['name'] == "Total Spending") {
+                    spending_goal = goals_db[i]['dataValues']['amount'];
+                 }
+             }
+             console.log(JSON.stringify(actual_spending));
+            if (actual_spending/spending_goal >= 0.9) {
+                var smtpTransport = nodemailer.createTransport({
+                    service: "gmail",
+                    host: "smtp.gmail.com",
+                    auth: {
+                        user: "budgetApp4920@gmail.com",
+                        pass: "budgetApp./"
+                    }
+                });
+                
+                let mailOptions = {
+                    from: 'Budget App <budgetApp4920@gmail.com>', 
+                    to: req.session.user.email, 
+                    subject: 'Budget App - Budget Alert', 
+                    html: '<b>Hi '+req.session.user.firstName+', <br><br> This is a friendly reminder that you are close to spending or have spent over your total spending goal for this month!<br> Current spending this month: $'+ actual_spending + '<br> Spending Goal: $'+ spending_goal+' </b>' 
+                };
+            
+                smtpTransport.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        return console.log(error);
+                    }
+                    console.log('Message sent: %s', info.messageId);
+    
+              })
+            }
+            
+        })
+    }).catch(function (err) {
+        console.error(err);
+        res.status(err.status || 500);
+        res.render('error', {
+            user: req.session.user
+        });
+    });
+    return null;
+}
 
 module.exports = router;
