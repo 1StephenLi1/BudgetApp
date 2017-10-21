@@ -120,7 +120,7 @@ $(document).ready(function() {
                 data: function(expense) {
                     var buttons = '<div id="'+expense.id+'-btns" class="btn-group btn-group-xs pull-right">' +
                     '<a href="/expenses/editExpense?id=' + expense.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Expense"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
-                    '<button type="button" id="remove-expense-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Expense" onClick="deleteExpense('+expense.id+');"><span class="glyphicon glyphicon-remove"></span>Delete</button>' +
+                    '<button type="button" id="remove-expense-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Expense" onClick="deleteExpense('+expense.id+');"><span class="glyphicon glyphicon-trash"></span>Delete</button>' +
                     '</div>';
                     return buttons
                 }

@@ -10,15 +10,15 @@ var activeJobs = []; // Array of all jobs that are currently active (i,e running
 var jobStartJobs = []; // Array of jobs that schedule the start of another job
 var jobEndJobs = []; // Array of jobs that schedule the end of another job
 
-// Get View Recurring Expenses Page
+// Get View Recurring Incomes Page
 router.get('/', function(req, res) {
     models.Category.findAll({
         where: {
-            type: "expense"
+            type: "income"
         }
     }).then(function(categories) {
-        res.render('recurringExpenses/recurringExpenses', {
-            title: 'All Recurring Expenses',
+        res.render('recurringIncomes/recurringIncomes', {
+            title: 'All Recurring Incomes',
             user: req.session.user,
             categories: categories
         })
@@ -75,13 +75,13 @@ router.post('/datatable', function(req, res) {
                 model: models.Category,
                 attributes: ['name'],
                 where: {
-                    type: 'expense'
+                    type: 'income'
                 }
             },
         ],
         where: {
             UserId: req.session.user.id,
-            isExpense: true,
+            isExpense: false,
             searchQuery,
             $or: categoriesQuery,
             // dateTime: {
@@ -89,20 +89,20 @@ router.post('/datatable', function(req, res) {
             //     $gte: startDate.toDate()
             // }
         }
-    }).then(function(recurringExpensesCount) {
+    }).then(function(recurringIncomesCount) {
         models.Recurring.findAndCountAll({
             include: [
                 {
                     model: models.Category,
                     attributes: ['name'],
                     where: {
-                        type: 'expense'
+                        type: 'income'
                     }
                 },
             ],
             where: {
                 UserId: req.session.user.id,
-                isExpense: true,
+                isExpense: false,
                 searchQuery,
                 $or: categoriesQuery,
                 // dateTime: {
@@ -113,28 +113,28 @@ router.post('/datatable', function(req, res) {
             order: order,
             offset: start,
             limit: limit
-        }).then(function(filteredRecurringExpenses) {
+        }).then(function(filteredRecurringIncomes) {
             res.json({
-                data: filteredRecurringExpenses.rows,
-                recordsTotal: recurringExpensesCount,
-                recordsFiltered: filteredRecurringExpenses.count
+                data: filteredRecurringIncomes.rows,
+                recordsTotal: recurringIncomesCount,
+                recordsFiltered: filteredRecurringIncomes.count
             })
         })
     })
 })
 
-router.get('/addRecurringExpense', function(req, res) {
-    res.render('recurringExpenses/addRecurringExpense', {
-        title: 'Add Recurring Expense',
+router.get('/addRecurringIncome', function(req, res) {
+    res.render('recurringIncomes/addRecurringIncome', {
+        title: 'Add Recurring Income',
         user: req.session.user
     })
 })
 
-router.post('/addRecurringExpense', function(req, res) {
+router.post('/addRecurringIncome', function(req, res) {
     if (req.session.user == null || req.session.user.id == null) {
         res.json({
             status: "error",
-            message: "You must be logged in to create an recurring expense"
+            message: "You must be logged in to create an recurring income"
         })
     } else if (req.body.category == null || req.body.category.length == 0) {
         res.json({
@@ -144,23 +144,23 @@ router.post('/addRecurringExpense', function(req, res) {
     } else if (req.body.shortDescription.length > 100) {
         res.json({
             status: "error",
-            message: "Short Description of an expense can not be greater than 100 characters"
+            message: "Short Description of an income can not be greater than 100 characters"
         })
     } else if (req.body.amount == null || req.body.amount <= 0) {
         // error must have amount > 0
         res.json({
             status: "error",
-            message: "Expense amount must be greater than $0.00"
+            message: "Income amount must be greater than $0.00"
         })
     } else {
         models.Category.findOrCreate({
             where: {
                 UserId: req.session.user.id,
-                type: "expense",
+                type: "income",
                 name: req.body.category
             },
             default: {
-                "isArchived": 0
+                isArchived: false
             }
         }).spread(function(category, created) {
             var frequency = req.body.frequency;
@@ -193,7 +193,7 @@ router.post('/addRecurringExpense', function(req, res) {
                 amount: req.body.amount,
                 shortDescription: req.body.shortDescription,
                 longDescription: req.body.longDescription,
-                isExpense: true,
+                isExpense: false,
                 isActive: isActive,
                 CategoryId: category.id,
                 UserId: req.session.user.id,
@@ -221,14 +221,14 @@ router.post('/addRecurringExpense', function(req, res) {
 
                 res.json({
                     status: "success",
-                    message: "A recurring expense has been created"
+                    message: "A recurring income has been created"
                 })
             })
         }).catch(function (err) {
             console.error(err)
             res.json({
                 status: "error",
-                message: "An error occured while adding expense, try again later"
+                message: "An error occured while adding income, try again later"
             })
         });
     }
@@ -239,24 +239,24 @@ router.delete('/:id', function(req, res) {
     models.Recurring.findOne({
         where: {
             id: req.params.id,
-            isExpense: true,
+            isExpense: false,
             UserId: req.session.user.id
         }
     }).then(function(recurring){
         if (recurring == null || recurring == undefined) {
             res.status(400).json({
                 status: "error",
-                message: "Recurring expense does not exist"
+                message: "Recurring income does not exist"
             })
         } else if (recurring.isArchived) {
             res.status(400).json({
                 status: "error",
-                message: "Recurring expense has already been cancelled"
+                message: "Recurring income has already been cancelled"
             })
         } else if (moment(recurring.endDate).isBefore(moment())) {
             res.status(400).json({
                 status: "error",
-                message: "Recurring expense has already ended"
+                message: "Recurring income has already ended"
             })
         } else if (moment(recurring.startDate).isAfter(moment())){
             models.Recurring.destroy({
@@ -268,7 +268,7 @@ router.delete('/:id', function(req, res) {
                 cancelJob(recurring.id);
                 res.status(200).json({
                     status: "success",
-                    message: "Recurring expense has been deleted"
+                    message: "Recurring income has been deleted"
                 })
             })
         } else {
@@ -284,7 +284,7 @@ router.delete('/:id', function(req, res) {
                 cancelJob(recurring.id);
                 res.status(200).json({
                     status: "success",
-                    message: "Recurring expense has been cancelled"
+                    message: "Recurring income has been cancelled"
                 })
             })
         }
@@ -304,7 +304,7 @@ function setJobSchedule(cronTime, recurring, startsOnRadio) {
                     amount: recurring.amount,
                     shortDescription: recurring.shortDescription,
                     longDescription: recurring.longDescription,
-                    isExpense: true,
+                    isExpense: false,
                     CategoryId: recurring.CategoryId,
                     UserId: recurring.UserId,
                     RecurringId: recurring.id
@@ -345,7 +345,7 @@ function setJobSchedule(cronTime, recurring, startsOnRadio) {
                             amount: recurring.amount,
                             shortDescription: recurring.shortDescription,
                             longDescription: recurring.longDescription,
-                            isExpense: true,
+                            isExpense: false,
                             CategoryId: recurring.CategoryId,
                             UserId: recurring.UserId,
                             RecurringId: recurring.id
@@ -418,7 +418,7 @@ function cancelJob(recurringId) {
         }, {
             where: {
                 id: recurringId,
-                isExpense: true
+                isExpense: false
             }
         });
 

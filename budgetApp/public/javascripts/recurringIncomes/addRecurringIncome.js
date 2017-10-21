@@ -36,10 +36,10 @@ $(document).ready(function() {
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         identify: function(obj) { return obj; },
-        prefetch: '/autocomplete/categories?type=expense&key=',
+        prefetch: '/autocomplete/categories?type=income&key=',
         remote: {
             wildcard: '%QUERY',
-            url: '/autocomplete/categories?type=expense&key=%QUERY'
+            url: '/autocomplete/categories?type=income&key=%QUERY'
         }
     });
 
@@ -53,10 +53,10 @@ $(document).ready(function() {
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         identify: function(obj) { return obj; },
-        prefetch: '/autocomplete/shortDescs?type=expense&key=',
+        prefetch: '/autocomplete/shortDescs?type=income&key=',
         remote: {
             wildcard: '%QUERY',
-            url: '/autocomplete/shortDescs?type=expense&key=%QUERY'
+            url: '/autocomplete/shortDescs?type=income&key=%QUERY'
         }
     });
 
@@ -67,7 +67,7 @@ $(document).ready(function() {
     });
 });
 
-function addExpense() {
+function addIncome() {
     $("#messageBox").hide();
     var category = $("#category").val().trim();
     var amount = $("#amount").val().trim();
@@ -92,12 +92,12 @@ function addExpense() {
     } else {
         $.ajax({
             type: "POST",
-            url: "/recurringExpenses/addRecurringExpense",
-            data: $("#addExpenseForm").serialize(),
+            url: "/recurringIncomes/addRecurringIncome",
+            data: $("#addIncomeForm").serialize(),
         }).then(function(result) {
             if (result.status == "success") {
                 $.notify({message: result.message}, {type: "success"});
-                window.location.href = "/recurringExpenses";
+                window.location.href = "/recurringIncomes";
             } else {
                 $.notify({message: result.message}, {type: "danger", delay: 10000});
             }

@@ -64,3 +64,8 @@
     font-size: 0.7em;
     text-align: right;
 }
+
+
+.tool-tip-div [disabled] {
+    pointer-events: none;
+}

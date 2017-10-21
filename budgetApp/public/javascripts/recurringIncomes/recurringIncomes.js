@@ -1,4 +1,4 @@
-var expensesDT;
+var incomesDT;
 
 $(document).ready(function() {
     // var start = moment().subtract(1, 'months');
@@ -29,7 +29,7 @@ $(document).ready(function() {
     //
     // cb(start, end);
 
-    expensesDT =  $('#expenses-tbl').DataTable({
+    incomesDT =  $('#incomes-tbl').DataTable({
         processing: true,
         serverSide: true,
         paging: true,
@@ -38,11 +38,11 @@ $(document).ready(function() {
         info: true,
         pagingType: "full_numbers",
         language: {
-            lengthMenu: "Display _MENU_ recurring expenses per page",
-            zeroRecords: "No recurring expenses found",
-            info: "Showing _START_ to _END_ of _TOTAL_ recurring expenses",
-            infoEmpty: "No recurring expenses available",
-            infoFiltered: "(filtered from _MAX_ total recurring expenses)",
+            lengthMenu: "Display _MENU_ recurring incomes per page",
+            zeroRecords: "No recurring incomes found",
+            info: "Showing _START_ to _END_ of _TOTAL_ recurring incomes",
+            infoEmpty: "No recurring incomes available",
+            infoFiltered: "(filtered from _MAX_ total recurring incomes)",
             paginate: {
                 first: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>',
                 previous: '<i class="fa fa-angle-left" aria-hidden="true"></i>',
@@ -70,7 +70,7 @@ $(document).ready(function() {
         order: [0, "DESC"],
         ajax: {
             type: "POST",
-            url: "/recurringExpenses/datatable",
+            url: "/recurringIncomes/datatable",
             data: function (d) {
                 if ($('#category-select').val() != null && $('#category-select').val().length > 0) {
                     d.categories = JSON.stringify($('#category-select').val());
@@ -81,82 +81,82 @@ $(document).ready(function() {
         },
         columns:[
             {
-                data: function(expense) {
-                    if (expense.startDate == null) {
+                data: function(income) {
+                    if (income.startDate == null) {
                         return "";
                     } else {
-                        return moment(expense.startDate).format('DD/MM/YY');
+                        return moment(income.startDate).format('DD/MM/YY');
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.endDate == null) {
+                data: function(income) {
+                    if (income.endDate == null) {
                         return "Until Specified";
                     } else {
-                        return moment(expense.endDate).format('DD/MM/YY');
+                        return moment(income.endDate).format('DD/MM/YY');
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.shortDescription == null) {
+                data: function(income) {
+                    if (income.shortDescription == null) {
                         return "";
                     } else {
-                        return expense.shortDescription;
+                        return income.shortDescription;
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.longDescription == null) {
+                data: function(income) {
+                    if (income.longDescription == null) {
                         return "";
                     } else {
-                        return expense.longDescription;
+                        return income.longDescription;
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.interval == null) {
+                data: function(income) {
+                    if (income.interval == null) {
                         return 0;
                     } else {
-                        return expense.interval;
+                        return income.interval;
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.frequency == null) {
+                data: function(income) {
+                    if (income.frequency == null) {
                         return 0;
                     } else {
-                        return expense.frequency;
+                        return income.frequency;
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.CategoryId == null) {
+                data: function(income) {
+                    if (income.CategoryId == null) {
                         return "No Category";
                     } else {
-                        return expense.Category.name;
+                        return income.Category.name;
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.amount == null) {
+                data: function(income) {
+                    if (income.amount == null) {
                         return "$0.00";
                     } else {
-                        return "$" + roundToTwo(expense.amount);
+                        return "$" + roundToTwo(income.amount);
                     }
                 }
             }, {
-                data: function(expense) {
-                    if (expense.isArchived) {
-                        var buttons = '<div id="'+expense.id+'-btns" data-toggle="tooltip" data-placement="top" title="This recurring expense has already been cancelled" class="btn-group btn-group-xs pull-right tool-tip-div">';
-                        buttons += '<button type="button" id="remove-expense-btn" class="btn btn-default btn-xs" disabled>Cancelled</button>';
+                data: function(income) {
+                    if (income.isArchived) {
+                        var buttons = '<div id="'+income.id+'-btns" data-toggle="tooltip" data-placement="top" title="This recurring income has already been cancelled" class="btn-group btn-group-xs pull-right tool-tip-div">';
+                        buttons += '<button type="button" id="remove-income-btn" class="btn btn-default btn-xs" disabled>Cancelled</button>';
                         buttons += '</div>';
                     } else {
-                        var buttons = '<div id="'+expense.id+'-btns" class="btn-group btn-group-xs pull-right">' +
-                        '<a href="/recurringExpenses/editRecurringExpense?id=' + expense.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Expense"><span class="glyphicon glyphicon-edit"></span>Edit</a>';
-                        if (moment(expense.startDate).isAfter(moment())) {
-                            buttons += '<button type="button" id="remove-expense-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Expense" onClick="deleteRecurringExpense('+expense.id+');"><span class="glyphicon glyphicon-trash"></span>Delete</button>';
-                        } else if (expense.endDate == null || moment(expense.endDate).isAfter(moment())) {
-                            buttons += '<button type="button" id="remove-expense-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Cancel Expense" onClick="deleteRecurringExpense('+expense.id+');"><span class="glyphicon glyphicon-remove"></span>Cancel</button>';
+                        var buttons = '<div id="'+income.id+'-btns" class="btn-group btn-group-xs pull-right">' +
+                        '<a href="/recurringIncomes/editRecurringIncome?id=' + income.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Income"><span class="glyphicon glyphicon-edit"></span>Edit</a>';
+                        if (moment(income.startDate).isAfter(moment())) {
+                            buttons += '<button type="button" id="remove-income-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Income" onClick="deleteRecurringIncome('+income.id+');"><span class="glyphicon glyphicon-trash"></span>Delete</button>';
+                        } else if (income.endDate == null || moment(income.endDate).isAfter(moment())) {
+                            buttons += '<button type="button" id="remove-income-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Cancel Income" onClick="deleteRecurringIncome('+income.id+');"><span class="glyphicon glyphicon-remove"></span>Cancel</button>';
                         }
                         buttons += '</div>';
                     }
@@ -171,20 +171,20 @@ $('body').tooltip({
     selector: '[data-toggle="tooltip"]'
 });
 // $('#dateRangePicker').on('apply.daterangepicker', function(ev, picker) {
-//     expensesDT.ajax.reload();
+//     incomesDT.ajax.reload();
 // });
 
-$("#expense-filters-form").change(function(){
-    expensesDT.ajax.reload();
+$("#income-filters-form").change(function(){
+    incomesDT.ajax.reload();
 });
 
-function deleteRecurringExpense(id) {
+function deleteRecurringIncome(id) {
     $.ajax({
-        url: '/recurringExpenses/' + id,
+        url: '/recurringIncomes/' + id,
         method: 'DELETE'
     }).then(function(result) {
         if (result.status == "success") {
-            expensesDT.ajax.reload();
+            incomesDT.ajax.reload();
         }
     })
 }

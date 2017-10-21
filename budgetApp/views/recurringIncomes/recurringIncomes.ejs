@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../includes/head.ejs %>
+</head>
+
+<body class="hold-transition skin-black fixed sidebar-mini">
+    <div class="wrapper">
+
+        <% include ../includes/top-nav.ejs %>
+        <% include ../includes/side-nav.ejs %>
+        <div class="content-wrapper container-fluid">
+            <!-- Main content -->
+
+            <div id="page-title">
+                <h1><%= title %> <a type="button" href="/recurringIncomes/addRecurringIncome" class="btn btn-default btn-md pull-right"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Income</a></h1>
+            </div>
+
+            <div class="box box-default">
+                <div class="box-body">
+                    <div class="row">
+                        <form id="income-filters-form">
+                            <div class="col-md-3 col-sm-12">
+                                <label for="category-select" style="width:100%">Categories</label>
+                                <select class="selectpicker" style="width:100%" id="category-select" name="category-select" data-live-search="true" title="All Categories" multiple>
+                                <% for (category of categories) { %>
+                                    <option value="<%= category.id %>"><%= category.name %> </option>
+                                <% } %>
+                                </select>
+                            </div>
+                        </form>
+                        <!-- <div class="col-md-3 col-md-offset-3 col-sm-12">
+                            <label for="dateRangePicker">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date Range: </label>
+                            <div id="dateRangePicker" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; border-radius: 2px">
+                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                                <span></span> <b class="caret"></b>
+                                <br>
+                            </div>
+                        </div> -->
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table id="incomes-tbl" class="table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Starts </th>
+                                    <th>Ends </th>
+                                    <th>ShortDescription </th>
+                                    <th>LongDescription </th>
+                                    <th>Interval </th>
+                                    <th>Frequency </th>
+                                    <th>Category</th>
+                                    <th>Amount </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.content -->
+
+            <% include ../includes/footer.ejs %>
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+    <!-- ./wrapper -->
+    <% include ../includes/jsDefaults.ejs %>
+    <script type="text/javascript" src="/javascripts/recurringIncomes/recurringIncomes.js"></script>
+</body>
+</html>

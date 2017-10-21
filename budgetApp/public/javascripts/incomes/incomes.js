@@ -81,7 +81,7 @@ $(document).ready(function() {
                     if (income.dateTime == null) {
                         return "";
                     } else {
-                        return moment(income.dateTime).format('DD/MM/YY');
+                        return moment(income.dateTime).format('DD/MM/YY LTS');
                     }
                 }
             }, {
@@ -120,7 +120,7 @@ $(document).ready(function() {
                 data: function(income) {
                     var buttons = '<div id="'+income.id+'-btns" class="btn-group btn-group-xs pull-right">' +
                     '<a href="/incomes/editIncome?id=' + income.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Income"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
-                    '<button type="button" id="remove-income-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Income" onClick="deleteIncome('+income.id+');"><span class="glyphicon glyphicon-remove"></span>Delete</button>' +
+                    '<button type="button" id="remove-income-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Income" onClick="deleteIncome('+income.id+');"><span class="glyphicon glyphicon-trash"></span>Delete</button>' +
                     '</div>';
                     return buttons
                 }
