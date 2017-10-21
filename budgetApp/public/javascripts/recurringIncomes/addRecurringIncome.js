@@ -78,7 +78,7 @@ function addIncome() {
         $("#messageBox").html("Category is a required field");
         validated = false;
     } else if (amount == null || amount <= 0) {
-        $("#messageBox").html("Amount must cost more than free");
+        $("#messageBox").html("Income must be positive");
         validated = false;
     } else if (shortDesc.length > 255) {
         $("#messageBox").html("Your short description is not short enough");
