@@ -54,6 +54,7 @@ router.get('/', function(req, res) {
     
    })
 
+
 function getQuotes(i,portfolios){
  return yahooFinance.historical({
         symbol: portfolios[i]['symbol'],
@@ -98,21 +99,13 @@ router.post('/datatable',function(req, res) {
             console.log(portfolios); 
             res.json({
                 data: portfolios,
-                //recordsTotal: expensesCount,
-                //recordsFiltered: filteredExpenses.count
+                recordsFiltered: portfolios.length
             })
         })
 
         
          
     })
-
-
-
-   
-
-
-
 
 })
 
@@ -167,7 +160,21 @@ router.post('/addInvestment', function(req, res) {
            
         }
 
+})
+
+router.delete('/:id', function(req, res) {
+    models.Portfolio.destroy({
+        where: {
+            id: req.params.id,
+            UserId: req.session.user.id
+        }
+    }).then(function() {
+        res.json({
+            status: "success",
+            message: "Portfolio has been deleted"
+        })
     })
+})
     
 
     

@@ -41,7 +41,7 @@ $(document).ready(function() {
             zeroRecords: "No portfolios found",
             info: "Showing _START_ to _END_ of _TOTAL_ portfolios",
             infoEmpty: "No portolios available",
-            infoFiltered: "(filtered from _MAX_ total portfolios)",
+            infoFiltered: "",
             paginate: {
                 first: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>',
                 previous: '<i class="fa fa-angle-left" aria-hidden="true"></i>',
@@ -57,8 +57,8 @@ $(document).ready(function() {
         columnDefs: [
             { name: "firstTrade", targets: 0},
             { name: "symbol", targets: 1},
-            { name: "boughtPrice", targets: 2},
-            { name: "shareAmount", targets: 3},
+            { name: "shareAmount", targets: 2},
+            { name: "boughtPrice", targets: 3},
             { name: "lastestPrice", targets: 4},
             { name: "change", targets: 5},
             { name: "percentChange", targets: 6},
@@ -93,18 +93,18 @@ $(document).ready(function() {
                 }
             }, {
                 data: function(portfolio) {
-                    if (portfolio.boughtPrice == null) {
-                        return "";
-                    } else {
-                        return "$"+roundToTwo(portfolio.boughtPrice);
-                    }
-                }
-            }, {
-                data: function(portfolio) {
                     if (portfolio.shareAmount == null) {
                         return "";
                     } else {
                         return portfolio.shareAmount;
+                    }
+                }
+            }, {
+                data: function(portfolio) {
+                    if (portfolio.boughtPrice == null) {
+                        return "";
+                    } else {
+                        return "$"+roundToTwo(portfolio.boughtPrice);
                     }
                 }
             }, {
@@ -169,6 +169,8 @@ function deletePortfolio(id) {
     }).then(function(result) {
         if (result.status == "success") {
             portfoliosDT.ajax.reload();
+        }else{
+            console.log("delete portfolio failed!!")
         }
     })
 }
