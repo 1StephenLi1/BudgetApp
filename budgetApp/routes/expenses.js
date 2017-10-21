@@ -19,15 +19,30 @@ router.get('/', function(req, res) {
             UserId: req.session.user.id,
         }
     }).then(function(categories) {
+        if (categoryUrlQuery != null || categoryUrlQuery != undefined) {
+            models.Category.findOne({
+                where: {
+                    "name": categoryUrlQuery
+                }
+            }).then(function(category) {
 
-        res.render('expenses/expenses', {
-            title: 'All Expenses',
-            user: req.session.user,
-            categories: categories,
-            categoryToken: categoryUrlQuery
-        })
-      
-       
+                res.render('expenses/expenses', {
+                    title: 'All Expenses',
+                    user: req.session.user,
+                    categories: categories,
+                    categoryName: category.name,
+                    categoryQuery: category.id
+                 })
+            })
+        
+        } else {
+            res.render('expenses/expenses', {
+                    title: 'All Expenses',
+                    user: req.session.user,
+                    categories: categories,
+                    categoryQuery: null
+            })
+        }  
     })
     
 })
