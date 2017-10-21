@@ -40,7 +40,7 @@ router.get('/', function(req, res) {
                 
             }
 
-            res.render('portfolio', {
+            res.render('portfolios', {
             title: 'Investment Portfolio',
             user: req.session.user,
             portfolios:portfolios
@@ -161,6 +161,54 @@ router.post('/addInvestment', function(req, res) {
         }
 
 })
+
+
+router.get('/editPortfolio', function(req, res) {
+
+    models.Portfolio.findOne({
+        where: {
+            id: req.query['id']
+        }
+    }).then(function(portfolio){
+        res.render('editPortfolio', {
+            title: 'Edit Portfolio',
+            user: req.session.user,
+            portfolio:portfolio
+        })
+    })
+    
+
+
+    portfolioId = req.query['id'];
+    
+})
+
+router.post('/editPortfolio', function(req, res) {
+     if (req.body.amount <= 0) {
+        dialog.info("Please enter an amount");
+        res.redirect("/portfolios/editPortfolio?id="+portfolioId);
+    } else {
+        models.Portfolio.find({
+            where: {
+                id: portfolioId
+            }
+        }).then(function(portfolio) {
+            portfolio.updateAttributes({
+                shareAmount: req.body.shareAmount,
+                boughtPrice: req.body.boughtPrice,
+            })
+        })
+
+        res.render('index', {
+            title: 'Dashboard',
+            user: req.session.user
+
+        })
+    }
+})
+
+
+
 
 router.delete('/:id', function(req, res) {
     models.Portfolio.destroy({

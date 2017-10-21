@@ -7,16 +7,6 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: 0,
             allowNull: false
         },
-        sharePriceOpen: {
-            type: DataTypes.DECIMAL(65,2),
-            defaultValue: 0,
-            allowNull: false
-        },
-        sharePriceClose: {
-            type: DataTypes.DECIMAL(65,2),
-            defaultValue: 0,
-            allowNull: false
-        },
         shareAmount: {
             type: DataTypes.INTEGER,
             defaultValue: 0,

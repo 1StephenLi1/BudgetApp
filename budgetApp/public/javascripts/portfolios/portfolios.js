@@ -68,7 +68,7 @@ $(document).ready(function() {
         order: [0, "DESC"],
         ajax: {
             type: "POST",
-            url: "/portfolio/datatable",
+            url: "/portfolios/datatable",
             //data: function (d) {
                 //d.startDate = $('#dateRangePicker').data('daterangepicker').startDate.toISOString();
                 //d.endDate = $('#dateRangePicker').data('daterangepicker').endDate.toISOString();
@@ -142,7 +142,7 @@ $(document).ready(function() {
             }, {
                 data: function(portfolio) {
                     var buttons = '<div id="'+portfolio.id+'-btns" class="btn-group btn-group-xs pull-right">' +
-                    '<a href="/portfolis/editPortfolio?id=' + portfolio.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit portfolio"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
+                    '<a href="/portfolios/editPortfolio?id=' + portfolio.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit portfolio"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
                     '<button type="button" id="remove-portfolios-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Portfolio" onClick="deletePortfolio('+portfolio.id+');"><span class="glyphicon glyphicon-remove"></span>Delete</button>' +
                     '</div>';
                     return buttons;
@@ -164,7 +164,7 @@ $("#portfolio-filters-form").change(function(){
 
 function deletePortfolio(id) {
     $.ajax({
-        url: '/portfolio/' + id,
+        url: '/portfolios/' + id,
         method: 'DELETE'
     }).then(function(result) {
         if (result.status == "success") {

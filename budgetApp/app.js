@@ -21,7 +21,7 @@ var settings = require('./routes/settings');
 var incomes = require('./routes/incomes');
 var dashboard = require('./routes/dashboard');
 var autocomplete = require('./routes/autocomplete');
-var portfolio = require('./routes/portfolio');
+var portfolios = require('./routes/portfolios');
 var goals = require('./routes/goals');
 
 var app = express();
@@ -70,7 +70,7 @@ app.use('/settings', settings);
 app.use('/incomes', incomes);
 app.use('/dashboard', dashboard);
 app.use('/autocomplete', autocomplete);
-app.use('/portfolio', portfolio);
+app.use('/portfolios', portfolios);
 app.use('/goals', goals);
 
 // catch 404 and forward to error handler
