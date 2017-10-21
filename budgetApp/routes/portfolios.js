@@ -65,6 +65,17 @@ function getQuotes(i,portfolios){
 
 router.post('/datatable',function(req, res) {
 
+    var searchTerms = req.body['search[value]'];
+    /*if (searchTerms != null && searchTerms != undefined){
+        var searchQuery = {
+            $and: [
+                Sequelize.where(Sequelize.fn(Sequelize.col('symbol')), {
+                    like: '%' + searchTerms + '%'
+                })
+            ]
+        };
+    }*/
+
     //Set start date to start at midnight
     var startDate = moment(req.body.startDate)
     startDate.millisecond(0);
@@ -81,7 +92,7 @@ router.post('/datatable',function(req, res) {
 
     console.log("startDate:"+req.body.startDate);
     console.log("endDate:"+req.body.endDate);
-
+    console.log("search:"+req.body['search[value]']);
 
 
 
@@ -91,6 +102,9 @@ router.post('/datatable',function(req, res) {
         firstTrade: {
             $lte: endDate.toDate(),
             $gte: startDate.toDate()
+        },
+        symbol: {
+            $like: '%' + searchTerms + '%'
         }
     }}).then(function(portfolios){
 
