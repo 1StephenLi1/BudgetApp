@@ -149,7 +149,7 @@ router.post('/addInvestment', function(req, res) {
                             errorMsg: "An error occured, try again later"
                         })
                     } else {
-                       res.render('portfolio', {
+                       res.render('portfolios', {
                             title: 'Investment Portfolio',
                             user: req.session.user
                         })
