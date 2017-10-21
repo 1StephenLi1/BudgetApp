@@ -14,7 +14,6 @@ $(document).ready(function() {
         startDate: start,
         endDate: end,
         ranges: {
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'Last 12 Months': [moment().subtract(12, 'months'), moment()],
             'Last 5 Years': [moment().subtract(5, 'years'), moment()],
             'Last 10 Years': [moment().subtract(10, 'years'), moment()],
@@ -35,10 +34,10 @@ $(document).ready(function() {
         info: true,
         pagingType: "full_numbers",
         language: {
-            lengthMenu: "Display _MENU_ portfolios per page",
-            zeroRecords: "No portfolios found",
-            info: "Showing _START_ to _END_ of _TOTAL_ portfolios",
-            infoEmpty: "No portolios available",
+            lengthMenu: "Display _MENU_ investments per page",
+            zeroRecords: "No investments found",
+            info: "Showing _START_ to _END_ of _TOTAL_ investments",
+            infoEmpty: "No investments available",
             infoFiltered: "",
             paginate: {
                 first: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>',
@@ -140,8 +139,8 @@ $(document).ready(function() {
             }, {
                 data: function(portfolio) {
                     var buttons = '<div id="'+portfolio.id+'-btns" class="btn-group btn-group-xs pull-right">' +
-                    '<a href="/portfolio/editPortfolio?id=' + portfolio.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit portfolio"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
-                    '<button type="button" id="remove-portfolios-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Portfolio" onClick="deletePortfolio('+portfolio.id+');"><span class="glyphicon glyphicon-remove"></span>Delete</button>' +
+                    '<a href="/portfolio/editPortfolio?id=' + portfolio.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Investment"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
+                    '<button type="button" id="remove-portfolios-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Investment" onClick="deletePortfolio('+portfolio.id+');"><span class="glyphicon glyphicon-remove"></span>Delete</button>' +
                     '</div>';
                     return buttons;
                 }
