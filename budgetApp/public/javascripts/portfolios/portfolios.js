@@ -10,7 +10,7 @@ $(document).ready(function() {
     $('#dateRangePicker').daterangepicker({
         locale: {
             format: 'DD/MM/YYYY'
-        },
+        }, 
         startDate: start,
         endDate: end,
         ranges: {
@@ -69,10 +69,10 @@ $(document).ready(function() {
         ajax: {
             type: "POST",
             url: "/portfolios/datatable",
-            //data: function (d) {
-                //d.startDate = $('#dateRangePicker').data('daterangepicker').startDate.toISOString();
-                //d.endDate = $('#dateRangePicker').data('daterangepicker').endDate.toISOString();
-            //}
+            data: function (d) {
+                d.startDate = $('#dateRangePicker').data('daterangepicker').startDate.toISOString();
+                d.endDate = $('#dateRangePicker').data('daterangepicker').endDate.toISOString();
+            }
         },
         columns:[
             {

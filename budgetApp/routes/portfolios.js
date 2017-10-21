@@ -65,9 +65,33 @@ function getQuotes(i,portfolios){
 
 router.post('/datatable',function(req, res) {
 
+    //Set start date to start at midnight
+    var startDate = moment(req.body.startDate)
+    startDate.millisecond(0);
+    startDate.seconds(0);
+    startDate.minutes(0);
+    startDate.hours(0);
+
+    // Set end date to finish at 11:59:59 PM
+    var endDate = moment(req.body.endDate);
+    endDate.millisecond(999);
+    endDate.seconds(59);
+    endDate.minutes(59);
+    endDate.hours(23);
+
+    console.log("startDate:"+req.body.startDate);
+    console.log("endDate:"+req.body.endDate);
+
+
+
+
     models.Portfolio.findAll({
     where:{
-        "UserId": req.session.user.id
+        "UserId": req.session.user.id,
+        firstTrade: {
+            $lte: endDate.toDate(),
+            $gte: startDate.toDate()
+        }
     }}).then(function(portfolios){
 
         var i,k,len = portfolios.length;
@@ -76,7 +100,7 @@ router.post('/datatable',function(req, res) {
             a.push(getQuotes(i,portfolios));
            
         }
-
+ 
         Promise.all(a).then(function(quotesArr) {
             for (portfolio of portfolios) {
                 for (quote of quotesArr) {
@@ -93,6 +117,7 @@ router.post('/datatable',function(req, res) {
                 }
                 
             }
+
             console.log("length:"+portfolios.length);
 
             console.log("portfolios:" );

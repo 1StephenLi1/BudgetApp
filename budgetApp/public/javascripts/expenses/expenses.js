@@ -8,7 +8,7 @@ $(document).ready(function() {
         $('#dateRangePicker span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
     }
 
-    $('#dateRangePicker').daterangepicker({
+    $('#dateRangePicker').daterangepicker({ 
         locale: {
             format: 'DD/MM/YYYY'
         },
