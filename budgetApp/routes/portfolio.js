@@ -40,7 +40,7 @@ router.get('/', function(req, res) {
                 
             }
 
-            res.render('portfolios', {
+            res.render('portfolio', {
             title: 'Investment Portfolio',
             user: req.session.user,
             portfolios:portfolios
@@ -90,11 +90,11 @@ router.post('/datatable',function(req, res) {
     endDate.minutes(59);
     endDate.hours(23);
 
+/*
     console.log("startDate:"+req.body.startDate);
     console.log("endDate:"+req.body.endDate);
     console.log("search:"+req.body['search[value]']);
-
-
+*/
 
     models.Portfolio.findAll({
     where:{
@@ -118,7 +118,7 @@ router.post('/datatable',function(req, res) {
         Promise.all(a).then(function(quotesArr) {
             for (portfolio of portfolios) {
                 for (quote of quotesArr) {
-                    console.log(quotesArr)
+                    // console.log(quotesArr);
                     
 
                     if (portfolio.symbol == quote[quote.length-1].symbol) {
@@ -132,10 +132,10 @@ router.post('/datatable',function(req, res) {
                 
             }
 
-            console.log("length:"+portfolios.length);
+            // console.log("length:"+portfolios.length);
 
-            console.log("portfolios:" );
-            console.log(portfolios); 
+            // console.log("portfolios:" );
+            // console.log(portfolios); 
             res.json({
                 data: portfolios,
                 recordsFiltered: portfolios.length
@@ -188,7 +188,7 @@ router.post('/addInvestment', function(req, res) {
                             errorMsg: "An error occured, try again later"
                         })
                     } else {
-                       res.render('portfolios', {
+                       res.render('portfolio', {
                             title: 'Investment Portfolio',
                             user: req.session.user
                         })
@@ -206,11 +206,12 @@ router.get('/editPortfolio', function(req, res) {
 
     models.Portfolio.findOne({
         where: {
-            id: req.query['id']
+            id: req.query['id'],
+            UserId: req.session.user.id
         }
     }).then(function(portfolio){
         res.render('editPortfolio', {
-            title: 'Edit Portfolio',
+            title: 'Edit Investment',
             user: req.session.user,
             portfolio:portfolio
         })
@@ -225,11 +226,12 @@ router.get('/editPortfolio', function(req, res) {
 router.post('/editPortfolio', function(req, res) {
      if (req.body.amount <= 0) {
         dialog.info("Please enter an amount");
-        res.redirect("/portfolios/editPortfolio?id="+portfolioId);
+        res.redirect("/portfolio/editPortfolio?id="+portfolioId);
     } else {
         models.Portfolio.find({
             where: {
-                id: portfolioId
+                id: portfolioId,
+                user: req.session.user.id
             }
         }).then(function(portfolio) {
             portfolio.updateAttributes({
@@ -238,11 +240,7 @@ router.post('/editPortfolio', function(req, res) {
             })
         })
 
-        res.render('index', {
-            title: 'Dashboard',
-            user: req.session.user
-
-        })
+        res.redirect("/portfolio");
     }
 })
 
@@ -258,7 +256,7 @@ router.delete('/:id', function(req, res) {
     }).then(function() {
         res.json({
             status: "success",
-            message: "Portfolio has been deleted"
+            message: "Investment has been deleted"
         })
     })
 })

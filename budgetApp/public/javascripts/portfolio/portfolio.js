@@ -14,14 +14,12 @@ $(document).ready(function() {
         startDate: start,
         endDate: end,
         ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Last 12 Months': [moment().subtract(12, 'months'), moment()],
+            'Last 5 Years': [moment().subtract(5, 'years'), moment()],
+            'Last 10 Years': [moment().subtract(10, 'years'), moment()],
+            'Last 25 Years': [moment().subtract(25, 'years'), moment()]
         },
-        showWeekNumbers: true,
         alwaysShowCalendars: true,
         opens: "left"
     }, cb);
@@ -68,7 +66,7 @@ $(document).ready(function() {
         order: [0, "DESC"],
         ajax: {
             type: "POST",
-            url: "/portfolios/datatable",
+            url: "/portfolio/datatable",
             data: function (d) {
                 d.startDate = $('#dateRangePicker').data('daterangepicker').startDate.toISOString();
                 d.endDate = $('#dateRangePicker').data('daterangepicker').endDate.toISOString();
@@ -142,7 +140,7 @@ $(document).ready(function() {
             }, {
                 data: function(portfolio) {
                     var buttons = '<div id="'+portfolio.id+'-btns" class="btn-group btn-group-xs pull-right">' +
-                    '<a href="/portfolios/editPortfolio?id=' + portfolio.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit portfolio"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
+                    '<a href="/portfolio/editPortfolio?id=' + portfolio.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit portfolio"><span class="glyphicon glyphicon-edit"></span>Edit</a>' +
                     '<button type="button" id="remove-portfolios-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Portfolio" onClick="deletePortfolio('+portfolio.id+');"><span class="glyphicon glyphicon-remove"></span>Delete</button>' +
                     '</div>';
                     return buttons;
@@ -164,7 +162,7 @@ $("#portfolio-filters-form").change(function(){
 
 function deletePortfolio(id) {
     $.ajax({
-        url: '/portfolios/' + id,
+        url: '/portfolio/' + id,
         method: 'DELETE'
     }).then(function(result) {
         if (result.status == "success") {
