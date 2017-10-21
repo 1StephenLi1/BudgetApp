@@ -34,7 +34,7 @@ router.get('/', function(req, res) {
                     categoryQuery: category.id
                  })
             })
-        
+
         } else {
             res.render('expenses/expenses', {
                     title: 'All Expenses',
@@ -42,9 +42,9 @@ router.get('/', function(req, res) {
                     categories: categories,
                     categoryQuery: null
             })
-        }  
+        }
     })
-    
+
 })
 
 router.post('/datatable', function(req, res) {
@@ -94,7 +94,7 @@ router.post('/datatable', function(req, res) {
     } else {
         categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];
     }
-    
+
     models.Cashflow.count({
         include: [
             {
@@ -191,7 +191,7 @@ router.post('/addExpense', function(req, res) {
             }
         }).then(function([category, isNewlyCreated]) {
             models.Cashflow.create({
-                dateTime: moment(req.body.expenseDate).tz("Australia/Sydney"),
+                dateTime: moment(req.body.expenseDate, 'DD/MM/YYYY').tz("Australia/Sydney"),
                 amount: req.body.amount,
                 shortDescription: req.body.shortDescription,
                 longDescription: req.body.longDescription,
@@ -294,7 +294,7 @@ router.post('/uploadCsv', function(req, res) {
                     // res.status(200).json({
                     //     msg: "Expense added successfully"
                     // })
-                   
+
                 }
 
             })
@@ -308,11 +308,11 @@ router.post('/uploadCsv', function(req, res) {
             });
 
         })
-            
+
         .on("data", function(data){
 
         }).on("end", function(){
-           
+
         });
     }
 });

@@ -151,8 +151,7 @@ $(document).ready(function() {
                         buttons += '<button type="button" id="remove-expense-btn" class="btn btn-default btn-xs" disabled>Cancelled</button>';
                         buttons += '</div>';
                     } else {
-                        var buttons = '<div id="'+expense.id+'-btns" class="btn-group btn-group-xs pull-right">' +
-                        '<a href="/recurringExpenses/editRecurringExpense?id=' + expense.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Expense"><span class="glyphicon glyphicon-edit"></span>Edit</a>';
+                        var buttons = '<div id="'+expense.id+'-btns" class="btn-group btn-group-xs pull-right">';
                         if (moment(expense.startDate).isAfter(moment())) {
                             buttons += '<button type="button" id="remove-expense-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Expense" onClick="deleteRecurringExpense('+expense.id+');"><span class="glyphicon glyphicon-trash"></span>Delete</button>';
                         } else if (expense.endDate == null || moment(expense.endDate).isAfter(moment())) {

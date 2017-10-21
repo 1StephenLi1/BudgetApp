@@ -151,8 +151,7 @@ $(document).ready(function() {
                         buttons += '<button type="button" id="remove-income-btn" class="btn btn-default btn-xs" disabled>Cancelled</button>';
                         buttons += '</div>';
                     } else {
-                        var buttons = '<div id="'+income.id+'-btns" class="btn-group btn-group-xs pull-right">' +
-                        '<a href="/recurringIncomes/editRecurringIncome?id=' + income.id + '" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Income"><span class="glyphicon glyphicon-edit"></span>Edit</a>';
+                        var buttons = '<div id="'+income.id+'-btns" class="btn-group btn-group-xs pull-right">'; 
                         if (moment(income.startDate).isAfter(moment())) {
                             buttons += '<button type="button" id="remove-income-btn" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Delete Income" onClick="deleteRecurringIncome('+income.id+');"><span class="glyphicon glyphicon-trash"></span>Delete</button>';
                         } else if (income.endDate == null || moment(income.endDate).isAfter(moment())) {
