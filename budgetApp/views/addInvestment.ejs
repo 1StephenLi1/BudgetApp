@@ -14,49 +14,47 @@
         <!-- Main content -->
         <h1><%= title %></h1>
         <div id="messageBox" class="alert alert-danger" style="display:none"></div>
+        <div id="expenseMsg"></div>
 
-        <div class="row">
-            <div id="expenseMsg"></div>
-            <div class="box box-primary">
-            <form method="post" action="/portfolio/addInvestment">
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label for="symbol">Symbol</label>    
-                            <a title="symbol look up" href="https://finance.yahoo.com/"><i class="fa fa-question"></i></a>
-                            <input type="text" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="symbol" name="symbol" maxLength=30 placeholder="e.g.BXB.AX ">
+        <div class="box box-primary">
+        <form method="post" action="/portfolios/addInvestment">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="symbol">Symbol</label>    
+                        <a title="symbol look up" href="https://finance.yahoo.com/"><i class="fa fa-question"></i></a>
+                        <input type="text" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="symbol" name="symbol" maxLength=30 placeholder="e.g. CBA.AX ">
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label for="shareAmount">Amount Held</label>
+                         <input type="number" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="shareAmount" name="shareAmount" placeholder="Quantity">
+                    </div>
+                    <div class="col-md-4 form-group">
+                         <label for="boughtPrice">Buy Price</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" class="form-control" id="boughtPrice" name="boughtPrice" min="0" step="0.50" value="0.00" autocomplete="off"/>
                         </div>
-                        <div class="col-md-4 form-group">
-                            <label for="shareAmount">Amount held</label>
-                             <input type="number" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="shareAmount" name="shareAmount" placeholder="enter your qty">
-                        </div>
-                        <div class="col-md-4 form-group">
-                             <label for="boughtPrice">Buy price</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" id="boughtPrice" name="boughtPrice" min="0" step="0.50" value="0.00" autocomplete="off"/>
-                            </div>
 
+                    </div>
+                    <div class="col-md-4 form-group">
+                         <label for="firstTrade">Investment Date</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                            <input type="text" name="firstTrade" id="expenseDate" class="form-control">
                         </div>
-                        <div class="col-md-4 form-group">
-                             <label for="expenseDate">Investment Date</label>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-                                <input type="text" name="expenseDate" id="expenseDate" class="form-control">
-                            </div>
-                    </div>
-                    </div>
-                      
+                </div>
+                </div>
                   
-                    <!-- /.box-body -->
-                </div>
-                <div class="box-footer">
-                  <button type="submit" class="btn btn-primary pull-right">Add Investment</button>
-                </div>
-            </form>
-        </div>
-            <!-- /.content -->
+              
+                <!-- /.box-body -->
+            </div>
+            <div class="box-footer">
+              <button type="submit" class="btn btn-primary pull-right">Add Investment</button>
+            </div>
+        </form>
     </div>
+            <!-- /.content -->
         <!-- /.content-wrapper -->
 
         <% include includes/footer.ejs %>

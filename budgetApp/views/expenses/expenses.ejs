@@ -24,8 +24,12 @@
                                 <label for="category-select" style="width:100%">Categories</label>
                                 <select class="selectpicker" style="width:100%" id="category-select" name="category-select" data-live-search="true" title="All Categories" multiple>
                                 <% for (category of categories) { %>
-                                    <option value="<%= category.id %>"><%= category.name %> </option>
-                                <% } %>
+                                        <% if (categoryQuery != null && category.name == categoryName) { %>
+                                            <option value="<%= category.id %>" selected="selected"><%= category.name %></option>
+                                        <% } else {%>
+                                        <option value="<%= category.id %>"><%= category.name %> </option>
+                                        <% } %>
+                                    <% } %>
                                 </select>
                             </div>
                         </form>

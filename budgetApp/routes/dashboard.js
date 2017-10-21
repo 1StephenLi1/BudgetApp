@@ -179,7 +179,7 @@ router.get('/goals', function(req, res, next) {
 			"dateTime": { gt: req.query.date }
 		},
 		attributes: [
-			[models.sequelize.fn('sum', models.sequelize.col('amount')), 'total']
+			[models.sequelize.fn('sum', models.sequelize.col('amount')), 'total'], 'isExpense'
 		],
 		group: ['isExpense'],
 		order: [['isExpense', 'ASC']]
@@ -187,11 +187,10 @@ router.get('/goals', function(req, res, next) {
 		var actual_income = null;
 		var actual_spending = null;
 		for (var i = 0; i < cashflows.length; i++) {
-			console.log(cashflows[i]['dataValues']['isExpense']);
 			if (cashflows[i]['dataValues']['isExpense']) {
-				actual_spending = cashflows[1]['dataValues']['total'];
+				actual_spending = cashflows[i]['dataValues']['total'];
 			} else {
-				actual_income = cashflows[0]['dataValues']['total'];
+				actual_income = cashflows[i]['dataValues']['total'];
 			}
 		}
 

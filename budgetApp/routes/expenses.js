@@ -19,15 +19,30 @@ router.get('/', function(req, res) {
             UserId: req.session.user.id,
         }
     }).then(function(categories) {
+        if (categoryUrlQuery != null || categoryUrlQuery != undefined) {
+            models.Category.findOne({
+                where: {
+                    "name": categoryUrlQuery
+                }
+            }).then(function(category) {
 
-        res.render('expenses/expenses', {
-            title: 'All Expenses',
-            user: req.session.user,
-            categories: categories,
-            categoryToken: categoryUrlQuery
-        })
-      
-       
+                res.render('expenses/expenses', {
+                    title: 'All Expenses',
+                    user: req.session.user,
+                    categories: categories,
+                    categoryName: category.name,
+                    categoryQuery: category.id
+                 })
+            })
+        
+        } else {
+            res.render('expenses/expenses', {
+                    title: 'All Expenses',
+                    user: req.session.user,
+                    categories: categories,
+                    categoryQuery: null
+            })
+        }  
     })
     
 })
@@ -79,7 +94,7 @@ router.post('/datatable', function(req, res) {
     } else {
         categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];
     }
-
+    
     models.Cashflow.count({
         include: [
             {
@@ -421,11 +436,14 @@ router.post('/editExpense', function(req, res) {
         res.render('index', {
             title: 'Dashboard',
             user: req.session.user
+
         })
-    }
+         console.log(JSON.stringify(cashflows))
+         console.log("-----------------")
+    }})
 
 
-})
+
 
 router.delete('/:id', function(req, res) {
     models.Cashflow.destroy({

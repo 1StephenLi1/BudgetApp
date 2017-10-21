@@ -8,7 +8,7 @@ $(document).ready(function() {
         $('#dateRangePicker span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
     }
 
-    $('#dateRangePicker').daterangepicker({
+    $('#dateRangePicker').daterangepicker({ 
         locale: {
             format: 'DD/MM/YYYY'
         },
@@ -128,6 +128,7 @@ $(document).ready(function() {
         ]
     });
 });
+
 
 $('#dateRangePicker').on('apply.daterangepicker', function(ev, picker) {
     expensesDT.ajax.reload();

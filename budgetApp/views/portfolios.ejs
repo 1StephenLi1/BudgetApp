@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include includes/head.ejs %>
+</head>
+
+<body class="hold-transition skin-black fixed sidebar-mini">
+    <div class="wrapper">
+        <% include includes/top-nav.ejs %>
+        <% include includes/side-nav.ejs %>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper container-fluid">
+            <!-- Main content -->
+            <h1><%= title %></h1>
+            
+            <div class="box box-default">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-12">
+                            <a href="/portfolios/addInvestment" class="btn btn-success"><i class="fa fa-plus"></i> Add Investment</a>
+                        </div>
+                        <div class="col-md-3 col-md-offset-6 col-sm-12">
+                            <label for="dateRangePicker">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date Range: </label>
+                            <div id="dateRangePicker" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; border-radius: 2px">
+                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                                <span></span> <b class="caret"></b>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table id="portfolios-tbl" class="table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>First Trade </th> 
+                                    <th>Symbol </th>
+                                    <th>Share Amount</th>
+                                    <th>Bought Price </th>
+                                    <th>Last Price</th>
+                                    <th>Change</th>
+                                    <th>%Change</th>
+                                    <th>profit</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <!-- /.content-wrapper -->
+
+        <% include includes/footer.ejs %>
+
+    </div>
+    <!-- ./wrapper -->
+    <% include includes/jsDefaults.ejs %>
+<script type="text/javascript" src="/javascripts/portfolios/portfolios.js"></script>
+</body>
+</html>

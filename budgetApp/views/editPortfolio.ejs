@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include includes/head.ejs %>
+</head>
+
+<body class="hold-transition skin-black fixed sidebar-mini">
+    <div class="wrapper">
+
+        <% include includes/top-nav.ejs %>
+        <% include includes/side-nav.ejs %>
+
+        <div class="content-wrapper container-fluid">
+        <!-- Main content -->
+        <h1><%= title %></h1>
+        <div id="messageBox" class="alert alert-danger" style="display:none"></div>
+
+        <div class="row">
+            <div id="PortfolioMsg"></div>
+            <div class="box box-primary">
+            <form method="post" action="/portfolios/editPortfolio">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label for="symbol">Symbol</label>    
+                            <a title="symbol look up" href="https://finance.yahoo.com/"><i class="fa fa-question"></i></a>
+                            <input type="text" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="symbol" name="symbol" disabled="disabled" value="<%= portfolio.symbol%>">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="shareAmount">Amount held</label>
+                             <input type="number" class="form-control typeahead tt-menu" autocomplete="off" data-toggle="tooltip" data-trigger="manual" id="shareAmount" name="shareAmount" value="<%= portfolio.shareAmount%>">
+                        </div>
+                        <div class="col-md-4 form-group">
+                             <label for="boughtPrice">Buy price</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" id="boughtPrice" name="boughtPrice" min="0" step="0.50" value="<%= portfolio.boughtPrice %>" autocomplete="off"/>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                      
+                  
+                    <!-- /.box-body -->
+                </div>
+                <div class="box-footer">
+                  <button type="submit" class="btn btn-primary pull-right">Edit Investment</button>
+                </div>
+            </form>
+        </div>
+            <!-- /.content -->
+    </div>
+        <!-- /.content-wrapper -->
+
+        <% include includes/footer.ejs %>
+</div>
+</div>
+    <!-- ./wrapper -->
+    <% include includes/jsDefaults.ejs %>
+    <script type="text/javascript" src="/javascripts/expenses/addExpense.js"></script>
+</body>
+</html>
