@@ -129,6 +129,7 @@ $(document).ready(function() {
     });
 });
 
+
 $('#dateRangePicker').on('apply.daterangepicker', function(ev, picker) {
     expensesDT.ajax.reload();
 });

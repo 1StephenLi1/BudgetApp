@@ -4,10 +4,6 @@
     <% include includes/head.ejs %>
 </head>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
 <body class="hold-transition skin-black fixed sidebar-mini">
     <div class="wrapper">
         <% include includes/top-nav.ejs %>
@@ -19,83 +15,47 @@
             <h1><%= title %></h1>
                 <a href="/portfolio/addInvestment" class="btn btn-success"><i class="fa fa-plus"></i>add investment</a>
             <!-- /.content -->
-            <table id="portfolios" cellspacing="0" width="100%">
-            <thead>
-            <tr>
-              <th>Symbol </th>
-              <th>Bought Price </th>
-              <th>Share Amount</th>
-              <th>First Trade </th> 
-              <th>Status </th>
-              <th>Last Price</th>
-              <th>Change</th>
-              <th>%Change</th>
-              <th>Volumn</th>
-              <th>profit</th>
 
-              
-              <th></th>
-              <th></th>
-            </tr>
-            </thead>
-      
-            <tbody>
-                <% for(var i=0; i < portfolios.length; i++) {%>
-                <tr>
-                <td><%= portfolios[i].Symbol %></td>
-                <td><%= portfolios[i].boughtPrice %></td>
-                <td><%= portfolios[i].shareAmount %></td>
-                <td><%= portfolios[i].firstTrade %></td> 
-                <td></td>
-                <td><%= portfolios[i].lastestPrice %></td>
-                <td><%= portfolios[i].change %></td>
-                <td><%= portfolios[i].percentChange %></td>
-                <td><a href="expenses/editPortfolio?id=<%= portfolios[i].id %>">edit</a></td>
-                <td><a href="expenses/deletePortfolio?id=<%= portfolios[i].id %>">delete</a></td>
-                </tr>
-                <% } %>
-            </tbody>
 
-   
-            </table>
-           <script>yahooFinance.historical({
-  symbol: SYMBOL,
-  from: START_DATE,
-  to: END_DATE
-}, function (err, quotes) {
+            <div class="box box-default">
+                <div class="box-body">
+                    <div class="row">
+                        
+                        <div class="col-md-3 col-md-offset-6 col-sm-12">
+                            <label for="dateRangePicker">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date Range: </label>
+                            <div id="dateRangePicker" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; border-radius: 2px">
+                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+                                <span></span> <b class="caret"></b>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table id="portfolios-tbl" class="table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>First Trade </th> 
+                                    <th>Symbol </th>
+                                    <th>Bought Price </th>
+                                    <th>Share Amount</th>
+                                    <th>Last Price</th>
+                                    <th>Change</th>
+                                    <th>%Change</th>
+                                    <th>profit</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-  /*
-  [
-    {
-      date: Thu Nov 07 2013 00:00:00 GMT-0500 (EST),
-      open: 45.1,
-      high: 50.09,
-      low: 44,
-      close: 44.9,
-      volume: 117701700,
-      adjClose: 44.9,
-      symbol: 'TWTR'
-    },
-    ...
-    {
-      date: Thu Nov 14 2013 00:00:00 GMT-0500 (EST),
-      open: 42.34,
-      high: 45.67,
-      low: 42.24,
-      close: 44.69,
-      volume: 11090800,
-      adjClose: 44.69,
-      symbol: 'TWTR'
-    }
-  ]
-  */
-});</script>
-          
-            <script type="text/javascript">
-                $(document).ready(function() {
-                $('#portfolios').DataTable();
-                } );
-            </script>
+
+
+
         </div>
         <!-- /.content-wrapper -->
 
@@ -103,7 +63,7 @@
 
     </div>
     <!-- ./wrapper -->
-
-
+    <% include includes/jsDefaults.ejs %>
+<script type="text/javascript" src="/javascripts/portfolios/portfolios.js"></script>
 </body>
 </html>

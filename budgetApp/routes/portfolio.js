@@ -9,11 +9,6 @@ var http = require('http');
 var json2csv = require('json2csv');
 var dialog = require('dialog');
 var yahooFinance = require('yahoo-finance');
-var Sync = require('sync');
-var Q = require('q');
-
-
-
 
 router.get('/', function(req, res) {
 
@@ -32,24 +27,18 @@ router.get('/', function(req, res) {
         Promise.all(a).then(function(quotesArr) {
             for (portfolio of portfolios) {
                 for (quote of quotesArr) {
-                    console.log(quotesArr)
-                    console.log("portfolio.symbol:" + portfolio.symbol);
-                    console.log("quote.symbol:" + quote[0].symbol);
 
                     if (portfolio.symbol == quote[quote.length-1].symbol) {
                         lastQuote = quote[0];
-                        console.log("lastQuote"+quote[0].close);
+                       
                         portfolio['lastestPrice'] = lastQuote.close;
                         portfolio['change'] = lastQuote.close-portfolio.boughtPrice;
-                        //portfolio['percentChange']= (lastQuote.close-portfolio.boughtPrice)/portfolio.boughtPrice;
-
+                        portfolio['percentChange']= (lastQuote.close-portfolio.boughtPrice)/portfolio.boughtPrice;
+                        portfolio['profit'] = portfolio['change']*portfolio.shareAmount;
                     }
                 }
                 
             }
-            console.log("check portfolios value:");
-            //console.log(portfolios);
-            console.log(portfolios[0]['change']);
 
             res.render('portfolio', {
             title: 'Investment Portfolio',
@@ -73,6 +62,59 @@ function getQuotes(i,portfolios){
 
 }
 
+router.post('/datatable',function(req, res) {
+
+    models.Portfolio.findAll({
+    where:{
+        "UserId": req.session.user.id
+    }}).then(function(portfolios){
+
+        var i,k,len = portfolios.length;
+        var a = [];
+        for(i=0;i<len;i++){
+            a.push(getQuotes(i,portfolios));
+           
+        }
+
+        Promise.all(a).then(function(quotesArr) {
+            for (portfolio of portfolios) {
+                for (quote of quotesArr) {
+                    console.log(quotesArr)
+                    
+
+                    if (portfolio.symbol == quote[quote.length-1].symbol) {
+                        lastQuote = quote[0];
+                        portfolio.dataValues['lastestPrice'] = lastQuote.close;
+                        portfolio.dataValues['change'] = lastQuote.close-portfolio.boughtPrice;
+                        portfolio.dataValues['percentChange']= (lastQuote.close-portfolio.boughtPrice)/portfolio.boughtPrice;
+                        portfolio.dataValues['profit'] = portfolio.dataValues['change']*portfolio.shareAmount;
+                    }
+                }
+                
+            }
+            console.log("length:"+portfolios.length);
+
+            console.log("portfolios:" );
+            console.log(portfolios); 
+            res.json({
+                data: portfolios,
+                //recordsTotal: expensesCount,
+                //recordsFiltered: filteredExpenses.count
+            })
+        })
+
+        
+         
+    })
+
+
+
+   
+
+
+
+
+})
 
 router.get('/addInvestment', function(req, res) {
 
@@ -103,7 +145,7 @@ router.post('/addInvestment', function(req, res) {
                 res.redirect("/portfolio/addInvestment");
             } else {
                 models.Portfolio.create({
-                    firstTrade: moment(req.body.expenseDate,'DD/MM/YYYY').tz("Australia/Sydney"),
+                    firstTrade: moment(req.body.firstTrade,'DD/MM/YYYY').tz("Australia/Sydney"),
                     boughtPrice: req.body.boughtPrice,
                     shareAmount: req.body.shareAmount,
                     symbol: req.body.symbol,

@@ -74,7 +74,7 @@ router.post('/datatable', function(req, res) {
     } else {
         categoriesQuery = [{"CategoryId": null},{"CategoryId": {$ne:null}}];
     }
-
+    
     models.Cashflow.count({
         include: [
             {

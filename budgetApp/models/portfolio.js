@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         firstTrade: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATE,
             allowNull: false
         },
         symbol: {
