@@ -215,10 +215,8 @@ router.post('/addExpense', function(req, res) {
                     var monthCheck = new Date();
                     var firstDayOfMonth = new Date(monthCheck.getFullYear(), monthCheck.getMonth(), 1);
                     var lastDayOfMonth = new Date(monthCheck.getFullYear(), monthCheck.getMonth() + 1, 0);
-                    console.log("JLASD;KFJASLDKFJ" + expenseDate + firstDayOfMonth + lastDayOfMonth);
                     if (expenseDate >= firstDayOfMonth && expenseDate <= lastDayOfMonth) {
-                        console.log('YEAHYFAHEFEHWF');
-                    checkBudget(req,res);
+                        checkBudget(req,res);
                     }
                 }
             })
