@@ -1,4 +1,4 @@
-# COMP4920-Project
+# BudgetApp
 
 ## Getting started
 
