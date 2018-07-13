@@ -1,15 +1,15 @@
 {
   "development": {
-    "username": "budgetApp",
-    "password": "budget123./",
+    "username": "root",
+    "password": "970415",
     "database": "budgetApp",
     "host": "127.0.0.1",
     "port":3306,
     "dialect": "mysql"
   },
   "test": {
-    "username": "budgetApp",
-    "password": "budget123./",
+    "username": "root",
+    "password": "970415",
     "database": "budgetApp",
     "host": "127.0.0.1",
     "port":3306,
